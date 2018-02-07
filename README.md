@@ -17,3 +17,22 @@ Streets:
 Research:
 
     Traffic control algorithms, flow network design, and literature regarding the study of traffic flow and density.
+
+Notes:
+
+    - Ways to introduce cars would be to create "origin/destination objects" with values 
+    that determine how popular they are. Houses would have a value of 1, supermarkets could 
+    have a value of 10, and squares/markets could have a value of 100. This value determines 
+    how likely a car leaving any given origin is to head towards a specific destination. Cars 
+    could randomly spawn on origin objects based on their value, and head towards destinations 
+    based on those values.
+    - Need to implement pathfinding algorithm/graph structure such that each car is able to stay 
+    on the road and reach a destination. A* would probably be our best bet since it's easy to 
+    implement.
+    - Need a graph structure to build the level on top of. Each road is an edge between two 
+    intersections (vertices), roundabouts could be a series of vertices in a circle graph structure.
+    Either way, there needs to be some way for cars to navigate a given space.
+    - Should we decide to do a level editor, the street objects that we can place/move around 
+    must have an edge/vertex attached to them, such that if we place objects in a location 
+    next to another, they automatically connect. ***OTHERWISE, A LEVEL EDITOR IS GOING TO 
+    BE EXTREMELY DIFFICULT IF NOT IMPOSSIBLE TO IMPLEMENT***
