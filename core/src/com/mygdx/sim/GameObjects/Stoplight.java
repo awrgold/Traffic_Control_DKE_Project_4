@@ -1,5 +1,5 @@
 package com.mygdx.sim.GameObjects;
 
-public class Car implements Vehicle {
+public class Stoplight {
 
 }
