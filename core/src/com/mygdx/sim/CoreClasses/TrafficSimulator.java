@@ -1,4 +1,4 @@
-package com.mygdx.sim;
+package com.mygdx.sim.CoreClasses;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
