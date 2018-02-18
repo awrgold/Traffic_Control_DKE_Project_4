@@ -1,9 +1,8 @@
 package com.mygdx.sim.Resources;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -12,7 +11,7 @@ public class UI {
 
 	// Skin
 	public Skin skin;
-	//public TextureAtlas atlas;
+	public TextureAtlas atlas;
 
 	// Menu Textures
 	public Texture texture_menu_background;
@@ -21,22 +20,26 @@ public class UI {
 	public Sprite menu_icon_start;
 	public Sprite menu_icon_editor;
 	public Sprite menu_icon_settings;
+	
+	// Audio
+	public Sound sound_click;
 
 	public UI() {
 
 		// Create Atlas
-		// atlas = new TextureAtlas(Gdx.files.internal("assets/images/ui/ui.atlas"));
+		atlas = new TextureAtlas(Gdx.files.internal("resources/skins/ui.atlas"));
 
 		// Initialize Components
 		this.initSkin();
 		this.initMenuUI();
+		this.initSounds();
 	}
 
 	private void initSkin() {
 
 		// Create Skin
 		skin = new Skin();
-		// skin.addRegions(atlas);
+		skin.addRegions(atlas);
 
 		// Read Skin
 		skin.load(Gdx.files.internal("resources/skins/ui.json"));
@@ -45,16 +48,20 @@ public class UI {
 	private void initMenuUI() {
 
 		// Menu Icons
-		// menu_icon_start = atlas.createSprite("");
-		// menu_icon_editor = atlas.createSprite("");
-		// menu_icon_settings = atlas.createSprite("");
+	}
+	
+	private void initSounds() {
+		sound_click = Gdx.audio.newSound(Gdx.files.internal("resources/sounds/click.ogg"));
 	}
 
 	public void dispose() {
 		
 		// Skin
 		skin.dispose();
-		//atlas.dispose();
+		atlas.dispose();
+		
+		// Sounds
+		sound_click.dispose();
 	}
 
 }

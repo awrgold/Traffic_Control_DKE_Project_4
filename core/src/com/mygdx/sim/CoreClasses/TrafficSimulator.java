@@ -5,15 +5,27 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.sim.Resources.Resources;
+import com.mygdx.sim.Screens.EditorScreen;
 import com.mygdx.sim.Screens.MenuScreen;
 
 public class TrafficSimulator extends Game {
 	
+	// Singleton
+	private static TrafficSimulator trafficSimulator;
+	
 	// Screens
 	public final MenuScreen menuScreen = new MenuScreen();
+	public final EditorScreen editorScreen = new EditorScreen();
 	
 	// Rendering
 	private SpriteBatch batch;
+	
+	public static TrafficSimulator get() {
+		if(trafficSimulator == null) {
+			trafficSimulator = new TrafficSimulator();
+		}
+		return trafficSimulator;
+	}
 	
 	@Override
 	public void create () {
@@ -38,6 +50,11 @@ public class TrafficSimulator extends Game {
 	
 	@Override
 	public void dispose () {
+		
+		//Menus
+		menuScreen.dispose();
+		editorScreen.dispose();
+		
 		batch.dispose();
 		Resources.dispose();
 	}

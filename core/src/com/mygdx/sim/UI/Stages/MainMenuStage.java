@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.mygdx.sim.UI.Menu.EditorMenu;
 import com.mygdx.sim.UI.Menu.StartMenu;
 
 public class MainMenuStage extends Stage {
@@ -24,10 +25,12 @@ public class MainMenuStage extends Stage {
 		
 		// Menus
 		mnu_startMenu = new StartMenu(this);
+		mnu_editorMenu = new EditorMenu(this);
 		
 		// Menu Stack
 		stack_menus = new Stack();
 		stack_menus.add(mnu_startMenu);
+		stack_menus.add(mnu_editorMenu);
 		
 		// Table
 		table_main = new Table();
@@ -38,7 +41,7 @@ public class MainMenuStage extends Stage {
 		this.addActor(table_main);
 		
 		// Initial Menu
-		mnu_startMenu.setVisible(true);
+		openStartMenu();
 	}
 	
 	@Override
@@ -48,6 +51,22 @@ public class MainMenuStage extends Stage {
 
 	public void resize(int width, int height) {
 		this.getViewport().update(width, height, true);
+	}
+	
+	private void hideAllMenus() {
+		for(Actor actor : stack_menus.getChildren()) {
+			actor.setVisible(false);
+		}
+	}
+	
+	public void openStartMenu() {
+		this.hideAllMenus();
+		mnu_startMenu.setVisible(true);
+	}
+	
+	public void openEditorMenu() {
+		this.hideAllMenus();
+		mnu_editorMenu.setVisible(true);
 	}
 
 }

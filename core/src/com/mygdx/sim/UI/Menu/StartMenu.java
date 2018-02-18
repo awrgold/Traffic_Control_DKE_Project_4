@@ -5,7 +5,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.mygdx.sim.CoreClasses.TrafficSimulator;
 import com.mygdx.sim.Resources.Resources;
+import com.mygdx.sim.UI.Components.DefaultButton;
 import com.mygdx.sim.UI.Stages.MainMenuStage;
 
 public class StartMenu extends Table {
@@ -25,7 +27,8 @@ public class StartMenu extends Table {
 	private Actor createStartButtonsTable() {
 
 		// Start Button
-		TextButton btn_start = new TextButton("Start", skin, "default");
+		TextButton btn_start = new DefaultButton("Start", skin, "default");
+		btn_start.pad(10.0f);
 		btn_start.addListener(new ChangeListener() {
 
 			@Override
@@ -36,18 +39,20 @@ public class StartMenu extends Table {
 		});
 
 		// Editor Button
-		TextButton btn_editor = new TextButton("Editor", skin, "default");
+		TextButton btn_editor = new DefaultButton("Editor", skin, "default");
+		btn_editor.pad(10.0f);
 		btn_editor.addListener(new ChangeListener() {
 
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				System.out.println("Editor");
+				TrafficSimulator.get().setScreen(TrafficSimulator.get().editorScreen);
 			}
 			
 		});
 
 		// Settings Button
-		TextButton btn_settings = new TextButton("Settings", skin, "default");
+		TextButton btn_settings = new DefaultButton("Settings", skin, "default");
+		btn_settings.pad(10.0f);
 		btn_settings.addListener(new ChangeListener() {
 
 			@Override

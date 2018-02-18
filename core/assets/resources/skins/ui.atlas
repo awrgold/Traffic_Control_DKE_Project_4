@@ -1,0 +1,13 @@
+ui.png
+size: 500,300
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+button
+	rotate: false
+	xy: 0, 0
+	size: 16, 16
+	pad: 7, 7, 7, 7
+	orig: 16, 16
+	offset: 0, 0
+	index: -1
