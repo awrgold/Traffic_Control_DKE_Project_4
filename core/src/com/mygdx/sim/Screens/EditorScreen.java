@@ -65,6 +65,9 @@ public class EditorScreen implements Screen {
 		// Editor Stage
 		editorStage.act();
 		editorStage.draw();
+		
+		// Input
+		editorInput.update();
 
 	}
 

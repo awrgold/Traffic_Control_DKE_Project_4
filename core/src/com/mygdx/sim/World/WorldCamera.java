@@ -20,5 +20,10 @@ public class WorldCamera extends OrthographicCamera {
 
 		this.update();
 	}
+	
+	public void move(float x, float y) {
+		this.position.x += x;
+		this.position.y += y;
+	}
 
 }
