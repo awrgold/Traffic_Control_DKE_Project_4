@@ -1,0 +1,41 @@
+{
+	com.badlogic.gdx.graphics.Color: {
+		button-white: { r: 1, g: 1, b: 1, a: 1 },
+		button-highlight: { r: 1, g: 1, b: 1, a: 0.8 }
+	},
+	com.badlogic.gdx.graphics.g2d.BitmapFont: { 
+		font-small: {
+			file: resources/fonts/Emu.fnt,
+			scaledSize: 18
+		},
+		font-medium: {
+			file: resources/fonts/Emu.fnt,
+			scaledSize: 32
+		},
+		font-large: {
+			file: resources/fonts/Emu.fnt,
+			scaledSize: 38
+		}
+	},
+	com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
+  		default: {
+			font: font-small, 
+			fontColor: button-white
+  		},
+	},
+	com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
+  		default: {
+  			font: font-small, 
+  			fontColor: button-white
+  		},
+  		smallLabel: {
+  			font: font-small, 
+  			fontColor: button-white
+  		}
+	},
+	com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
+		default:  {
+			titleFont: font-small
+		}
+	},
+}
