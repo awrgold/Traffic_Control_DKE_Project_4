@@ -47,7 +47,7 @@ public class StartMenu extends Table {
 			public void changed(ChangeEvent event, Actor actor) {
 				TrafficSimulator.get().setScreen(TrafficSimulator.get().editorScreen);
 			}
-			
+
 		});
 
 		// Settings Button
@@ -59,18 +59,17 @@ public class StartMenu extends Table {
 			public void changed(ChangeEvent event, Actor actor) {
 				System.out.println("Settings");
 			}
-			
+
 		});
-		
+
 		Table tbl_buttons = new Table();
-		
+
 		tbl_buttons.defaults().center().space(60f);
-		
+
 		tbl_buttons.add(btn_start);
 		tbl_buttons.add(btn_editor);
 		tbl_buttons.add(btn_settings);
-		
-		
+
 		return tbl_buttons;
 	}
 

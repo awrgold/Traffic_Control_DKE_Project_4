@@ -41,7 +41,7 @@ public class TrafficSimulator extends Game {
 	public void render () {
 		
 		// Clear Screen
-		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClearColor(0.21f, 0.22f, 0.24f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		// Render Screen

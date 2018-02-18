@@ -11,21 +11,21 @@ public class MenuScreen implements Screen {
 
 	@Override
 	public void show() {
-		
+
 		// UI
 		mainMenuStage = new MainMenuStage();
-		
-		//User Input
+
+		// User Input
 		Gdx.input.setInputProcessor(mainMenuStage);
 	}
 
 	@Override
 	public void render(float delta) {
-		
+
 		// Main Menu Stage
 		mainMenuStage.act();
 		mainMenuStage.draw();
-		
+
 	}
 
 	@Override

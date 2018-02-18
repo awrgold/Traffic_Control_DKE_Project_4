@@ -7,12 +7,12 @@ import com.mygdx.sim.World.WorldController;
 public class EditorStage extends Stage {
 
 	private WorldController worldController;
-	
+
 	public EditorStage(WorldController worldController) {
 
 		// Viewport | Camera
 		super(new ScreenViewport());
-		
+
 		// World Controller
 		this.worldController = worldController;
 	}
@@ -25,9 +25,9 @@ public class EditorStage extends Stage {
 	public void resize(int width, int height) {
 		this.getViewport().update(width, height, true);
 	}
-	
+
 	public WorldController getWorldController() {
 		return this.worldController;
 	}
-	
+
 }
