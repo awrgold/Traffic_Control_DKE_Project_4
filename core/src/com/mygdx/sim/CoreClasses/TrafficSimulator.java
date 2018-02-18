@@ -34,18 +34,22 @@ public class TrafficSimulator extends Game {
 		batch = new SpriteBatch();
 		
 		//Set screen
-		setScreen(menuScreen);
+		this.setScreen(menuScreen);
 	}
 
 	@Override
 	public void render () {
 		
 		// Clear Screen
-		Gdx.gl.glClearColor(0.07f, 0.075f, 0.08f, 1f);
+		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		// Render Screen
 		super.render();
+	}
+	
+	public SpriteBatch getBatch() {
+		return this.batch;
 	}
 	
 	@Override

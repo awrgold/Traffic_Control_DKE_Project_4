@@ -8,7 +8,7 @@ public class DesktopLauncher {
 
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		new LwjglApplication(new TrafficSimulator(), config);
+		new LwjglApplication(TrafficSimulator.get(), config);
 	}
 
 }
