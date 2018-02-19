@@ -14,6 +14,11 @@ public class SidebarTabs extends Table {
 	private Table table_tabs;
 	
 	public SidebarTabs() {
+		
+		// Set Position
+		this.top().left();
+		
+		// Contents
 		buttonGroup = new ButtonGroup<Button>();
 		actorStack = new Stack();
 		table_tabs = new Table();
@@ -29,7 +34,7 @@ public class SidebarTabs extends Table {
 		
 		// Add to table
 		this.clear();
-		this.add(table_tabs).left().row();;
+		this.add(table_tabs).left().row();
 		this.add(actorStack);
 	}
 }

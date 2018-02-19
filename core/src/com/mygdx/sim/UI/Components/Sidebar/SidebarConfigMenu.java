@@ -17,7 +17,7 @@ public class SidebarConfigMenu extends Table {
 
 	// Skin
 	private Skin skin;
-	
+
 	// Label
 	private Label lb_mapDimensions;
 
@@ -41,7 +41,7 @@ public class SidebarConfigMenu extends Table {
 	}
 
 	private void createMenu() {
-		
+
 		// Labels
 		lb_mapDimensions = new Label("Set Map Dimensions", skin);
 
@@ -56,14 +56,18 @@ public class SidebarConfigMenu extends Table {
 
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				worldController.createMap(Integer.valueOf(tf_mapWidth.getText()), Integer.valueOf(tf_mapHeight.getText()));
+
+				if (tf_mapWidth.getText() != "" && tf_mapHeight.getText() != "") {				
+					worldController.createMap(Integer.valueOf(tf_mapWidth.getText()),
+							Integer.valueOf(tf_mapHeight.getText()));
+				}
 			}
 
 		});
 
-		//this.add(lb_mapDimensions);
+		// this.add(lb_mapDimensions);
 		this.add(tf_mapWidth).row();
-		this.add(tf_mapHeight).row();
+		this.add(tf_mapHeight).padBottom(20f).row();
 		this.add(submitMapDimensions).row();
 	}
 
