@@ -1,15 +1,17 @@
 {
 	com.badlogic.gdx.graphics.Color: {
+		dark: { r: 87, g: 101, b: 116, a: 1 },
 		font-white: { r: 1, g: 1, b: 1, a: 1 },
 		button-up: { r: 1, g: 1, b: 1, a: 0.5 },
 		button-down: { r: 1, g: 1, b: 1, a: 0.5 },
-		button-down: { r: 1, g: 1, b: 1, a: 0.3 }
+		button-down: { r: 1, g: 1, b: 1, a: 0.3 },
 	},
 	
 	com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 		button-up: {name: button, color: font-white},
 		button-down: {name: button, color: button-down},
-		button-over: {name: button, color: button-up}
+		button-over: {name: button, color: button-up},
+		dark: {name: button, color: dark}
 	},
 	com.badlogic.gdx.graphics.g2d.BitmapFont: { 
 		font-small: {
@@ -47,6 +49,12 @@
 	com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
 		default:  {
 			titleFont: font-small
+		}
+	},
+	
+	com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
+		default: {
+			background: dark,
 		}
 	},
 }
