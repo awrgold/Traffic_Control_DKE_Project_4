@@ -2,22 +2,35 @@ package com.mygdx.sim.UI.Components.Sidebar;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.mygdx.sim.UI.Components.DefaultButton;
 import com.mygdx.sim.UI.Components.DefaultScrollPane;
+import com.mygdx.sim.UI.Components.SidebarTabButton;
+import com.mygdx.sim.UI.Components.SidebarTabs;
+import com.mygdx.sim.World.WorldController;
 
 public class SidebarPanel extends Table {
-	
-	// Dimensions
-	public static final float WIDTH = 362f;
-	
-	public SidebarPanel(Skin skin) {
+
+	// Sidebar Tabs
+	private SidebarTabs sidebarTabs;
+
+	// Sidebar Menus
+	private SidebarConfigMenu mnu_config;
+
+	public SidebarPanel(Skin skin, WorldController worldController) {
 		
-		this.add(new DefaultScrollPane(new DefaultButton("Banana", skin), skin));
+		// Menus
+		mnu_config = new SidebarConfigMenu(worldController);
+
+		sidebarTabs = new SidebarTabs();
+		sidebarTabs.addTab(new SidebarTabButton("A", skin), mnu_config);
+		sidebarTabs.addTab(new SidebarTabButton("B", skin), new Table());
+		sidebarTabs.addTab(new SidebarTabButton("C", skin), new Table());
+
+		this.add(new DefaultScrollPane(sidebarTabs, skin)).grow();
 		this.pack();
 		this.setVisible(true);
 	}
-	
+
 	public void resize(int width, int height) {
-		this.setSize(WIDTH, height);
+		this.setSize(width / 3, height);
 	}
 }

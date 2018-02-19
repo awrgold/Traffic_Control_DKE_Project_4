@@ -1,6 +1,7 @@
 {
 	com.badlogic.gdx.graphics.Color: {
-		dark: { r: 87, g: 101, b: 116, a: 1 },
+		background-white: { r: 1, g: 1, b: 1, a: 1 },
+		background-lightdark: { r: 87, g: 101, b: 116, a: 1 },
 		font-white: { r: 1, g: 1, b: 1, a: 1 },
 		button-up: { r: 1, g: 1, b: 1, a: 0.5 },
 		button-down: { r: 1, g: 1, b: 1, a: 0.5 },
@@ -11,40 +12,40 @@
 		button-up: {name: button, color: font-white},
 		button-down: {name: button, color: button-down},
 		button-over: {name: button, color: button-up},
-		dark: {name: button, color: dark}
+		scroll-lightdark: {name: button, color: background-lightdark},
 	},
 	com.badlogic.gdx.graphics.g2d.BitmapFont: { 
 		font-small: {
 			file: resources/fonts/Emu.fnt,
-			scaledSize: 18
+			scaledSize: 7
 		},
 		font-medium: {
 			file: resources/fonts/Emu.fnt,
-			scaledSize: 32
+			scaledSize: 12
 		},
 		font-large: {
 			file: resources/fonts/Emu.fnt,
-			scaledSize: 38
+			scaledSize: 15
 		}
 	},
 	com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
-  		default: {
+		default: {
 			up: button-up,
 			over: button-over,
 			down: button-down,
-			font: font-small,
+			font: font-medium,
 			fontColor: font-white
-  		},
+		},
 	},
 	com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
-  		default: {
-  			font: font-small, 
-  			fontColor: font-white
-  		},
-  		smallLabel: {
-  			font: font-small, 
-  			fontColor: font-white
-  		}
+		default: {
+			font: font-small, 
+			fontColor: font-white
+		},
+		smallLabel: {
+			font: font-small, 
+			fontColor: font-white
+		}
 	},
 	com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
 		default:  {
@@ -54,7 +55,27 @@
 	
 	com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
 		default: {
-			background: dark,
+			background: scroll-lightdark,
+		}
+	},
+
+	com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
+		default: {
+			background: scroll-lightdark,
+		}
+	},
+
+	com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
+		default: {
+			font: font-small,
+			fontColor: font-white,
+		}
+	},
+
+	com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
+		default: {
+			font: font-small,
+			fontColor: font-white,
 		}
 	},
 }

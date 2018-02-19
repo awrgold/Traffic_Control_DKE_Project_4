@@ -10,7 +10,7 @@ public class EditorStage extends Stage {
 
 	// World Controller
 	private WorldController worldController;
-	
+
 	// UI
 	private SidebarPanel sidebarPanel;
 
@@ -21,10 +21,10 @@ public class EditorStage extends Stage {
 
 		// World Controller
 		this.worldController = worldController;
-		
+
 		// Sidebar
-		sidebarPanel = new SidebarPanel(Resources.ui.skin);
-		
+		sidebarPanel = new SidebarPanel(Resources.ui.skin, worldController);
+
 		this.addActor(sidebarPanel);
 	}
 
@@ -35,7 +35,7 @@ public class EditorStage extends Stage {
 
 	public void resize(int width, int height) {
 		this.getViewport().update(width, height, true);
-		
+
 		sidebarPanel.resize(width, height);
 	}
 
