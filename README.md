@@ -38,4 +38,4 @@ Notes:
     BE EXTREMELY DIFFICULT IF NOT IMPOSSIBLE TO IMPLEMENT***
 	
 Sources:
-	- [Arne Kesting and Martin Treiber  - Traffic Flow Dynamics: Data, Models and Simulation](https://drive.google.com/open?id=1ndSzDcehfJ2iXOqPZ_SVsj_JJYlLKvnl)
+   - [Arne Kesting and Martin Treiber  - Traffic Flow Dynamics: Data, Models and Simulation](https://drive.google.com/open?id=1ndSzDcehfJ2iXOqPZ_SVsj_JJYlLKvnl)
