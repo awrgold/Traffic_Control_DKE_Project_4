@@ -36,3 +36,6 @@ Notes:
     must have an edge/vertex attached to them, such that if we place objects in a location 
     next to another, they automatically connect. ***OTHERWISE, A LEVEL EDITOR IS GOING TO 
     BE EXTREMELY DIFFICULT IF NOT IMPOSSIBLE TO IMPLEMENT***
+	
+Sources:
+	- [Arne Kesting and Martin Treiber  - Traffic Flow Dynamics: Data, Models and Simulation](https://drive.google.com/open?id=1ndSzDcehfJ2iXOqPZ_SVsj_JJYlLKvnl)
