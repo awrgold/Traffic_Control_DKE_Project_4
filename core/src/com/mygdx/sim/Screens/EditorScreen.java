@@ -38,7 +38,7 @@ public class EditorScreen implements Screen {
 		// Input
 		editorInput = new EditorInput(editorStage);
 		inputMultiplexer = new InputMultiplexer();
-		
+
 		inputMultiplexer.addProcessor(editorStage);
 		inputMultiplexer.addProcessor(editorInput);
 
@@ -65,7 +65,7 @@ public class EditorScreen implements Screen {
 		// Editor Stage
 		editorStage.act();
 		editorStage.draw();
-		
+
 		// Input
 		editorInput.update();
 
@@ -86,16 +86,15 @@ public class EditorScreen implements Screen {
 
 	@Override
 	public void hide() {
-		this.dispose();
 	}
 
 	@Override
 	public void dispose() {
-
 		// UI
 		editorStage.dispose();
 
 		// Input
 		inputMultiplexer.clear();
+
 	}
 }
