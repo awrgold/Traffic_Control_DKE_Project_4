@@ -9,7 +9,7 @@ public class Car extends Vehicle {
 		this.maxSpeed = maxSpeed;
 				
 		// Set Sprite Name
-		spriteName = "Car";
+		spriteName = "car";
 	}
 
 	// This function can be used as a multiplier to the car's speed so that he is

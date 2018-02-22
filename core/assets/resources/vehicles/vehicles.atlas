@@ -1,5 +1,5 @@
 vehicles.png
-size: 500,300
+size: 370, 407
 format: RGBA8888
 filter: Linear, Linear
 repeat: none
