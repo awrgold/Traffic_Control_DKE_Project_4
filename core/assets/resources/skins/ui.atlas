@@ -1,7 +1,7 @@
 ui.png
 size: 500,300
 format: RGBA8888
-filter: Linear, Linear
+filter: Nearest, Nearest
 repeat: none
 button
 	rotate: false
