@@ -37,11 +37,25 @@ public class Edge {
         return Math.abs(Math.sqrt((to.getX() - from.getX()) + to.getY() - from.getY()));
     }
     
+    /**
+     * Gives you your (x,y) coordinates if you have traveled a certain distance on this edge.
+     * E.g. edge is from (0,0) to (10,10) and you've traveled 5*sqrt(2) on it - that means
+     * you're at (5,5)
+     * @param traveledDistance - distance that you have traveled on the edge
+     * @return (x,y) Coordinates
+     */
     public Coordinates getLocationIfTraveledDistance(double traveledDistance) {
     	double fraction = traveledDistance/getLength();
     	return getLocationIfTraveledFraction(fraction);
     }
     
+    /**
+     * Gives you your (x,y) coordinates if you have traveled a certain fraction of this edge.
+     * E.g. edge is from (0,0) to (10,10) and you've traveled 50% of it - that means you're at
+     * (5,5)
+     * @param traveledFraction - fraction of the edge's total length that you have traveled
+     * @return (x,y) Coordinates
+     */
     public Coordinates getLocationIfTraveledFraction(double traveledFraction) {
     	Coordinates change = getCoordinateChange();
     	double startX = from.getX();
