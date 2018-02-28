@@ -23,6 +23,30 @@ public class Coordinates {
     	this.y = y;
     }
     
+    public Coordinates add(Coordinates coords) {
+    	return add(coords.getX(),coords.getY());    	
+    }
+    
+    public Coordinates add(double x, double y) {
+    	return new Coordinates(this.x+x,this.y+y);
+    }
+    
+    public Coordinates subtract(Coordinates coords) {
+    	return subtract(coords.getX(),coords.getY());
+    }
+    
+    public Coordinates subtract(double x, double y) {
+    	return new Coordinates(this.x-x,this.y-y);
+    }
+    
+    public Coordinates subtractAbs(Coordinates coords) {
+    	return subtractAbs(coords.getX(),coords.getY());
+    }
+    
+    public Coordinates subtractAbs(double x, double y) {
+    	return new Coordinates(Math.abs(this.x-x),Math.abs(this.y-y));
+    }
+    
     public double getX() {
     	return x;
     }

@@ -11,6 +11,12 @@ public class Edge {
         this.to = to;
     }
     
+    public Edge(Node from, Node to, int speedLimit){
+        this.from = from;
+        this.to = to;
+        this.speedLimit = speedLimit;
+    }
+    
     public Node getFrom(){
         return from;
     }
@@ -29,6 +35,26 @@ public class Edge {
 
     public double getLength(){
         return Math.abs(Math.sqrt((to.getX() - from.getX()) + to.getY() - from.getY()));
+    }
+    
+    public Coordinates getLocationIfTraveledDistance(double traveledDistance) {
+    	double fraction = traveledDistance/getLength();
+    	return getLocationIfTraveledFraction(fraction);
+    }
+    
+    public Coordinates getLocationIfTraveledFraction(double traveledFraction) {
+    	Coordinates change = getCoordinateChange();
+    	double startX = from.getX();
+    	double startY = from.getY();
+    	return new Coordinates(startX + change.getX()*traveledFraction, 
+    			startY + change.getY()*traveledFraction);
+    }
+    
+    /** Returns a Coordinates object that describes the change in X and Y that you experience when
+     * going from fromNode to toNode 
+     */
+    private Coordinates getCoordinateChange() {
+    	return (from.getLocation().subtract(to.getLocation()));
     }
 
 

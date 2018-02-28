@@ -14,6 +14,10 @@ public class Car extends Vehicle {
 		// Set Sprite Name
 		spriteName = "car";
 	}
+	
+	public Coordinates getLocationCoordinates() {		
+		return locationEdge.getLocationIfTraveledDistance(distanceTraveledOnEdge);
+	}
 
 	/**
 	 *  This function can be used as a multiplier to the car's speed so that he is
