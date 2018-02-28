@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygdx.sim.CoreClasses.TrafficSimulator;
 import com.mygdx.sim.Resources.Resources;
 
 public class Vehicle {

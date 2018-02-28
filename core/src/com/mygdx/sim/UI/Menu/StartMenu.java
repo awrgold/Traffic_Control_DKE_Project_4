@@ -33,7 +33,7 @@ public class StartMenu extends Table {
 
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				System.out.println("Start");
+				TrafficSimulator.get().setScreen(TrafficSimulator.get().simulatorScreen);
 			}
 
 		});

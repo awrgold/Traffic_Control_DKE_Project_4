@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.sim.Resources.Resources;
 import com.mygdx.sim.Screens.EditorScreen;
 import com.mygdx.sim.Screens.MenuScreen;
+import com.mygdx.sim.Screens.SimulatorScreen;
 
 public class TrafficSimulator extends Game {
 	
@@ -16,6 +17,7 @@ public class TrafficSimulator extends Game {
 	// Screens
 	public final MenuScreen menuScreen = new MenuScreen();
 	public final EditorScreen editorScreen = new EditorScreen();
+	public final SimulatorScreen simulatorScreen = new SimulatorScreen();
 	
 	// Rendering
 	private SpriteBatch batch;
@@ -58,6 +60,7 @@ public class TrafficSimulator extends Game {
 		//Menus
 		menuScreen.dispose();
 		editorScreen.dispose();
+		simulatorScreen.dispose();
 		
 		batch.dispose();
 		Resources.dispose();

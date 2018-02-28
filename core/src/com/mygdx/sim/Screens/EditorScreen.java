@@ -68,7 +68,6 @@ public class EditorScreen implements Screen {
 
 		// Input
 		editorInput.update();
-
 	}
 
 	@Override
@@ -90,11 +89,15 @@ public class EditorScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		// UI
-		editorStage.dispose();
+		try {
+			// UI
+			editorStage.dispose();
 
-		// Input
-		inputMultiplexer.clear();
+			// Input
+			inputMultiplexer.clear();
+		} catch (Exception ex) {
+
+		}
 
 	}
 }

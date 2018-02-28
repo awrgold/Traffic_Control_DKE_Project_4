@@ -46,7 +46,7 @@ public class EditorInput extends InputAdapter {
 
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
-		if (button == Buttons.MIDDLE) {
+		if (button == Buttons.LEFT) {
 			startScroll(x, y);
 		}
 		return true;
@@ -54,7 +54,7 @@ public class EditorInput extends InputAdapter {
 
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
-		if (button == Buttons.MIDDLE) {
+		if (button == Buttons.LEFT) {
 			stopScroll();
 		}
 		return true;
