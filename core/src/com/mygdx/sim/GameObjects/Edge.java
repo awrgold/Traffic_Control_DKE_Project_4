@@ -33,8 +33,13 @@ public class Edge {
         return speedLimit;
     }
 
+    /**
+     * Returns the length of the road section that this edge represents.
+     * @return double
+     */
     public double getLength(){
-        return Math.abs(Math.sqrt((to.getX() - from.getX()) + to.getY() - from.getY()));
+    	Coordinates md = getManhattanDistanceTraveled();
+    	return Math.sqrt(md.getX()+md.getY());
     }
     
     /**
@@ -65,15 +70,14 @@ public class Edge {
     }
     
     /** Returns a Coordinates object that describes the change in X and Y that you experience when
-     * going from fromNode to toNode 
+     * going from fromNode to toNode
+     * e.g. if you're going from (5,-5) to (-5,10) this method will return (-10,15)
      */
     private Coordinates getCoordinateChange() {
     	return (from.getLocation().subtract(to.getLocation()));
     }
-
-
-
-
-
-
+    
+    private Coordinates getManhattanDistanceTraveled() {
+    	return (from.getLocation().subtractAbs(to.getLocation()));
+    }
 }
