@@ -17,6 +17,8 @@ public class Intersection {
         }
     }
 
+
+
     public ArrayList<Stoplight> getStoplights(){
         return stoplights;
     }
