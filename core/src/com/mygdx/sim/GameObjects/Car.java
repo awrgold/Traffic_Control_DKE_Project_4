@@ -1,9 +1,12 @@
 package com.mygdx.sim.GameObjects;
 
+import java.util.ArrayList;
+
 public class Car extends Vehicle {
 
-	Edge locationEdge;
-	double distanceTraveledOnEdge;
+	ArrayList<Edge> locationEdges;
+	ArrayList<Double> distancesTraveledOnEdge;
+	ArrayList<Double> speeds;
 
 	public Car(Node startNode, Node goalNode, int maxSpeed) {
 		super(startNode, goalNode);
@@ -15,8 +18,10 @@ public class Car extends Vehicle {
 		spriteName = "car";
 	}
 	
-	public Coordinates getLocationCoordinates() {		
-		return locationEdge.getLocationIfTraveledDistance(distanceTraveledOnEdge);
+	public Coordinates getLocationCoordinates(int timestep) {	
+		Edge edge = locationEdges.get(timestep);
+		double distance = distancesTraveledOnEdge.get(timestep);
+		return edge.getLocationIfTraveledDistance(distance);
 	}
 
 	/**
