@@ -7,20 +7,26 @@ public class Node {
     // Do we need to differentiate between the two edge types?
     private ArrayList<Edge> inEdges;
     private ArrayList<Edge> outEdges;
-    private double x;
-    private double y;
+    private Coordinates location;
 
     public Node(double xCoordinate, double yCoordinate){
-        this.x = xCoordinate;
-        this.y = yCoordinate;
+    	location = new Coordinates(xCoordinate,yCoordinate);
+    }
+    
+    public Node(Coordinates coords) {
+    	location = coords;
     }
 
+    public Coordinates getLocation() {
+    	return location;
+    }
+    
     public double getX(){
-        return x;
+        return location.getX();
     }
 
     public double getY(){
-        return y;
+        return location.getY();
     }
 
     public void addInEdge(Edge toAdd){
@@ -38,7 +44,4 @@ public class Node {
     public ArrayList<Edge> getOutEdges(){
         return outEdges;
     }
-
-
-
 }

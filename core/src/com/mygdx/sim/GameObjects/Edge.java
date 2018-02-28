@@ -5,14 +5,12 @@ public class Edge {
     private Node from;
     private Node to;
     private int speedLimit;
-    private double length;
 
     public Edge(Node from, Node to){
         this.from = from;
         this.to = to;
-        this.length = Math.abs(Math.sqrt((to.getX() - from.getX()) + to.getY() - from.getY()));
     }
-
+    
     public Node getFrom(){
         return from;
     }
@@ -30,7 +28,7 @@ public class Edge {
     }
 
     public double getLength(){
-        return length;
+        return Math.abs(Math.sqrt((to.getX() - from.getX()) + to.getY() - from.getY()));
     }
 
 
