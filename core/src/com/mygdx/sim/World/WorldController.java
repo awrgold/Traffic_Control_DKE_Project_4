@@ -1,6 +1,7 @@
 package com.mygdx.sim.World;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.mygdx.sim.GameObjects.Node;
 import com.mygdx.sim.World.Map.Map;
 
 public class WorldController {
@@ -27,12 +28,16 @@ public class WorldController {
 	public WorldCamera getWorldCamera() {
 		return this.worldCamera;
 	}
-	
+
 	public void createMap(int columns, int rows) {
 		map.reset(columns, rows);
 	}
 
 	public Rectangle getBounds() {
 		return map.getBounds();
+	}
+
+	public Node[][] getNodes() {
+		return map.getNodes();
 	}
 }

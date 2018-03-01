@@ -2,46 +2,48 @@ package com.mygdx.sim.GameObjects;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
 public class Node {
 
-    // Do we need to differentiate between the two edge types?
-    private ArrayList<Edge> inEdges;
-    private ArrayList<Edge> outEdges;
-    private Coordinates location;
+	// Do we need to differentiate between the two edge types?
+	private ArrayList<Edge> inEdges;
+	private ArrayList<Edge> outEdges;
+	private Coordinates location;
 
-    public Node(double xCoordinate, double yCoordinate){
-    	location = new Coordinates(xCoordinate,yCoordinate);
-    }
-    
-    public Node(Coordinates coords) {
-    	location = coords;
-    }
+	public Node(double xCoordinate, double yCoordinate) {
+		location = new Coordinates(xCoordinate, yCoordinate);
+	}
 
-    public Coordinates getLocation() {
-    	return location;
-    }
-    
-    public double getX(){
-        return location.getX();
-    }
+	public Node(Coordinates coords) {
+		location = coords;
+	}
 
-    public double getY(){
-        return location.getY();
-    }
+	public Coordinates getLocation() {
+		return location;
+	}
 
-    public void addInEdge(Edge toAdd){
-        inEdges.add(toAdd);
-    }
+	public double getX() {
+		return location.getX();
+	}
 
-    public void addOutEdge(Edge toAdd){
-        outEdges.add(toAdd);
-    }
+	public double getY() {
+		return location.getY();
+	}
 
-    public ArrayList<Edge> getInEdges(){
-        return inEdges;
-    }
+	public void addInEdge(Edge toAdd) {
+		inEdges.add(toAdd);
+	}
 
-    public ArrayList<Edge> getOutEdges(){
-        return outEdges;
-    }
+	public void addOutEdge(Edge toAdd) {
+		outEdges.add(toAdd);
+	}
+
+	public ArrayList<Edge> getInEdges() {
+		return inEdges;
+	}
+
+	public ArrayList<Edge> getOutEdges() {
+		return outEdges;
+	}
 }
