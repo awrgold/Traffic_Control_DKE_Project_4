@@ -21,6 +21,9 @@ public class UI {
 	public Sprite menu_icon_editor;
 	public Sprite menu_icon_settings;
 	
+	// Cursors
+	public Sprite allScroll_icon;
+	
 	// Audio
 	public Sound sound_click;
 
@@ -33,6 +36,7 @@ public class UI {
 		this.initSkin();
 		this.initMenuUI();
 		this.initSounds();
+		this.initMisc();
 	}
 
 	private void initSkin() {
@@ -52,6 +56,10 @@ public class UI {
 	
 	private void initSounds() {
 		sound_click = Gdx.audio.newSound(Gdx.files.internal("resources/sounds/click.ogg"));
+	}
+	
+	private void initMisc() {
+		allScroll_icon = atlas.createSprite("all-scroll");
 	}
 
 	public void dispose() {

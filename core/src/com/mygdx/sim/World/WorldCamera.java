@@ -2,6 +2,7 @@ package com.mygdx.sim.World;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.MathUtils;
 
 public class WorldCamera extends OrthographicCamera {
 
@@ -24,6 +25,16 @@ public class WorldCamera extends OrthographicCamera {
 	public void move(float x, float y) {
 		this.position.x += x;
 		this.position.y += y;
+	}
+
+	public void zoomIn() {
+		if (this.zoom < 10)
+			this.zoom += 0.1f;
+	}
+
+	public void zoomOut() {
+		if (this.zoom > 0.5f)
+			this.zoom -= 0.1f;
 	}
 
 }

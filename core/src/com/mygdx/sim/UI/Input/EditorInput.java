@@ -21,8 +21,8 @@ public class EditorInput extends InputAdapter {
 	private boolean scrollEnabled;
 
 	// Mouse Variables
-	private static Vector2 mousePos_screen;
-	private static Vector2 scrollCenter;
+	private Vector2 mousePos_screen;
+	private Vector2 scrollCenter;
 
 	public EditorInput(EditorStage editorStage) {
 
@@ -47,7 +47,7 @@ public class EditorInput extends InputAdapter {
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
 		if (button == Buttons.LEFT) {
-			startScroll(x, y);
+			startScroll(mousePos_screen);
 		}
 		return true;
 	}
@@ -65,22 +65,24 @@ public class EditorInput extends InputAdapter {
 		this.mouseMoved(Gdx.input.getX(), Gdx.input.getY());
 
 		if (scroll == -1) {
-			worldController.getWorldCamera().zoom -= 0.1f;
+			worldController.getWorldCamera().zoomOut();
 		} else {
-			worldController.getWorldCamera().zoom += 0.1f;
+			worldController.getWorldCamera().zoomIn();
 		}
 
 		return true;
 	}
 
-	private void startScroll(int x, int y) {
+	private void startScroll(Vector2 scrollCenter) {
 		scrollEnabled = true;
-		scrollCenter.x = x;
-		scrollCenter.y = y;
+		this.scrollCenter.x = scrollCenter.x;
+		this.scrollCenter.y = scrollCenter.y;
+		editorStage.setScrollCenterPos(this.scrollCenter);
 	}
 
 	private void stopScroll() {
 		scrollEnabled = false;
+		editorStage.setScrollCenterPos(null);
 	}
 
 	private void updateMouse() {
