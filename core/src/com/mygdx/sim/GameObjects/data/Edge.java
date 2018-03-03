@@ -38,7 +38,7 @@ public class Edge {
      */
     public double getLength(){
     	Coordinates md = getManhattanDistanceTraveled();
-    	return Math.sqrt(md.getX()+md.getY());
+    	return Math.sqrt(Math.pow(md.getX(),2)+Math.pow(md.getY(),2));
     }
     
     /**
