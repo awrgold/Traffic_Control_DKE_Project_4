@@ -9,7 +9,7 @@ import com.mygdx.sim.CoreClasses.TrafficSimulator;
 import com.mygdx.sim.GameObjects.data.Edge;
 import com.mygdx.sim.GameObjects.data.Node;
 import com.mygdx.sim.GameObjects.pathfinding.AStarPathfinder;
-import com.mygdx.sim.GameObjects.pathfinding.PathfinderStrategy;
+import com.mygdx.sim.GameObjects.pathfinding.Pathfinder;
 import com.mygdx.sim.Resources.Resources;
 
 public abstract class Vehicle {
@@ -63,7 +63,7 @@ public abstract class Vehicle {
 	 * By default, it uses a simple A* pathfinder at the start of the trip, and
 	 * doesn't adjust its path afterwards.
 	 */
-	PathfinderStrategy pathfinder = new AStarPathfinder();
+	Pathfinder pathfinder = new AStarPathfinder();
 
 	/**
 	 * The name of the sprite that this vehicle uses.
@@ -86,6 +86,11 @@ public abstract class Vehicle {
 		
 		// Set maximum speed
 		this.maxSpeed = maxSpeed;
+	}
+	
+	public Vehicle(Node startNode, Node goalNode, int maxSpeed, Pathfinder pathfinder) {
+		this(startNode,goalNode,maxSpeed);
+		this.pathfinder = pathfinder;
 	}
 
 	private void initSprite() {

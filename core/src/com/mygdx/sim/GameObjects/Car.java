@@ -7,20 +7,20 @@ import com.mygdx.sim.GameObjects.data.Coordinates;
 import com.mygdx.sim.GameObjects.data.Edge;
 import com.mygdx.sim.GameObjects.data.Node;
 import com.mygdx.sim.GameObjects.pathfinding.AStarPathfinder;
-import com.mygdx.sim.GameObjects.pathfinding.PathfinderStrategy;
+import com.mygdx.sim.GameObjects.pathfinding.Pathfinder;
 
 public class Car extends Vehicle {
 	
 	public Car(Node startNode, Node goalNode, int maxSpeed) {
 		super(startNode, goalNode, maxSpeed);
-
-		// Set Sprite Name
-		spriteName = "car";		
+		
+		spriteName = "car";
 	}
 	
-	public Car(Node startNode, Node goalNode, int maxSpeed, PathfinderStrategy pf) {
-		this(startNode,goalNode,maxSpeed);		
-		this.pathfinder = pf;
+	public Car(Node startNode, Node goalNode, int maxSpeed, Pathfinder pf) {
+		super(startNode,goalNode,maxSpeed,pf);		
+		
+		spriteName = "car";	
 	}
 	
 	/**
