@@ -37,9 +37,10 @@ public abstract class Vehicle {
 	 */
 	List<Edge> edgePath;
 	
+	//TODO: delete this, it's temporary
 	public void setEdgePath(List<Edge> edgePath) {
 		this.edgePath = edgePath;
-	}//TODO: delete this
+	}
 	
 	/**
 	 * True means the car is allowed to move, false means it is not.
