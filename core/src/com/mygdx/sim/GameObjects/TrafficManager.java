@@ -56,18 +56,23 @@ public class TrafficManager {
 	
 	public static void main(String[] args) {
 		Node node1 = new Node(0,0);
-		Node node2 = new Node(500,0);
+		Node node2 = new Node(475,0);
+		Node node3 = new Node(475,500);
 		Edge edge = new Edge(node1,node2);
+		Edge edge2 = new Edge(node2,node3);
 		
 		TrafficManager tm = new TrafficManager();
-		tm.setMap(new Graph(Arrays.asList(node1,node2),Arrays.asList(edge)));
+		tm.setMap(new Graph(Arrays.asList(node1,node2,node3),Arrays.asList(edge,edge2)));
 		
 		Car car = new Car(node1,node2);
+		car.setEdgePath(Arrays.asList(edge,edge2));
 		
 		List cars = Arrays.asList(car);
 		
 		tm.setVehicles(cars);
 		
-		tm.simulate(5);
+		tm.simulate(15);
+		
+		int x=0;
 	}
 }

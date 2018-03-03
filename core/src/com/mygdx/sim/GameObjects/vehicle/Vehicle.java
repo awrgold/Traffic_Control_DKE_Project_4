@@ -37,6 +37,16 @@ public abstract class Vehicle {
 	 */
 	List<Edge> edgePath;
 	
+	public void setEdgePath(List<Edge> edgePath) {
+		this.edgePath = edgePath;
+	}//TODO: delete this
+	
+	/**
+	 * True means the car is allowed to move, false means it is not.
+	 * False if it has reached its destination.
+	 */
+	private boolean moving = true;
+	
 	/**
 	 * Stores for each timestep, the index in edgesToTravel of the edge
 	 * that this vehicle is located at.
@@ -44,7 +54,8 @@ public abstract class Vehicle {
 	 * If we do edgesToTravel.get(edgeIndices.get(t)), we should get
 	 * the edge where this vehicle is located at timestep t.
 	 */
-	ArrayList<Integer> edgeIndices = new ArrayList<Integer>(Arrays.asList(0));
+	int[] edgeIndices = new int[1000];
+	//TODO: implement configurable number of timesteps
 	
 	/**
 	 * Stores for each timestep, the distance that this vehicle has traveled
@@ -53,16 +64,16 @@ public abstract class Vehicle {
 	 * If we have a 10-long edge, and we're moving at 3 per second:
 	 * 0 3 6 9 2 5 8 ...
 	 */
-	ArrayList<Double> distancesTraveledOnEdge = new ArrayList<Double>(Arrays.asList(0.));
+	double[] distancesTraveledOnEdge = new double[1000];
 	
 	/**
 	 * Stores for each timestep, the speed that this vehicle was traveling at.
 	 */
-	ArrayList<Double> speeds = new ArrayList<Double>();
+	double[] speeds = new double[1000];
 	
 	// Ignore. Keeps track of whether you're doing something very wrong.
-	ArrayList<Boolean> computedSpeeds = new ArrayList<Boolean>();
-	ArrayList<Boolean> computedLocations = new ArrayList<Boolean>(Arrays.asList(true));
+	boolean[] computedSpeeds = new boolean[1000];
+	boolean[] computedLocations = new boolean[1000];
 	
 	/**
 	 * Stores the algorithm that this vehicle uses for navigation/pathfinding.
@@ -112,18 +123,18 @@ public abstract class Vehicle {
 	}
 	
 	public void move(int timestep) {
-		if(computedLocations.get(timestep)) {
+		if(computedLocations[timestep]) {
 			System.out.println("You're setting a location for a timestep where the location has already been computed. You're doing something wrong.");
 			return;
 		}
 		// Get the speed we are moving at
-		double speed = speeds.get(timestep-1);
+		double speed = speeds[timestep-1];
 		
 		// Get the index of the edge we are currently on
-		int edgeIdx = edgeIndices.get(timestep-1);
+		int edgeIdx = edgeIndices[timestep-1];
 		
 		// Get the distance we have traveled on the current edge
-		double distanceTraveledOnEdge = distancesTraveledOnEdge.get(timestep-1);
+		double distanceTraveledOnEdge = distancesTraveledOnEdge[timestep-1];
 		
 		// Add the speed we are currently moving at to our old location in order to determine
 		// our new location
@@ -135,17 +146,21 @@ public abstract class Vehicle {
 		// Check if we have reached the end of the edge we were on in the last timestep. 
 		// If yes, we need to move to the next edge.		
 		if(distanceTraveledOnEdge > currentEdgeLength) {
+			// TODO: implement stopping when goal node has been reached
+			
 			// Increment the edge index to indicate we have moved on to the next edge from our path
 			edgeIdx++;
 			
 			// Subtract the last edge's length from the distance we have traveled, so we are only storing the
 			// distance traveled on the current (new) edge
 			distanceTraveledOnEdge -= currentEdgeLength;
+			
+			
 		}
 		
 		// Set the edge index and traveled distance 
-		edgeIndices.set(timestep, edgeIdx);
-		distancesTraveledOnEdge.set(timestep, distanceTraveledOnEdge);
+		edgeIndices[timestep] = edgeIdx;
+		distancesTraveledOnEdge[timestep] = distanceTraveledOnEdge;
 	}
 	
 	/**
@@ -154,7 +169,7 @@ public abstract class Vehicle {
 	 * @return the Edge that this vehicle is located on at the given timestep
 	 */
 	public Edge getEdgeAt(int timestep) {
-		return edgePath.get(edgeIndices.get(timestep));
+		return edgePath.get(edgeIndices[timestep]);
 	}
 	
 	/**
@@ -164,7 +179,7 @@ public abstract class Vehicle {
 	 */
 	public Coordinates getLocationCoordinates(int timestep) {	
 		Edge edge = getEdgeAt(timestep);
-		double distance = distancesTraveledOnEdge.get(timestep);
+		double distance = distancesTraveledOnEdge[timestep];
 		return edge.getLocationIfTraveledDistance(distance);
 	}
 
@@ -177,12 +192,12 @@ public abstract class Vehicle {
 	}
 	
 	public void setSpeed(int timestep, double speed) {
-		if(computedSpeeds.get(timestep)) {
+		if(computedSpeeds[timestep]) {
 			System.out.println("You're trying to set a speed that has already been set. You're doing something wrong.");
 			return;
 		}
 		
-		speeds.set(timestep, speed);
-		computedSpeeds.set(timestep, true);
+		speeds[timestep] = speed;
+		computedSpeeds[timestep] = true;
 	}
 }
