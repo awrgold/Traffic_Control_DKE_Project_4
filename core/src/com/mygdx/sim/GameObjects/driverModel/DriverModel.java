@@ -1,8 +1,8 @@
 package com.mygdx.sim.GameObjects.driverModel;
 
 import com.mygdx.sim.GameObjects.TrafficManager;
-import com.mygdx.sim.GameObjects.vehicle.Car;
+import com.mygdx.sim.GameObjects.vehicle.Vehicle;
 
 public interface DriverModel {
-	public double determineNewSpeed(TrafficManager mgr, Car car, int timestep);
+	public double determineNewSpeed(TrafficManager mgr, Vehicle vehicle, int timestep);
 }

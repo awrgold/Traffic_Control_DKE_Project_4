@@ -59,6 +59,10 @@ public abstract class Vehicle {
 	 */
 	ArrayList<Double> speeds = new ArrayList<Double>();
 	
+	// Ignore. Keeps track of whether you're doing something very wrong.
+	ArrayList<Boolean> computedSpeeds = new ArrayList<Boolean>();
+	ArrayList<Boolean> computedLocations = new ArrayList<Boolean>();
+	
 	/**
 	 * Stores the algorithm that this vehicle uses for navigation/pathfinding.
 	 * By default, it uses a simple A* pathfinder at the start of the trip, and
@@ -66,7 +70,10 @@ public abstract class Vehicle {
 	 */
 	Pathfinder pathfinder = new AStarPathfinder();
 	
-	DriverModel model;
+	/**
+	 * Stores the algorithm that this vehicle uses to determine its acceleration.
+	 */
+	DriverModel driverModel;
 
 	/**
 	 * The name of the sprite that this vehicle uses.
@@ -100,6 +107,43 @@ public abstract class Vehicle {
 		sprite = Resources.world.vehicleSprites.get(spriteName);
 	}
 	
+	public void move(int timestep) {
+		if(computedLocations.get(timestep)) {
+			System.out.println("You're setting a location for a timestep where the location has already been computed. You're doing something wrong.");
+			return;
+		}
+		// Get the speed we are moving at
+		double speed = speeds.get(timestep-1);
+		
+		// Get the index of the edge we are currently on
+		int edgeIdx = edgeIndices.get(timestep-1);
+		
+		// Get the distance we have traveled on the current edge
+		double distanceTraveledOnEdge = distancesTraveledOnEdge.get(timestep-1);
+		
+		// Add the speed we are currently moving at to our old location in order to determine
+		// our new location
+		distanceTraveledOnEdge += speed;
+		
+		// Get the length of the current edge
+		double currentEdgeLength = getEdgeAt(timestep-1).getLength();
+		
+		// Check if we have reached the end of the edge we were on in the last timestep. 
+		// If yes, we need to move to the next edge.		
+		if(distanceTraveledOnEdge > currentEdgeLength) {
+			// Increment the edge index to indicate we have moved on to the next edge from our path
+			edgeIdx++;
+			
+			// Subtract the last edge's length from the distance we have traveled, so we are only storing the
+			// distance traveled on the current (new) edge
+			distanceTraveledOnEdge -= currentEdgeLength;
+		}
+		
+		// Set the edge index and traveled distance 
+		edgeIndices.set(timestep, edgeIdx);
+		distancesTraveledOnEdge.set(timestep, distanceTraveledOnEdge);
+	}
+	
 	/**
 	 * Returns the Edge that this vehicle is located on at the given timestep.
 	 * @param timestep
@@ -124,7 +168,17 @@ public abstract class Vehicle {
 		sprite.draw(batch);
 	}
 
-	public void update() {
-		// All check the vehicle has to make
+	public DriverModel getDriverModel() {
+		return driverModel;
+	}
+	
+	public void setSpeed(int timestep, double speed) {
+		if(computedSpeeds.get(timestep)) {
+			System.out.println("You're trying to set a speed that has already been set. You're doing something wrong.");
+			return;
+		}
+		
+		speeds.set(timestep, speed);
+		computedSpeeds.set(timestep, true);
 	}
 }
