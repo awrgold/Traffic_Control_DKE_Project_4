@@ -1,7 +1,7 @@
 package com.mygdx.sim.World;
 
 import com.badlogic.gdx.math.Rectangle;
-import com.mygdx.sim.GameObjects.Node;
+import com.mygdx.sim.GameObjects.data.Node;
 import com.mygdx.sim.World.Map.Map;
 
 public class WorldController {

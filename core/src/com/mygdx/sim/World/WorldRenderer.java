@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
-import com.mygdx.sim.GameObjects.Node;
+import com.mygdx.sim.GameObjects.data.Node;
 import com.mygdx.sim.Resources.Resources;
 import com.mygdx.sim.World.Map.Map;
 import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;

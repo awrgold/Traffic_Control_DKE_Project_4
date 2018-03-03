@@ -1,4 +1,4 @@
-package com.mygdx.sim.GameObjects;
+package com.mygdx.sim.GameObjects.data;
 
 public class Edge {
 

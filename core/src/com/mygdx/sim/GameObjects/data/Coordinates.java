@@ -1,4 +1,4 @@
-package com.mygdx.sim.GameObjects;
+package com.mygdx.sim.GameObjects.data;
 
 /**
  * Immutable data class containing width and height coordinates.

@@ -2,6 +2,8 @@ package com.mygdx.sim.GameObjects;
 
 import java.util.ArrayList;
 
+import com.mygdx.sim.GameObjects.data.Node;
+
 public class Intersection {
 
     private ArrayList<Node> points;
