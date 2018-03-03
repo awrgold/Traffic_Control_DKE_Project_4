@@ -7,8 +7,7 @@ public class Edge {
     private int speedLimit;
 
     public Edge(Node from, Node to){
-        this.from = from;
-        this.to = to;
+        this(from,to,50);
     }
     
     public Edge(Node from, Node to, int speedLimit){

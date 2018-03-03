@@ -1,6 +1,7 @@
 package com.mygdx.sim.GameObjects.vehicle;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -9,9 +10,9 @@ import com.mygdx.sim.GameObjects.data.Coordinates;
 import com.mygdx.sim.GameObjects.data.Edge;
 import com.mygdx.sim.GameObjects.data.Node;
 import com.mygdx.sim.GameObjects.driverModel.DriverModel;
+import com.mygdx.sim.GameObjects.driverModel.SimpleDriverModel;
 import com.mygdx.sim.GameObjects.pathfinding.AStarPathfinder;
 import com.mygdx.sim.GameObjects.pathfinding.Pathfinder;
-import com.mygdx.sim.Resources.Resources;
 
 public abstract class Vehicle {
 	
@@ -43,7 +44,7 @@ public abstract class Vehicle {
 	 * If we do edgesToTravel.get(edgeIndices.get(t)), we should get
 	 * the edge where this vehicle is located at timestep t.
 	 */
-	ArrayList<Integer> edgeIndices = new ArrayList<Integer>();
+	ArrayList<Integer> edgeIndices = new ArrayList<Integer>(Arrays.asList(0));
 	
 	/**
 	 * Stores for each timestep, the distance that this vehicle has traveled
@@ -52,7 +53,7 @@ public abstract class Vehicle {
 	 * If we have a 10-long edge, and we're moving at 3 per second:
 	 * 0 3 6 9 2 5 8 ...
 	 */
-	ArrayList<Double> distancesTraveledOnEdge = new ArrayList<Double>();
+	ArrayList<Double> distancesTraveledOnEdge = new ArrayList<Double>(Arrays.asList(0.));
 	
 	/**
 	 * Stores for each timestep, the speed that this vehicle was traveling at.
@@ -61,7 +62,7 @@ public abstract class Vehicle {
 	
 	// Ignore. Keeps track of whether you're doing something very wrong.
 	ArrayList<Boolean> computedSpeeds = new ArrayList<Boolean>();
-	ArrayList<Boolean> computedLocations = new ArrayList<Boolean>();
+	ArrayList<Boolean> computedLocations = new ArrayList<Boolean>(Arrays.asList(true));
 	
 	/**
 	 * Stores the algorithm that this vehicle uses for navigation/pathfinding.
@@ -72,8 +73,9 @@ public abstract class Vehicle {
 	
 	/**
 	 * Stores the algorithm that this vehicle uses to determine its acceleration.
+	 * By default, it uses a very simple model that maintains a constant speed.
 	 */
-	DriverModel driverModel;
+	DriverModel driverModel = new SimpleDriverModel();
 
 	/**
 	 * The name of the sprite that this vehicle uses.
@@ -95,6 +97,8 @@ public abstract class Vehicle {
 		
 		// Set maximum speed
 		this.maxSpeed = maxSpeed;
+		
+		
 	}
 	
 	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Pathfinder pathfinder) {
@@ -104,7 +108,7 @@ public abstract class Vehicle {
 
 	private void setSprite(String spriteName) {
 		this.spriteName = spriteName;
-		sprite = Resources.world.vehicleSprites.get(spriteName);
+//		sprite = Resources.world.vehicleSprites.get(spriteName);
 	}
 	
 	public void move(int timestep) {

@@ -4,10 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Graph {
-	private ArrayList<Node> nodes = new ArrayList<Node>();
-	private ArrayList<Edge> edges = new ArrayList<Edge>();
+	private List<Node> nodes = new ArrayList<Node>();
+	private List<Edge> edges = new ArrayList<Edge>();
 	
 	public Graph() {}
+	
+	public Graph(List<Node> nodes, List<Edge> edges) {
+		this.nodes = nodes;
+		this.edges = edges;
+	}
 	
 	public void addNode(Node node) {
 		nodes.add(node);		
