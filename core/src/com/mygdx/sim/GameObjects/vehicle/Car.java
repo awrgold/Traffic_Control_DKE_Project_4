@@ -1,45 +1,16 @@
-package com.mygdx.sim.GameObjects;
+package com.mygdx.sim.GameObjects.vehicle;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.mygdx.sim.GameObjects.data.Coordinates;
-import com.mygdx.sim.GameObjects.data.Edge;
 import com.mygdx.sim.GameObjects.data.Node;
-import com.mygdx.sim.GameObjects.pathfinding.AStarPathfinder;
 import com.mygdx.sim.GameObjects.pathfinding.Pathfinder;
 
 public class Car extends Vehicle {
+	private final static String SPRITE_NAME = "car";
 	
 	public Car(Node startNode, Node goalNode, int maxSpeed) {
-		super(startNode, goalNode, maxSpeed);
-		
-		spriteName = "car";
+		super(startNode, goalNode, maxSpeed,SPRITE_NAME);
 	}
 	
 	public Car(Node startNode, Node goalNode, int maxSpeed, Pathfinder pf) {
-		super(startNode,goalNode,maxSpeed,pf);		
-		
-		spriteName = "car";	
-	}
-	
-	/**
-	 * Returns the Edge that this car is located on at the given timestep.
-	 * @param timestep
-	 * @return the Edge that this car is located on at the given timestep
-	 */
-	public Edge getEdgeAt(int timestep) {
-		return edgePath.get(edgeIndices.get(timestep));
-	}
-	
-	/**
-	 * Returns the Coordinates that this car is located on at the given timestep.
-	 * @param timestep
-	 * @return the Coordinates that this car is located on at the given timestep
-	 */
-	public Coordinates getLocationCoordinates(int timestep) {	
-		Edge edge = getEdgeAt(timestep);
-		double distance = distancesTraveledOnEdge.get(timestep);
-		return edge.getLocationIfTraveledDistance(distance);
+		super(startNode,goalNode,maxSpeed,SPRITE_NAME,pf);		
 	}
 }

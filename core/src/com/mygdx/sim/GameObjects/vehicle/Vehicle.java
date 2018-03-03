@@ -1,13 +1,14 @@
-package com.mygdx.sim.GameObjects;
+package com.mygdx.sim.GameObjects.vehicle;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.mygdx.sim.CoreClasses.TrafficSimulator;
+import com.mygdx.sim.GameObjects.data.Coordinates;
 import com.mygdx.sim.GameObjects.data.Edge;
 import com.mygdx.sim.GameObjects.data.Node;
+import com.mygdx.sim.GameObjects.driverModel.DriverModel;
 import com.mygdx.sim.GameObjects.pathfinding.AStarPathfinder;
 import com.mygdx.sim.GameObjects.pathfinding.Pathfinder;
 import com.mygdx.sim.Resources.Resources;
@@ -64,6 +65,8 @@ public abstract class Vehicle {
 	 * doesn't adjust its path afterwards.
 	 */
 	Pathfinder pathfinder = new AStarPathfinder();
+	
+	DriverModel model;
 
 	/**
 	 * The name of the sprite that this vehicle uses.
@@ -75,10 +78,9 @@ public abstract class Vehicle {
 	 */
 	private Sprite sprite;
 
-	public Vehicle(Node startNode, Node goalNode, int maxSpeed) {
+	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName) {
 
-		// Set Sprite
-		initSprite();
+		setSprite(spriteName);
 
 		// Set Start/Goal
 		this.startNode = startNode;
@@ -88,14 +90,34 @@ public abstract class Vehicle {
 		this.maxSpeed = maxSpeed;
 	}
 	
-	public Vehicle(Node startNode, Node goalNode, int maxSpeed, Pathfinder pathfinder) {
-		this(startNode,goalNode,maxSpeed);
+	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Pathfinder pathfinder) {
+		this(startNode,goalNode,maxSpeed,spriteName);
 		this.pathfinder = pathfinder;
 	}
 
-	private void initSprite() {
+	private void setSprite(String spriteName) {
+		this.spriteName = spriteName;
 		sprite = Resources.world.vehicleSprites.get(spriteName);
-
+	}
+	
+	/**
+	 * Returns the Edge that this vehicle is located on at the given timestep.
+	 * @param timestep
+	 * @return the Edge that this vehicle is located on at the given timestep
+	 */
+	public Edge getEdgeAt(int timestep) {
+		return edgePath.get(edgeIndices.get(timestep));
+	}
+	
+	/**
+	 * Returns the Coordinates that this vehicle is located on at the given timestep.
+	 * @param timestep
+	 * @return the Coordinates that this vehicle is located on at the given timestep
+	 */
+	public Coordinates getLocationCoordinates(int timestep) {	
+		Edge edge = getEdgeAt(timestep);
+		double distance = distancesTraveledOnEdge.get(timestep);
+		return edge.getLocationIfTraveledDistance(distance);
 	}
 
 	public void draw(SpriteBatch batch) {
