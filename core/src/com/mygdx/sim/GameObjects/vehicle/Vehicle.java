@@ -88,6 +88,10 @@ public abstract class Vehicle {
 	 * By default, it uses a very simple model that maintains a constant speed.
 	 */
 	DriverModel driverModel = new SimpleDriverModel();
+	
+	public DriverModel getDriverModel() {
+		return driverModel;
+	}
 
 	/**
 	 * The name of the sprite that this vehicle uses.
@@ -98,6 +102,11 @@ public abstract class Vehicle {
 	 * The sprite that this vehicle uses.
 	 */
 	private Sprite sprite;
+	
+	private void setSprite(String spriteName) {
+		this.spriteName = spriteName;
+//		sprite = Resources.world.vehicleSprites.get(spriteName);
+	}
 
 	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName) {
 
@@ -118,16 +127,21 @@ public abstract class Vehicle {
 		this.pathfinder = pathfinder;
 	}
 
-	private void setSprite(String spriteName) {
-		this.spriteName = spriteName;
-//		sprite = Resources.world.vehicleSprites.get(spriteName);
-	}
-	
+	/**
+	 * Applies the previous speed of this car to the previous location to compute the new location.
+	 * @param timestep - the timestep up to which we are moving.
+	 */
 	public void move(int timestep) {
 		if(computedLocations[timestep]) {
 			System.out.println("You're setting a location for a timestep where the location has already been computed. You're doing something wrong.");
 			return;
 		}
+		
+		if(!computedSpeeds[timestep-1]) {
+			System.out.println("You're setting a location for a timestep where the previous speed hasn't been computed. You're doing something wrong.");
+			return;
+		}
+		
 		// Get the speed we are moving at
 		double speed = speeds[timestep-1];
 		
@@ -187,11 +201,12 @@ public abstract class Vehicle {
 	public void draw(SpriteBatch batch) {
 		sprite.draw(batch);
 	}
-
-	public DriverModel getDriverModel() {
-		return driverModel;
-	}
 	
+	/**
+	 * Sets this vehicle's speed at a given timestep.
+	 * @param timestep - the timestep for which we're setting the speed
+	 * @param speed - the speed at that timestep
+	 */
 	public void setSpeed(int timestep, double speed) {
 		if(computedSpeeds[timestep]) {
 			System.out.println("You're trying to set a speed that has already been set. You're doing something wrong.");
