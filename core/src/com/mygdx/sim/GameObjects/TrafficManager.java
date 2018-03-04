@@ -40,6 +40,7 @@ public class TrafficManager {
 	 */
 	public void simulate(int finalTimeStep) {
 		
+		// Ensure all Vehicles have enough memory capacity 
 		for (Vehicle vehicle : vehicles) {
 			vehicle.ensureCapacity(finalTimeStep);
 		}
