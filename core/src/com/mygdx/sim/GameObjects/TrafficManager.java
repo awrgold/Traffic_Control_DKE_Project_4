@@ -11,7 +11,7 @@ import com.mygdx.sim.GameObjects.vehicle.Vehicle;
 
 public class TrafficManager {
 	
-	private final static int TIMESTEPS = 15;
+	private final static int TIMESTEPS = 100;
 	
 	private Graph map;
 	private List<Vehicle> vehicles;

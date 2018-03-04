@@ -131,6 +131,7 @@ public abstract class Vehicle {
 	 * @param timestep - the timestep up to which we are moving.
 	 */
 	public void move(int timestep) {
+		
 		if(computedLocations.get(timestep)) {
 			System.out.println("You're setting a location for a timestep where the location has already been computed. You're doing something wrong.");
 			return;
@@ -150,26 +151,38 @@ public abstract class Vehicle {
 		// Get the distance we have traveled on the current edge
 		double distanceTraveledOnEdge = distancesTraveledOnEdge.get(timestep-1);
 		
-		// Add the speed we are currently moving at to our old location in order to determine
-		// our new location
-		distanceTraveledOnEdge += speed;
-		
-		// Get the length of the current edge
-		double currentEdgeLength = getEdgeAt(timestep-1).getLength();
-		
-		// Check if we have reached the end of the edge we were on in the last timestep. 
-		// If yes, we need to move to the next edge.		
-		if(distanceTraveledOnEdge > currentEdgeLength) {
-			// TODO: implement stopping when goal node has been reached
+		// Check if the vehicle is still allowed to move.
+		if(moving) {
+			// Add the speed we are currently moving at to our old location in order to determine
+			// our new location
+			distanceTraveledOnEdge += speed;
 			
-			// Increment the edge index to indicate we have moved on to the next edge from our path
-			edgeIdx++;
+			// Get the length of the current edge
+			double currentEdgeLength = getEdgeAt(timestep-1).getLength();
 			
-			// Subtract the last edge's length from the distance we have traveled, so we are only storing the
-			// distance traveled on the current (new) edge
-			distanceTraveledOnEdge -= currentEdgeLength;
-			
-			
+			// Check if we have reached the end of the edge we were on in the last timestep. 
+			// If yes, we need to move to the next edge.		
+			if(distanceTraveledOnEdge >= currentEdgeLength) {	
+				
+				// Check if the destination has been reached
+				if(edgeIdx == edgePath.size()-1) {
+					
+					// Disallow the car from moving further
+					moving = false;
+					
+					// Set the distance traveled on the edge to the length on the edge
+					// to indicate that we are at its end
+					distanceTraveledOnEdge = currentEdgeLength;
+				} else {
+					
+					// Increment the edge index to indicate we have moved on to the next edge from our path
+					edgeIdx++;
+					
+					// Subtract the last edge's length from the distance we have traveled, so we are only storing the
+					// distance traveled on the current (new) edge
+					distanceTraveledOnEdge -= currentEdgeLength;
+				}				
+			}			
 		}
 		
 		// Set the edge index and traveled distance 
