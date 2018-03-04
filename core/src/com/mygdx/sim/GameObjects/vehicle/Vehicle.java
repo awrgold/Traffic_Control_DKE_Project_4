@@ -119,7 +119,7 @@ public abstract class Vehicle {
 		// Set maximum speed
 		this.maxSpeed = maxSpeed;
 		
-		
+		initialize();
 	}
 	
 	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Pathfinder pathfinder) {
@@ -176,6 +176,9 @@ public abstract class Vehicle {
 		// Set the edge index and traveled distance 
 		edgeIndices.set(timestep, edgeIdx);
 		distancesTraveledOnEdge.set(timestep, distanceTraveledOnEdge);
+		
+		// Indicate that the location for this timestep has been computed
+		computedLocations.set(timestep, true);
 	}
 	
 	/**
@@ -215,5 +218,27 @@ public abstract class Vehicle {
 		
 		speeds.set(timestep, speed);
 		computedSpeeds.set(timestep, true);
+	}
+	
+	private void initialize() {
+		if(edgeIndices.size() == 0) {
+			addZeros();
+			computedLocations.set(0, true);
+		} else
+			System.out.println("You're trying to initialize a vehicle that has already been initialized. You're doing something wrong.");		
+	}
+	
+	private void addZeros() {
+		edgeIndices.add(0);
+		distancesTraveledOnEdge.add(0.);
+		speeds.add(0.);
+		computedLocations.add(false);
+		computedSpeeds.add(false);
+	}
+	
+	public void ensureCapacity(int timestep) {
+		while(edgeIndices.size() <= timestep) {
+			addZeros();
+		}
 	}
 }

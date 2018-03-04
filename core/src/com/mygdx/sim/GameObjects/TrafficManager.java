@@ -10,6 +10,9 @@ import com.mygdx.sim.GameObjects.vehicle.Car;
 import com.mygdx.sim.GameObjects.vehicle.Vehicle;
 
 public class TrafficManager {
+	
+	private final static int TIMESTEPS = 15;
+	
 	private Graph map;
 	private List<Vehicle> vehicles;
 	
@@ -32,6 +35,10 @@ public class TrafficManager {
 	private int lastComputedTimestep = 0;
 	
 	public void simulate(int finalTimeStep) {
+		
+		for (Vehicle vehicle : vehicles) {
+			vehicle.ensureCapacity(finalTimeStep);
+		}
 		
 		while(lastComputedTimestep < finalTimeStep) {
 			
@@ -71,7 +78,7 @@ public class TrafficManager {
 		
 		tm.setVehicles(cars);
 		
-		tm.simulate(15);
+		tm.simulate(TIMESTEPS);
 		
 		int x=0;
 	}
