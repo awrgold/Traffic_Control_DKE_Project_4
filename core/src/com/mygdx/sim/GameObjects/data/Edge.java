@@ -12,7 +12,11 @@ public class Edge {
     
     public Edge(Node from, Node to, int speedLimit){
         this.from = from;
+        from.addOutEdge(this);
+        
         this.to = to;
+        to.addInEdge(this);
+        
         this.speedLimit = speedLimit;
     }
     

@@ -6,9 +6,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Node {
 
-	// Do we need to differentiate between the two edge types?
-	private ArrayList<Edge> inEdges;
-	private ArrayList<Edge> outEdges;
+	private ArrayList<Edge> inEdges = new ArrayList<Edge>();
+	private ArrayList<Edge> outEdges = new ArrayList<Edge>();
 	private Coordinates location;
 
 	public Node(double xCoordinate, double yCoordinate) {
