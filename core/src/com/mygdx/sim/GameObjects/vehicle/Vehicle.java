@@ -37,7 +37,7 @@ public abstract class Vehicle {
 	 */
 	List<Edge> edgePath;
 	
-	//TODO: delete this, it's temporary
+	//TODO: delete this, it's a temporary replacement for proper pathfinder
 	public void setEdgePath(List<Edge> edgePath) {
 		this.edgePath = edgePath;
 	}
@@ -56,7 +56,6 @@ public abstract class Vehicle {
 	 * the edge where this vehicle is located at timestep t.
 	 */
 	ArrayList<Integer> edgeIndices = new ArrayList<Integer>();
-	//TODO: implement configurable number of timesteps
 	
 	/**
 	 * Stores for each timestep, the distance that this vehicle has traveled
@@ -220,6 +219,10 @@ public abstract class Vehicle {
 		computedSpeeds.set(timestep, true);
 	}
 	
+	/**
+	 * Initializes the history-keeping ArrayLists to hold at least one element.
+	 * Things break otherwise
+	 */
 	private void initialize() {
 		if(edgeIndices.size() == 0) {
 			addZeros();
@@ -228,6 +231,9 @@ public abstract class Vehicle {
 			System.out.println("You're trying to initialize a vehicle that has already been initialized. You're doing something wrong.");		
 	}
 	
+	/**
+	 * Utility method used by ensureCapacity to increase the capacity of all ArrayLists.
+	 */
 	private void addZeros() {
 		edgeIndices.add(0);
 		distancesTraveledOnEdge.add(0.);
@@ -236,6 +242,11 @@ public abstract class Vehicle {
 		computedSpeeds.add(false);
 	}
 	
+	/**
+	 * Ensures that the history-keeping variables of this Vehicle have sufficient capacity
+	 * for the given number of timesteps
+	 * @param timestep - number of timesteps we need to be able to keep history of
+	 */
 	public void ensureCapacity(int timestep) {
 		while(edgeIndices.size() <= timestep) {
 			addZeros();
