@@ -34,6 +34,10 @@ public class TrafficManager {
 
 	private int lastComputedTimestep = 0;
 	
+	/**
+	 * Run the simulation until the given timestep.
+	 * @param finalTimeStep - timestep until which we are running the sim
+	 */
 	public void simulate(int finalTimeStep) {
 		
 		for (Vehicle vehicle : vehicles) {
