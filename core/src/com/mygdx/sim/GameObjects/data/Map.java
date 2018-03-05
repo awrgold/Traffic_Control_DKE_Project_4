@@ -3,6 +3,7 @@ package com.mygdx.sim.GameObjects.data;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import com.mygdx.sim.GameObjects.vehicle.Vehicle;
@@ -11,11 +12,30 @@ public class Map {
 	private List<Node> nodes = new ArrayList<Node>();
 	private List<Edge> edges = new ArrayList<Edge>();
 	
-	HashMap<Edge,ArrayList<List<Vehicle>>> vehiclesAtEdgeAtTimestep;
+	HashMap<Edge,ArrayList<ArrayList<Vehicle>>> locationCache;
 	
 	public Map(List<Node> nodes, List<Edge> edges) {
 		this.nodes = nodes;
 		this.edges = edges;
+		
+		locationCache = new HashMap<Edge,ArrayList<ArrayList<Vehicle>>>();
+		
+		for (Edge edge : edges)
+			locationCache.put(edge, new ArrayList<ArrayList<Vehicle>>());
+	}
+	
+	public ArrayList<Vehicle> getVehiclesAt(Edge edge, int timestep){
+		return locationCache.get(edge).get(timestep);
+	}
+	
+	public void ensureCapacity(int timestep) {
+		for (Edge edge : edges) {
+			ArrayList<ArrayList<Vehicle>> history =
+					locationCache.get(edge);
+			
+			while(history.size() <= timestep)
+				history.add(new ArrayList<Vehicle>());
+		}
 	}
 	
 	public List<Node> getNodes(){
@@ -35,5 +55,9 @@ public class Map {
 		Map map = new Map(Arrays.asList(node1,node2),Arrays.asList(edge));
 		
 		System.out.println("Created map");
+		
+		map.ensureCapacity(10);
+		
+		int x = 0;
 	}
 }

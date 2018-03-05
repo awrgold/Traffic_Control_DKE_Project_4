@@ -40,13 +40,15 @@ public class TrafficManager {
 	 */
 	public void simulate(int finalTimeStep) {
 		
+		// Ensure the map's location cache has enough memory capacity
+		map.ensureCapacity(finalTimeStep);
+		
 		// Ensure all Vehicles have enough memory capacity 
 		for (Vehicle vehicle : vehicles) {
 			vehicle.ensureCapacity(finalTimeStep);
 		}
 		
 		while(lastComputedTimestep < finalTimeStep) {
-			
 			
 			// Set speeds for the current timestep
 			for (Vehicle vehicle : vehicles) {
