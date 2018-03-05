@@ -91,6 +91,10 @@ public abstract class Vehicle {
 	public DriverModel getDriverModel() {
 		return driverModel;
 	}
+	
+	public void setDriverModel(DriverModel dm) {
+		this.driverModel = dm;
+	}
 
 	/**
 	 * The name of the sprite that this vehicle uses.
@@ -286,8 +290,15 @@ public abstract class Vehicle {
 		}
 	}
 
+	public double getTraveledDistance(int timestep) {
+		return distancesTraveledOnEdge.get(timestep);
+	}
 	
 	public List<Edge> getEdgePath() {
 		return edgePath;
+	}
+	
+	public double getSpeedAt(int timestep){
+		return speeds.get(timestep);
 	}
 }

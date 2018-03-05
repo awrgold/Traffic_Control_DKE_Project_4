@@ -7,11 +7,6 @@ package com.mygdx.sim.GameObjects.data;
  */
 
 public class Coordinates {
-	/**
-	 * The minimum difference between two numbers for them to be considered different.
-	 * If the difference is smaller, the numbers are considered equal.
-	 */
-	private final static double DELTA_EPSILON = 0.00001;
 	
 	/** Width */
 	private double x;
@@ -60,8 +55,8 @@ public class Coordinates {
     	
     	Coordinates coords2 = (Coordinates) o;
     	
-    	if(Math.abs(getX() - coords2.getX()) > DELTA_EPSILON) return false;    	
-    	if(Math.abs(getY() - coords2.getY()) > DELTA_EPSILON) return false;
+    	if(Math.abs(getX() - coords2.getX()) > Util.DELTA_EPSILON) return false;    	
+    	if(Math.abs(getY() - coords2.getY()) > Util.DELTA_EPSILON) return false;
     	
     	return true;
     }
@@ -89,5 +84,9 @@ public class Coordinates {
     	if(coords1.equals(redFlag))
     		System.out.println("1 equals redFlag");
     	else System.out.println("1 and redFlag are NOT equal");
+    }
+    
+    public String toString() {
+    	return ("["+x+","+y+"]");
     }
 }
