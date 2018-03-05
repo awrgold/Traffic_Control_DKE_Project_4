@@ -14,7 +14,7 @@ public class AStarPathfinder extends Pathfinder {
 
 	public List<Edge> findPath(Vehicle vehicle, int timestep) {
 		// TODO Auto-generated method stub
-		return null;
+		return vehicle.getEdgePath();
 	}
 
 }
