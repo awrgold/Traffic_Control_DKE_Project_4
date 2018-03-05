@@ -1,13 +1,13 @@
 package com.mygdx.sim.GameObjects.vehicle;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.sim.GameObjects.data.Coordinates;
 import com.mygdx.sim.GameObjects.data.Edge;
+import com.mygdx.sim.GameObjects.data.Graph;
 import com.mygdx.sim.GameObjects.data.Node;
 import com.mygdx.sim.GameObjects.driverModel.DriverModel;
 import com.mygdx.sim.GameObjects.driverModel.SimpleDriverModel;
@@ -80,7 +80,7 @@ public abstract class Vehicle {
 	 * By default, it uses a simple A* pathfinder at the start of the trip, and
 	 * doesn't adjust its path afterwards.
 	 */
-	Pathfinder pathfinder = new AStarPathfinder();
+	Pathfinder pathfinder;
 	
 	/**
 	 * Stores the algorithm that this vehicle uses to determine its acceleration.
@@ -107,7 +107,7 @@ public abstract class Vehicle {
 //		sprite = Resources.world.vehicleSprites.get(spriteName);
 	}
 
-	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName) {
+	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Graph graph) {
 
 		setSprite(spriteName);
 
@@ -118,14 +118,30 @@ public abstract class Vehicle {
 		// Set maximum speed
 		this.maxSpeed = maxSpeed;
 		
+		pathfinder = new AStarPathfinder(graph);
+		
+		// Find path
+		computePath(0);
+		
 		initialize();
 	}
 	
-	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Pathfinder pathfinder) {
-		this(startNode,goalNode,maxSpeed,spriteName);
+	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Graph graph, Pathfinder pathfinder) {
+		this(startNode,goalNode,maxSpeed,spriteName,graph);
 		this.pathfinder = pathfinder;
 	}
 
+	/**
+	 * Recomputes the path after a given timestep. If this vehicle has already
+	 * traveled for 10 timesteps and you're recomputing then, timestep should
+	 * be 10 - otherwise, the pathfinder could recompute some edges that have
+	 * already been traveled, and break EVERYTHING.
+	 * @param timestep - the edges that have already been traveled at that timestep may not be changed by the pathfinder
+	 */
+	public void computePath(int timestep) {
+		this.edgePath = pathfinder.findPath(this,timestep);
+	}
+	
 	/**
 	 * Applies the previous speed of this car to the previous location to compute the new location.
 	 * @param timestep - the timestep up to which we are moving.

@@ -47,6 +47,7 @@ public class TrafficManager {
 		
 		while(lastComputedTimestep < finalTimeStep) {
 			
+			
 			// Set speeds for the current timestep
 			for (Vehicle vehicle : vehicles) {
 				// Use the driver model the vehicle uses to determine the vehicle's new speed
@@ -54,6 +55,11 @@ public class TrafficManager {
 				
 				// Set the new speed
 				vehicle.setSpeed(lastComputedTimestep, newSpeed);
+				
+				/* Ask our pathfinding algorithm for a path
+				 It can still return the very same path - we're only giving it
+				 the opportunity to change the path, not requiring it */
+				vehicle.computePath(lastComputedTimestep);
 			}
 						
 			// Increment the timestep
@@ -73,10 +79,12 @@ public class TrafficManager {
 		Edge edge = new Edge(node1,node2);
 		Edge edge2 = new Edge(node2,node3);
 		
-		TrafficManager tm = new TrafficManager();
-		tm.setMap(new Graph(Arrays.asList(node1,node2,node3),Arrays.asList(edge,edge2)));
+		Graph graph = new Graph(Arrays.asList(node1,node2,node3),Arrays.asList(edge,edge2));
 		
-		Car car = new Car(node1,node2);
+		TrafficManager tm = new TrafficManager();
+		tm.setMap(graph);
+		
+		Car car = new Car(node1,node2,graph);
 		car.setEdgePath(Arrays.asList(edge,edge2));
 		
 		List cars = Arrays.asList(car);
