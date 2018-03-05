@@ -233,6 +233,10 @@ public abstract class Vehicle {
 		sprite.draw(batch);
 	}
 	
+	public int getMaxSpeed(int timestep) {
+		return Math.min(maxSpeed, getEdgeAt(timestep).getSpeedLimit());
+	}
+	
 	/**
 	 * Sets this vehicle's speed at a given timestep.
 	 * @param timestep - the timestep for which we're setting the speed
