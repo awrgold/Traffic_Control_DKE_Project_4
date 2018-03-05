@@ -1,25 +1,21 @@
 package com.mygdx.sim.GameObjects.data;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
-public class Graph {
+import com.mygdx.sim.GameObjects.vehicle.Vehicle;
+
+public class Map {
 	private List<Node> nodes = new ArrayList<Node>();
 	private List<Edge> edges = new ArrayList<Edge>();
 	
-	public Graph() {}
+	HashMap<Edge,ArrayList<List<Vehicle>>> vehiclesAtEdgeAtTimestep;
 	
-	public Graph(List<Node> nodes, List<Edge> edges) {
+	public Map(List<Node> nodes, List<Edge> edges) {
 		this.nodes = nodes;
 		this.edges = edges;
-	}
-	
-	public void addNode(Node node) {
-		nodes.add(node);		
-	}
-	
-	public void addEdge(Edge edge) {
-		edges.add(edge);		
 	}
 	
 	public List<Node> getNodes(){
@@ -36,11 +32,8 @@ public class Graph {
 		
 		Edge edge = new Edge(node1,node2,50);
 		
-		Graph graph = new Graph();
-		graph.addEdge(edge);
-		graph.addNode(node1);
-		graph.addNode(node2);
+		Map map = new Map(Arrays.asList(node1,node2),Arrays.asList(edge));
 		
-		System.out.println("Created graph");
+		System.out.println("Created map");
 	}
 }

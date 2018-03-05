@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.sim.GameObjects.data.Coordinates;
 import com.mygdx.sim.GameObjects.data.Edge;
-import com.mygdx.sim.GameObjects.data.Graph;
+import com.mygdx.sim.GameObjects.data.Map;
 import com.mygdx.sim.GameObjects.data.Node;
 import com.mygdx.sim.GameObjects.driverModel.DriverModel;
 import com.mygdx.sim.GameObjects.driverModel.SimpleDriverModel;
@@ -107,7 +107,7 @@ public abstract class Vehicle {
 //		sprite = Resources.world.vehicleSprites.get(spriteName);
 	}
 
-	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Graph graph) {
+	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Map graph) {
 
 		setSprite(spriteName);
 
@@ -126,7 +126,7 @@ public abstract class Vehicle {
 		initialize();
 	}
 	
-	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Graph graph, Pathfinder pathfinder) {
+	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Map graph, Pathfinder pathfinder) {
 		this(startNode,goalNode,maxSpeed,spriteName,graph);
 		this.pathfinder = pathfinder;
 	}

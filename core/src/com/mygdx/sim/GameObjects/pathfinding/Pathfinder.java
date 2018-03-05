@@ -3,11 +3,11 @@ package com.mygdx.sim.GameObjects.pathfinding;
 import java.util.List;
 
 import com.mygdx.sim.GameObjects.data.Edge;
-import com.mygdx.sim.GameObjects.data.Graph;
+import com.mygdx.sim.GameObjects.data.Map;
 import com.mygdx.sim.GameObjects.vehicle.Vehicle;
 
 public abstract class Pathfinder {
-	public Graph graph;
+	public Map graph;
 	
 	/**
 	 * Finds a path for the given vehicle after the given timestep.
@@ -19,7 +19,7 @@ public abstract class Pathfinder {
 	 */
 	public abstract List<Edge> findPath(Vehicle vehicle, int timestep);
 
-	public Pathfinder(Graph graph) {
+	public Pathfinder(Map graph) {
 		this.graph = graph;
 	}
 

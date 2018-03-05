@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.mygdx.sim.GameObjects.data.Edge;
-import com.mygdx.sim.GameObjects.data.Graph;
+import com.mygdx.sim.GameObjects.data.Map;
 import com.mygdx.sim.GameObjects.data.Node;
 import com.mygdx.sim.GameObjects.vehicle.Car;
 import com.mygdx.sim.GameObjects.vehicle.Vehicle;
@@ -13,14 +13,14 @@ public class TrafficManager {
 	
 	private final static int TIMESTEPS = 100;
 	
-	private Graph map;
+	private Map map;
 	private List<Vehicle> vehicles;
 	
-	public Graph getMap() {
+	public Map getMap() {
 		return map;
 	}
 
-	public void setMap(Graph map) {
+	public void setMap(Map map) {
 		this.map = map;
 	}
 
@@ -79,15 +79,15 @@ public class TrafficManager {
 		Edge edge = new Edge(node1,node2);
 		Edge edge2 = new Edge(node2,node3);
 		
-		Graph graph = new Graph(Arrays.asList(node1,node2,node3),Arrays.asList(edge,edge2));
+		Map map = new Map(Arrays.asList(node1,node2,node3),Arrays.asList(edge,edge2));
 		
-		TrafficManager tm = new TrafficManager();
-		tm.setMap(graph);
-		
-		Car car = new Car(node1,node2,graph);
+		Car car = new Car(node1,node2,map);
 		car.setEdgePath(Arrays.asList(edge,edge2));
 		
 		List cars = Arrays.asList(car);
+		
+		TrafficManager tm = new TrafficManager();
+		tm.setMap(map);
 		
 		tm.setVehicles(cars);
 		
