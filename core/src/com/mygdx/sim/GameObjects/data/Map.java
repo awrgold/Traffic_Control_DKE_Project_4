@@ -38,6 +38,10 @@ public class Map {
 		}
 	}
 	
+	public HashMap<Edge,ArrayList<ArrayList<Vehicle>>> getLocationCache(){
+		return locationCache;
+	}
+	
 	public List<Node> getNodes(){
 		return nodes;
 	}

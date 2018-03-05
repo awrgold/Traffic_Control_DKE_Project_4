@@ -285,4 +285,9 @@ public abstract class Vehicle {
 			addZeros();
 		}
 	}
+
+	
+	public List<Edge> getEdgePath() {
+		return edgePath;
+	}
 }

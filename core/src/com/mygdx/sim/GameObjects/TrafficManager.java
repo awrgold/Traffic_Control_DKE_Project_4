@@ -49,6 +49,8 @@ public class TrafficManager {
 		}
 		
 		while(lastComputedTimestep < finalTimeStep) {
+			for(Vehicle vehicle : vehicles)
+				map.getLocationCache().get(vehicle.getEdgeAt(lastComputedTimestep)).get(lastComputedTimestep).add(vehicle);
 			
 			// Set speeds for the current timestep
 			for (Vehicle vehicle : vehicles) {
@@ -70,7 +72,6 @@ public class TrafficManager {
 			// Have the vehicles update their locations for the next timestep			
 			for (Vehicle vehicle : vehicles)
 				vehicle.move(lastComputedTimestep);
-			
 		}
 	}
 	
