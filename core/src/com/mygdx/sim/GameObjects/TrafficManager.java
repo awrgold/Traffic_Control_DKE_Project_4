@@ -61,8 +61,6 @@ public class TrafficManager {
 				
 			// Set speeds for the current timestep
 			for (Vehicle vehicle : vehicles) {
-				DistanceAndSpeed dns = getDistanceAndSpeedToClosestVehicle(vehicle, lastComputedTimestep);
-				
 				// Use the driver model the vehicle uses to determine the vehicle's new speed
 				double newSpeed = vehicle.getDriverModel().determineNewSpeed(this,vehicle,lastComputedTimestep);
 				
@@ -85,6 +83,12 @@ public class TrafficManager {
 		}
 	}
 	
+	/**
+	 * Gets the distance to and speed of the closest vehicle in front of this vehicle.
+	 * @param vehicle - vehicle in front of which we are checking
+	 * @param timestep - timestep at which we are checking
+	 * @return distance and speed of closest vehicle
+	 */
 	public DistanceAndSpeed getDistanceAndSpeedToClosestVehicle(Vehicle vehicle, int timestep) {
 		Edge edge = vehicle.getEdgeAt(timestep);
 		double distance = -vehicle.getTraveledDistance(timestep);
@@ -107,14 +111,14 @@ public class TrafficManager {
 	private DistanceAndVehicle getClosestVehicle(Vehicle vehicle, Edge currentEdge, double distanceUntilNow, int timestep) {
 		List<Vehicle> vehiclesOnCurrentEdge = (List<Vehicle>) map.getLocationCache().get(currentEdge).get(timestep).clone();
 		
-		ArrayList<Vehicle> toBeRemoved = new ArrayList<Vehicle>();
-		for (Vehicle vehicle2 : vehiclesOnCurrentEdge)
-			if((vehicle2.getTraveledDistance(timestep) + distanceUntilNow - Util.DELTA_EPSILON) <= 0)
-				toBeRemoved.add(vehicle2);
+		ArrayList<DistanceAndVehicle> candidates = new ArrayList<DistanceAndVehicle>();
+		for (Vehicle vehicle2 : vehiclesOnCurrentEdge) {
+			double distance = distanceUntilNow + vehicle2.getTraveledDistance(timestep);
+			if(distance - Util.DELTA_EPSILON > 0)
+				candidates.add(new DistanceAndVehicle(distance,vehicle2));			
+		}
 		
-		vehiclesOnCurrentEdge.removeAll(toBeRemoved);
-		
-		DistanceAndVehicle closest = getClosestDistanceAndVehicleFromListVehicles(vehiclesOnCurrentEdge,timestep);
+		DistanceAndVehicle closest = getClosestDistanceAndVehicleFromList(candidates, timestep);
 		
 		if(closest != null) {
 			Vehicle closestVehicle = closest.getVehicle();
@@ -134,23 +138,6 @@ public class TrafficManager {
 			vehiclesFromFollowingEdges.add(getClosestVehicle(vehicle,edge2,distanceUntilNow,timestep));
 		
 		return getClosestDistanceAndVehicleFromList(vehiclesFromFollowingEdges,timestep);
-	}
-	
-	private DistanceAndVehicle getClosestDistanceAndVehicleFromListVehicles(List<Vehicle> list, int timestep) {
-
-		Vehicle closestVehicle = null;
-		double smallestDistance = VIEW_DISTANCE;
-
-		for (Vehicle vehicle2 : list) {
-			double thisDistance = vehicle2.getTraveledDistance(timestep);
-			if (thisDistance < smallestDistance) {
-				closestVehicle = vehicle2;
-				smallestDistance = thisDistance;
-			}
-		}
-		if(closestVehicle == null) return null;
-		
-		return new DistanceAndVehicle(smallestDistance,closestVehicle);
 	}
 	
 	private DistanceAndVehicle getClosestDistanceAndVehicleFromList(List<DistanceAndVehicle> list, int timestep) {
