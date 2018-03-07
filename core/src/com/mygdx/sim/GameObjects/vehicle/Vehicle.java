@@ -323,4 +323,15 @@ public abstract class Vehicle {
 	public double getSpeedAt(int timestep){
 		return speeds.get(timestep);
 	}
+	
+	public int hashCode() {
+		return id;
+	}
+	
+	public boolean equals(Object o) {
+		if(!(o instanceof Vehicle)) return false;
+		Vehicle v = (Vehicle) o;
+		
+		return (v.id == this.id);
+	}
 }
