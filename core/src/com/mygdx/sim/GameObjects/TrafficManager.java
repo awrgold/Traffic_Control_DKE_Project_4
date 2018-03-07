@@ -44,6 +44,12 @@ public class TrafficManager {
 	public List<Vehicle> getVehicles() {
 		return vehicles;
 	}
+	
+	public HashMap<Vehicle,Coordinates> getState(int timestep){
+		if(timestep >= history.size()) simulate(timestep);
+		
+		return history.get(timestep);
+	}
 
 	private int lastComputedTimestep = 0;
 	
@@ -207,5 +213,9 @@ public class TrafficManager {
 		tm.simulate(TIMESTEPS);
 		
 		int x=0;
+		
+		tm.getState(100);
+		
+		int y= 0;
 	}
 }
