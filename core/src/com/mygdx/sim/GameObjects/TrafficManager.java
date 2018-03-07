@@ -25,6 +25,8 @@ public class TrafficManager {
 	private Map map;
 	private List<Vehicle> vehicles;
 	
+	private int lastComputedTimestep = 0;
+	
 	private ArrayList<HashMap<Vehicle,Coordinates>> history = new ArrayList<HashMap<Vehicle,Coordinates>>();
 	
 	public TrafficManager(Map map, List<Vehicle> vehicles) {
@@ -45,13 +47,16 @@ public class TrafficManager {
 		return vehicles;
 	}
 	
+	/**
+	 * Gets the locations of all vehicles at the given timestep.
+	 * @param timestep - timestep for which you need the locations
+	 * @return a HashMap that maps Vehicles to their Coordinates
+	 */
 	public HashMap<Vehicle,Coordinates> getState(int timestep){
 		if(timestep >= history.size()) simulate(timestep);
 		
 		return history.get(timestep);
 	}
-
-	private int lastComputedTimestep = 0;
 	
 	/**
 	 * Run the simulation until the given timestep.
