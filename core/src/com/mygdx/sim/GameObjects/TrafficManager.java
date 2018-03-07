@@ -27,20 +27,22 @@ public class TrafficManager {
 	
 	private ArrayList<HashMap<Vehicle,Coordinates>> history = new ArrayList<HashMap<Vehicle,Coordinates>>();
 	
+	public TrafficManager(Map map, List<Vehicle> vehicles) {
+		this.map = map;
+		this.vehicles = vehicles;
+		
+		ensureCapacity(lastComputedTimestep);
+		
+		for(Vehicle vehicle : vehicles)
+			history.get(lastComputedTimestep).put(vehicle, vehicle.getLocationCoordinates(lastComputedTimestep));
+	}
+	
 	public Map getMap() {
 		return map;
 	}
 
-	public void setMap(Map map) {
-		this.map = map;
-	}
-
 	public List<Vehicle> getVehicles() {
 		return vehicles;
-	}
-
-	public void setVehicles(List<Vehicle> vehicles) {
-		this.vehicles = vehicles;
 	}
 
 	private int lastComputedTimestep = 0;
@@ -54,12 +56,12 @@ public class TrafficManager {
 		// Ensure the map's location cache has enough memory capacity
 		map.ensureCapacity(finalTimeStep);
 		
+		// Ensure the TrafficManager's car-location history has enough memory capacity
 		this.ensureCapacity(finalTimeStep);
 		
 		// Ensure all Vehicles have enough memory capacity 
-		for (Vehicle vehicle : vehicles) {
+		for (Vehicle vehicle : vehicles)
 			vehicle.ensureCapacity(finalTimeStep);
-		}
 		
 		while(lastComputedTimestep < finalTimeStep) {
 			for(Vehicle vehicle : vehicles)
@@ -83,9 +85,10 @@ public class TrafficManager {
 			lastComputedTimestep++;
 			
 			// Have the vehicles update their locations for the next timestep			
-			for (Vehicle vehicle : vehicles)
+			for (Vehicle vehicle : vehicles) {
 				vehicle.move(lastComputedTimestep);
-		
+				history.get(lastComputedTimestep).put(vehicle, vehicle.getLocationCoordinates(lastComputedTimestep));
+			}
 		}
 	}
 	
@@ -176,6 +179,10 @@ public class TrafficManager {
 		return new DistanceAndVehicle(smallestDistance,closestVehicle);
 	}
 	
+	public String toString() {
+		return "[TrafficManager]";
+	}
+	
 	public static void main(String[] args) {
 		Node node1 = new Node(0,0);
 		Node node2 = new Node(475,0);
@@ -195,10 +202,7 @@ public class TrafficManager {
 		
 		List cars = Arrays.asList(car,car2);
 		
-		TrafficManager tm = new TrafficManager();
-		tm.setMap(map);
-		
-		tm.setVehicles(cars);
+		TrafficManager tm = new TrafficManager(map,cars);
 		
 		tm.simulate(TIMESTEPS);
 		

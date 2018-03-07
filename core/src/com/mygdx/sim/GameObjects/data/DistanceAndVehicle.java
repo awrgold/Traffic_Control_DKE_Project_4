@@ -11,6 +11,10 @@ public class DistanceAndVehicle {
 		this.vehicle = vehicle;		
 	}
 	
+	public String toString() {
+		return ("["+distance+","+vehicle+"]");
+	}
+	
 	public double getDistance() { return distance; }
 	public Vehicle getVehicle() { return vehicle; }
 

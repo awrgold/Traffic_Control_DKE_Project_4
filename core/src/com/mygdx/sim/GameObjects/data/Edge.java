@@ -77,10 +77,14 @@ public class Edge {
      * e.g. if you're going from (5,-5) to (-5,10) this method will return (-10,15)
      */
     private Coordinates getCoordinateChange() {
-    	return (from.getLocation().subtract(to.getLocation()));
+    	return (to.getLocation().subtract(from.getLocation()));
     }
     
     private Coordinates getManhattanDistanceTraveled() {
     	return (from.getLocation().subtractAbs(to.getLocation()));
+    }
+    
+    public String toString() {
+    	return ("["+from+","+to+"]");
     }
 }

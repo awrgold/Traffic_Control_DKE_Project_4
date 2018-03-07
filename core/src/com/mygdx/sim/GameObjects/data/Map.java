@@ -50,6 +50,10 @@ public class Map {
 		return edges;
 	}
 	
+	public String toString() {
+		return "[Map]";
+	}
+	
 	public static void main(String[] args) {
 		Node node1 = new Node(0,0);
 		Node node2 = new Node(0,10);

@@ -16,6 +16,10 @@ import com.mygdx.sim.GameObjects.pathfinding.Pathfinder;
 
 public abstract class Vehicle {
 	
+	private static int lastGivenId = 0;
+	
+	private int id;
+	
 	/**
 	 * The node this vehicle starts its trip at.
 	 */
@@ -126,6 +130,8 @@ public abstract class Vehicle {
 	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Map graph) {
 
 		setSprite(spriteName);
+		
+		this.id = lastGivenId++;
 
 		// Set Start/Goal
 		this.startNode = startNode;
@@ -140,6 +146,10 @@ public abstract class Vehicle {
 		computePath(0);
 		
 		initialize();
+	}
+	
+	public String toString() {
+		return ("[Vehicle " + id + "]");
 	}
 	
 	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Map graph, Pathfinder pathfinder) {

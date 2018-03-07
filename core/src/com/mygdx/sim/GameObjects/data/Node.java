@@ -45,4 +45,8 @@ public class Node {
 	public ArrayList<Edge> getOutEdges() {
 		return outEdges;
 	}
+	
+	public String toString() {
+		return "[Node@"+location+"]";
+	}
 }
