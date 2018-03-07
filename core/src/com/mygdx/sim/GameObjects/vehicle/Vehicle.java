@@ -106,6 +106,18 @@ public abstract class Vehicle {
 	 */
 	private Sprite sprite;
 	
+	private double maxAcceleration = 1.4;
+	
+	public double getMaxAcceleration() {
+		return maxAcceleration;
+	}
+	
+	private double safetyHeadway = 1.5;
+	
+	public double getSafetyHeadway() {
+		return safetyHeadway;
+	}
+	
 	private void setSprite(String spriteName) {
 		this.spriteName = spriteName;
 //		sprite = Resources.world.vehicleSprites.get(spriteName);
