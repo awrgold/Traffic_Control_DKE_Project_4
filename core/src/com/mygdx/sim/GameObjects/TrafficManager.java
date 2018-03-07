@@ -2,8 +2,10 @@ package com.mygdx.sim.GameObjects;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
+import com.mygdx.sim.GameObjects.data.Coordinates;
 import com.mygdx.sim.GameObjects.data.DistanceAndSpeed;
 import com.mygdx.sim.GameObjects.data.DistanceAndVehicle;
 import com.mygdx.sim.GameObjects.data.Edge;
@@ -22,6 +24,8 @@ public class TrafficManager {
 	
 	private Map map;
 	private List<Vehicle> vehicles;
+	
+	private ArrayList<HashMap<Vehicle,Coordinates>> history = new ArrayList<HashMap<Vehicle,Coordinates>>();
 	
 	public Map getMap() {
 		return map;
@@ -49,6 +53,8 @@ public class TrafficManager {
 		
 		// Ensure the map's location cache has enough memory capacity
 		map.ensureCapacity(finalTimeStep);
+		
+		this.ensureCapacity(finalTimeStep);
 		
 		// Ensure all Vehicles have enough memory capacity 
 		for (Vehicle vehicle : vehicles) {
@@ -83,6 +89,16 @@ public class TrafficManager {
 		}
 	}
 	
+	/**
+	 * Ensures that this TrafficManager's history has enough space for the given number
+	 * of timesteps
+	 * @param timestep - number of timesteps we need to be able to save history for
+	 */
+	private void ensureCapacity(int timestep) {
+		while(history.size() <= timestep)
+			history.add(new HashMap<Vehicle,Coordinates>());
+	}
+
 	/**
 	 * Gets the distance to and speed of the closest vehicle in front of this vehicle.
 	 * @param vehicle - vehicle in front of which we are checking
