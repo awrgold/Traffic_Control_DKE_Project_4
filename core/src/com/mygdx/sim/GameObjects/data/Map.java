@@ -49,6 +49,13 @@ public class Map {
 	public List<Edge> getEdges(){
 		return edges;
 	}
+
+	public int getNodeIndex(Node toFind){
+		for (int i = 0; i < nodes.size(); i++){
+			if (nodes.get(i).equals(toFind)) return i;
+		}
+		return -1;
+	}
 	
 	public static void main(String[] args) {
 		Node node1 = new Node(0,0);

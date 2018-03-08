@@ -5,6 +5,7 @@ public class Edge {
     private Node from;
     private Node to;
     private int speedLimit;
+    private double lengthScore;
 
     public Edge(Node from, Node to){
         this(from,to,50);
@@ -43,6 +44,10 @@ public class Edge {
     public double getLength(){
     	Coordinates md = getManhattanDistanceTraveled();
     	return Math.sqrt(Math.pow(md.getX(),2)+Math.pow(md.getY(),2));
+    }
+
+    public void setLengthScore(double newScore){
+        this.lengthScore = newScore;
     }
     
     /**

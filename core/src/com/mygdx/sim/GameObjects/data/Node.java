@@ -4,11 +4,14 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import static java.lang.Float.MAX_VALUE;
+
 public class Node {
 
 	private ArrayList<Edge> inEdges = new ArrayList<Edge>();
 	private ArrayList<Edge> outEdges = new ArrayList<Edge>();
 	private Coordinates location;
+	private double nodeDistanceWeight;
 
 	public Node(double xCoordinate, double yCoordinate) {
 		location = new Coordinates(xCoordinate, yCoordinate);
@@ -45,4 +48,21 @@ public class Node {
 	public ArrayList<Edge> getOutEdges() {
 		return outEdges;
 	}
+
+	public void setNodeDistanceWeight(double d){
+		nodeDistanceWeight = d;
+	}
+
+	public double getNodeDistanceWeight(){
+		return nodeDistanceWeight;
+	}
+
+	public ArrayList<Node> getOutgoingNeighbors(){
+		ArrayList<Node> neighbors = new ArrayList<Node>();
+		for (Edge e : outEdges){
+			neighbors.add(e.getTo());
+		}
+		return neighbors;
+	}
+
 }
