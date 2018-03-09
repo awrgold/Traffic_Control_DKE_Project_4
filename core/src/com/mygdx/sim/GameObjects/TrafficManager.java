@@ -12,13 +12,14 @@ import com.mygdx.sim.GameObjects.data.Edge;
 import com.mygdx.sim.GameObjects.data.Map;
 import com.mygdx.sim.GameObjects.data.Node;
 import com.mygdx.sim.GameObjects.data.Util;
+import com.mygdx.sim.GameObjects.driverModel.IntelligentDriverModel;
 import com.mygdx.sim.GameObjects.driverModel.SimpleDriverModel;
 import com.mygdx.sim.GameObjects.vehicle.Car;
 import com.mygdx.sim.GameObjects.vehicle.Vehicle;
 
 public class TrafficManager {
 	
-	private final static int TIMESTEPS = 1000000;
+	private final static int TIMESTEPS = 1000;
 	private final static int VIEW_DISTANCE = 500;
 	private final static int RIDICULOUS_SPEED = 1000;
 	
@@ -201,7 +202,7 @@ public class TrafficManager {
 	public static void main(String[] args) {
 		Node node1 = new Node(0,0);
 		Node node2 = new Node(475,0);
-		Node node3 = new Node(475,500);
+		Node node3 = new Node(475,1000);
 		Edge edge = new Edge(node1,node2);
 		Edge edge2 = new Edge(node2,node3);
 		
@@ -209,21 +210,17 @@ public class TrafficManager {
 		
 		Car car = new Car(node1,node2,map);
 		car.setEdgePath(Arrays.asList(edge,edge2));
-		car.setDriverModel(new SimpleDriverModel(70));
+		car.setDriverModel(new SimpleDriverModel(10));
 		
 		Car car2 = new Car(node1,node2,map);
 		car2.setEdgePath(Arrays.asList(edge,edge2));
-		car2.setDriverModel(new SimpleDriverModel(30));
+		car2.setDriverModel(new IntelligentDriverModel());
 		
 		List cars = Arrays.asList(car,car2);
 		
 		TrafficManager tm = new TrafficManager(map,cars);
 		
 		tm.simulate(TIMESTEPS);
-		
-		int x=0;
-		
-		tm.getState(100);
 		
 		int y= 0;
 	}
