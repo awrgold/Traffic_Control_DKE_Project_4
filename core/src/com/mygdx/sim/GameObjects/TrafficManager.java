@@ -18,7 +18,7 @@ import com.mygdx.sim.GameObjects.vehicle.Vehicle;
 
 public class TrafficManager {
 	
-	private final static int TIMESTEPS = 10;
+	private final static int TIMESTEPS = 1000000;
 	private final static int VIEW_DISTANCE = 500;
 	private final static int RIDICULOUS_SPEED = 1000;
 	
@@ -56,6 +56,10 @@ public class TrafficManager {
 		if(timestep >= history.size()) simulate(timestep);
 		
 		return history.get(timestep);
+	}
+	
+	public ArrayList<HashMap<Vehicle,Coordinates>> getHistory(){
+		return history;
 	}
 	
 	/**
