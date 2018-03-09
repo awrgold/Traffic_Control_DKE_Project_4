@@ -128,7 +128,8 @@ public class TrafficManager {
 		Edge edge = vehicle.getEdgeAt(timestep);
 		double distance = -vehicle.getTraveledDistance(timestep);
 		
-		DistanceAndVehicle dnv = getClosestVehicle(vehicle,edge,distance,timestep);
+		DistanceAndVehicle dnv = 
+				getClosestVehicle(vehicle,edge,distance,timestep);
 		
 		if(dnv == null) return new DistanceAndSpeed(VIEW_DISTANCE,RIDICULOUS_SPEED);
 		
@@ -159,8 +160,7 @@ public class TrafficManager {
 			Vehicle closestVehicle = closest.getVehicle();
 			double distanceToClosest = (distanceUntilNow + closestVehicle.getTraveledDistance(timestep));
 			return new DistanceAndVehicle(distanceToClosest,closestVehicle);
-		}
-			
+		}			
 		
 		distanceUntilNow += currentEdge.getLength();
 		
@@ -184,7 +184,7 @@ public class TrafficManager {
 			if(dnv == null) continue;
 			Vehicle vehicle2 = dnv.getVehicle();
 			
-			double thisDistance = vehicle2.getTraveledDistance(timestep);
+			double thisDistance = dnv.getDistance();
 			if (thisDistance < smallestDistance) {
 				closestVehicle = vehicle2;
 				smallestDistance = thisDistance;
@@ -203,20 +203,24 @@ public class TrafficManager {
 		Node node1 = new Node(0,0);
 		Node node2 = new Node(475,0);
 		Node node3 = new Node(475,1000);
-		Edge edge = new Edge(node1,node2);
+		Edge edge1 = new Edge(node1,node2);
 		Edge edge2 = new Edge(node2,node3);
 		
-		Map map = new Map(Arrays.asList(node1,node2,node3),Arrays.asList(edge,edge2));
+		Map map = new Map(Arrays.asList(node1,node2,node3),Arrays.asList(edge1,edge2));
 		
-		Car car = new Car(node1,node2,map);
-		car.setEdgePath(Arrays.asList(edge,edge2));
-		car.setDriverModel(new SimpleDriverModel(10));
+		Car car1 = new Car(node2,node3,map);
+		car1.setEdgePath(Arrays.asList(edge2));
+		car1.setDriverModel(new SimpleDriverModel(10));
 		
-		Car car2 = new Car(node1,node2,map);
-		car2.setEdgePath(Arrays.asList(edge,edge2));
+		Car car2 = new Car(node2,node3,map);
+		car2.setEdgePath(Arrays.asList(edge2));
 		car2.setDriverModel(new IntelligentDriverModel());
 		
-		List cars = Arrays.asList(car,car2);
+		Car car3 = new Car(node1,node3,map);
+		car3.setEdgePath(Arrays.asList(edge1,edge2));
+		car3.setDriverModel(new IntelligentDriverModel());
+		
+		List cars = Arrays.asList(car1,car2,car3);
 		
 		TrafficManager tm = new TrafficManager(map,cars);
 		
