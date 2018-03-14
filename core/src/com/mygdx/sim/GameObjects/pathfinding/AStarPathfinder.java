@@ -49,16 +49,16 @@ public class AStarPathfinder extends Pathfinder {
 			n.setNodeDistanceWeight(MIN_VALUE);
 		}
 
+		// Initialize the distances in the remaining distances to infinity
+		for (Node n : costRemaining.getNodes()){
+			n.setNodeDistanceWeight(MAX_VALUE);
+		}
+
 		// Set the manhattan distance from start to goal for the starting node
 		costRemaining.getNodes().get(map.getNodeIndex(start)).setNodeDistanceWeight(manhattanDistance(goal, start));
 
 		// Set the distance to the starting node as 0
 		costSoFar.getNodes().get(map.getNodeIndex(start)).setNodeDistanceWeight(0);
-
-		// Initialize the distances in the remaining distances to infinity
-		for (Node n : costRemaining.getNodes()){
-			n.setNodeDistanceWeight(MAX_VALUE);
-		}
 
 		while (!open.isEmpty()){
 
