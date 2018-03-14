@@ -52,4 +52,22 @@ public class Node {
 	public String toString() {
 		return "[Node@"+location+"]";
 	}
+
+	public void setNodeDistanceWeight(double d){
+		this.nodeDistanceWeight = d;
+	}
+
+	public double getNodeDistanceWeight(){
+		return nodeDistanceWeight;
+	}
+
+	public ArrayList<Node> getOutgoingNeighbors(){
+		ArrayList<Node> outgoingNeighbors = new ArrayList<Node>();
+		for (Edge e : outEdges){
+			outgoingNeighbors.add(e.getTo());
+		}
+		return outgoingNeighbors;
+	}
+
+
 }
