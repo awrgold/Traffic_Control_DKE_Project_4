@@ -139,6 +139,7 @@ public class AStarPathfinder extends Pathfinder {
 	// Reconstruct the shortest path leading to the goal
 	public void reconstructPath(ArrayList<Node> cameFrom, Node current){
 
+		// This should be done recursively but I'm like balls deep in DGAF territory right now so...
 		for (int i = 0; i < cameFrom.size() - 1; i ++){
 			for (Edge e : cameFrom.get(i).getOutEdges()){
 				if (e.getTo().equals(cameFrom.get(i+1)) || e.getTo().equals(current)){
