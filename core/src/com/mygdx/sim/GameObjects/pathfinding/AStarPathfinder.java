@@ -60,12 +60,13 @@ public class AStarPathfinder extends Pathfinder {
 		// Set the distance to the starting node as 0
 		costSoFar.getNodes().get(map.getNodeIndex(start)).setNodeDistanceWeight(0);
 
+		// While there are still candidates to explore
 		while (!open.isEmpty()){
 
 			// Lazy implementation of a priority queue because I hate comparators without tuples
 			// This does not *robustly* sort anything beyond the top element, but we don't need a robust sorting, just a "meh" sorting (for now)
 			for (Node n : open){
-				if (!n.equals(goal) && (n.getNodeDistanceWeight() < open.peek().getNodeDistanceWeight()) ){
+				if (n.getNodeDistanceWeight() < open.peek().getNodeDistanceWeight()){
 					Node temp = n;
 					open.remove(n);
 					open.push(temp);
