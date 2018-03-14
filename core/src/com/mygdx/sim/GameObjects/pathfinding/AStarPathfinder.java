@@ -19,6 +19,14 @@ public class AStarPathfinder extends Pathfinder {
 		super(graph);
 	}
 
+
+	/**
+	 * Not documented yet.
+	 * @param map
+	 * @param start
+	 * @param goal
+	 * @return
+	 */
 	public Map search(Map map, Node start, Node goal){
 
 		// The set of nodes already evaluated
@@ -78,6 +86,7 @@ public class AStarPathfinder extends Pathfinder {
 		return null;
 	}
 
+	// Not working yet
 	public Map reconstructPath(List cameFrom, Node current){
 		Map path = new Map(new ArrayList<Node>(), new ArrayList<Edge>());
 
@@ -88,6 +97,9 @@ public class AStarPathfinder extends Pathfinder {
 	public double manhattanDistance(Node a, Node b){
 		return Math.abs((a.getX()-b.getX()) - (a.getY()-b.getY()));
 	}
+
+	// Not working yet
+
 	public List<Edge> findPath(Vehicle vehicle, int timestep) {
 		// TODO Auto-generated method stub
 
