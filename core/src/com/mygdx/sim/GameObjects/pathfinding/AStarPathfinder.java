@@ -44,9 +44,9 @@ public class AStarPathfinder extends Pathfinder {
 		// The map of distances from any given node to the goal node
 		Map costRemaining = new Map(map.getNodes(), map.getEdges());
 
-		// Set the g and f scores to max/min value (have not been evaluated yet)
+		// Initialize the distances in the costs incurred so far as -infinity
 		for (Node n : costSoFar.getNodes()){
-			n.setNodeDistanceWeight(MAX_VALUE);
+			n.setNodeDistanceWeight(MIN_VALUE);
 		}
 
 		// Set the manhattan distance from start to goal for the starting node
@@ -55,7 +55,7 @@ public class AStarPathfinder extends Pathfinder {
 		// Set the distance to the starting node as 0
 		costSoFar.getNodes().get(map.getNodeIndex(start)).setNodeDistanceWeight(0);
 
-		// Initialize the distances in gScore to infinity
+		// Initialize the distances in the remaining distances to infinity
 		for (Node n : costRemaining.getNodes()){
 			n.setNodeDistanceWeight(MAX_VALUE);
 		}
@@ -85,13 +85,14 @@ public class AStarPathfinder extends Pathfinder {
 				// Calculate the new cost to reach each neighbor of the current node from the start
 				double newCost = costSoFar.getNodes().get(map.getNodeIndex(current)).getNodeDistanceWeight() + manhattanDistance(current, n);
 
-				// If the neighbor is not evaluated yet OR newCost is less than the cost to get to the neighbor
+				// If the neighbor is not evaluated yet AND newCost is less than the cost to get to the neighbor
 				if (open.contains(n) && newCost < costSoFar.getNodes().get(map.getNodeIndex(n)).getNodeDistanceWeight()) {
 
 					// Remove neighbor as the new path is better
 					open.remove(n);
 				}
 
+				// If the neighbor is not yet a candidate and has not been evaluated yet
 				if (!closed.contains(n) && !open.contains(n)){
 
 					// Update the cost to reach the neighbor n
@@ -134,7 +135,7 @@ public class AStarPathfinder extends Pathfinder {
 
 	}
 
-	// Not working yet
+	// Reconstruct the shortest path leading to the goal
 	public void reconstructPath(ArrayList<Node> cameFrom, Node current){
 
 		for (int i = 0; i < cameFrom.size() - 1; i ++){
@@ -150,7 +151,7 @@ public class AStarPathfinder extends Pathfinder {
 		return Math.abs((a.getX()-b.getX()) - (a.getY()-b.getY()));
 	}
 
-	// Not working yet
+	// Return the path
 	public List<Edge> findPath(Vehicle vehicle, int timestep) {
 		search(graph, vehicle.getStartNode(), vehicle.getGoalNode());
 		return this.path;
