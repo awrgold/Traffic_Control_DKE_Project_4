@@ -13,6 +13,7 @@ import com.mygdx.sim.GameObjects.driverModel.DriverModel;
 import com.mygdx.sim.GameObjects.driverModel.SimpleDriverModel;
 import com.mygdx.sim.GameObjects.pathfinding.AStarPathfinder;
 import com.mygdx.sim.GameObjects.pathfinding.Pathfinder;
+import com.mygdx.sim.Resources.Resources;
 
 public abstract class Vehicle {
 	
@@ -124,7 +125,7 @@ public abstract class Vehicle {
 	
 	private void setSprite(String spriteName) {
 		this.spriteName = spriteName;
-//		sprite = Resources.world.vehicleSprites.get(spriteName);
+		sprite = Resources.world.vehicleSprites.get(spriteName);
 	}
 
 	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Map graph) {

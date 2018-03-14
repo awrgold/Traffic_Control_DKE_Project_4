@@ -22,7 +22,7 @@ public class TrafficManager {
 	private final static int TIMESTEPS = 1000;
 	private final static int VIEW_DISTANCE = 500;
 	private final static int RIDICULOUS_SPEED = 1000;
-	
+
 	private Map map;
 	private List<Vehicle> vehicles;
 	
@@ -65,10 +65,12 @@ public class TrafficManager {
 	
 	/**
 	 * Run the simulation until the given timestep.
-	 * @param finalTimeStep - timestep until which we are running the sim
+	 * 
+	 * @param finalTimeStep
+	 *            - timestep until which we are running the sim
 	 */
 	public void simulate(int finalTimeStep) {
-		
+
 		// Ensure the map's location cache has enough memory capacity
 		map.ensureCapacity(finalTimeStep);
 		
@@ -90,13 +92,15 @@ public class TrafficManager {
 				
 				// Set the new speed
 				vehicle.setSpeed(lastComputedTimestep, newSpeed);
-				
-				/* Ask our pathfinding algorithm for a path
-				 It can still return the very same path - we're only giving it
-				 the opportunity to change the path, not requiring it */
+
+				/*
+				 * Ask our pathfinding algorithm for a path It can still return
+				 * the very same path - we're only giving it the opportunity to
+				 * change the path, not requiring it
+				 */
 				vehicle.computePath(lastComputedTimestep);
 			}
-						
+
 			// Increment the timestep
 			lastComputedTimestep++;
 			
@@ -135,13 +139,13 @@ public class TrafficManager {
 		
 		Vehicle closest = dnv.getVehicle();
 		double distanceToClosest = dnv.getDistance();
-		
+
 		double speedOfClosest = RIDICULOUS_SPEED;
-		
-		if(timestep>0)
-			speedOfClosest = closest.getSpeedAt(timestep-1);
-		
-		return new DistanceAndSpeed(distanceToClosest,speedOfClosest);
+
+		if (timestep > 0)
+			speedOfClosest = closest.getSpeedAt(timestep - 1);
+
+		return new DistanceAndSpeed(distanceToClosest, speedOfClosest);
 	}
 	
 	private DistanceAndVehicle getClosestVehicle(Vehicle vehicle, Edge currentEdge, double distanceUntilNow, int timestep) {
@@ -163,36 +167,66 @@ public class TrafficManager {
 		}			
 		
 		distanceUntilNow += currentEdge.getLength();
-		
-		if((distanceUntilNow + Util.DELTA_EPSILON) >= VIEW_DISTANCE)
+
+		if ((distanceUntilNow + Util.DELTA_EPSILON) >= VIEW_DISTANCE)
 			return null;
-		
+
 		ArrayList<DistanceAndVehicle> vehiclesFromFollowingEdges = new ArrayList<DistanceAndVehicle>();
-		
+
 		for (Edge edge2 : currentEdge.getTo().getOutEdges())
-			vehiclesFromFollowingEdges.add(getClosestVehicle(vehicle,edge2,distanceUntilNow,timestep));
-		
-		return getClosestDistanceAndVehicleFromList(vehiclesFromFollowingEdges,timestep);
+			vehiclesFromFollowingEdges.add(getClosestVehicle(vehicle, edge2, distanceUntilNow, timestep));
+
+		return getClosestDistanceAndVehicleFromList(vehiclesFromFollowingEdges, timestep);
 	}
-	
+
 	private DistanceAndVehicle getClosestDistanceAndVehicleFromList(List<DistanceAndVehicle> list, int timestep) {
 
 		Vehicle closestVehicle = null;
 		double smallestDistance = VIEW_DISTANCE;
 
 		for (DistanceAndVehicle dnv : list) {
-			if(dnv == null) continue;
+			if (dnv == null)
+				continue;
 			Vehicle vehicle2 = dnv.getVehicle();
 			
 			double thisDistance = dnv.getDistance();
+      
 			if (thisDistance < smallestDistance) {
 				closestVehicle = vehicle2;
 				smallestDistance = thisDistance;
 			}
 		}
-		if(closestVehicle == null) return null;
-		
-		return new DistanceAndVehicle(smallestDistance,closestVehicle);
+		if (closestVehicle == null)
+			return null;
+
+		return new DistanceAndVehicle(smallestDistance, closestVehicle);
+	}
+
+	public static TrafficManager createEnironment() {
+		Node node1 = new Node(0, 0);
+		Node node2 = new Node(475, 0);
+		Node node3 = new Node(475, 500);
+		Edge edge = new Edge(node1, node2);
+		Edge edge2 = new Edge(node2, node3);
+
+		Map map = new Map(Arrays.asList(node1, node2, node3), Arrays.asList(edge, edge2));
+
+		Car car = new Car(node1, node2, map);
+		car.setEdgePath(Arrays.asList(edge, edge2));
+		car.setDriverModel(new SimpleDriverModel(70));
+
+		Car car2 = new Car(node1, node2, map);
+		car2.setEdgePath(Arrays.asList(edge, edge2));
+		car2.setDriverModel(new SimpleDriverModel(30));
+
+		List cars = Arrays.asList(car, car2);
+
+		TrafficManager tm = new TrafficManager();
+		tm.setMap(map);
+
+		tm.setVehicles(cars);
+
+		return tm;
 	}
 	
 	public String toString() {

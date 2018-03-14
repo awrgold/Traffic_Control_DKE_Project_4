@@ -37,6 +37,7 @@ public class TrafficSimulator extends Game {
 		
 		//Set screen
 		this.setScreen(menuScreen);
+
 	}
 
 	@Override

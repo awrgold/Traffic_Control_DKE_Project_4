@@ -1,20 +1,47 @@
 package com.mygdx.sim.World;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.math.Rectangle;
+import com.mygdx.sim.GameObjects.TrafficManager;
+import com.mygdx.sim.GameObjects.data.Map;
 import com.mygdx.sim.GameObjects.data.Node;
-import com.mygdx.sim.World.Map.Map;
+import com.mygdx.sim.GameObjects.vehicle.Vehicle;
 
 public class WorldController {
 
 	// Map
 	private Map map;
 
+	// Map Objects
+	private List<Vehicle> vehicles;
+
 	// Camera
 	private WorldCamera worldCamera;
+	
+	// Traffic Manager
+	private TrafficManager trafficManager;
 
 	public WorldController() {
-		map = new Map(20, 20);
+
+		// Create Map Object Lists
+		vehicles = new ArrayList<Vehicle>();
+
+		// Create World Camera
 		worldCamera = new WorldCamera();
+
+		// Traffic Manager
+		trafficManager = TrafficManager.createEnironment();
+		
+		// Get Vehicles
+		vehicles = trafficManager.getVehicles();
+		
+		// Get Map
+		map = trafficManager.getMap();
+		
+		// Start Simulation
+		trafficManager.simulate(TrafficManager.TIMESTEPS);
 	}
 
 	public void update() {
@@ -37,7 +64,11 @@ public class WorldController {
 		return map.getBounds();
 	}
 
-	public Node[][] getNodes() {
+	public List<Node> getNodes() {
 		return map.getNodes();
+	}
+
+	public List<Vehicle> getVehicles() {
+		return vehicles;
 	}
 }
