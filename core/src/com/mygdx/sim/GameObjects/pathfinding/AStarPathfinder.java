@@ -29,9 +29,9 @@ public class AStarPathfinder extends Pathfinder {
 	 */
 	public Map search(Map map, Node start, Node goal){
 
-		// The set of nodes already evaluated
+		// The set of nodes to be evaluated
 		Stack<Node> open = new Stack<Node>();
-		// The set of nodes not yet explored
+		// The set of nodes already evaluated
 		List<Node> closed = new ArrayList<Node>();
 		closed.addAll(map.getNodes());
 		// Create a list of edges we have taken to get to where we are now
@@ -45,6 +45,8 @@ public class AStarPathfinder extends Pathfinder {
 		for (Node n : fScore.getNodes()){
 			n.setNodeDistanceWeight(MAX_VALUE);
 		}
+
+		//
 		gScore.getNodes().get(map.getNodeIndex(start)).setNodeDistanceWeight(0);
 		fScore.getNodes().get(map.getNodeIndex(start)).setNodeDistanceWeight(manhattanDistance(goal, start));
 		for (Node n : gScore.getNodes()){
@@ -53,7 +55,7 @@ public class AStarPathfinder extends Pathfinder {
 
 		while (!open.isEmpty()){
 
-			// Lazy implementation of a priority queue
+			// Lazy implementation of a priority queue because I hate comparators without tuples
 			for (Node n : open){
 				if (n.getNodeDistanceWeight() < open.peek().getNodeDistanceWeight()){
 					Node temp = n;
