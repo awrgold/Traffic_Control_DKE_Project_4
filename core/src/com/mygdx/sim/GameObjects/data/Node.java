@@ -53,6 +53,7 @@ public class Node {
 		return "[Node@"+location+"]";
 	}
 
+
 	public void setNodeDistanceWeight(double d){
 		this.nodeDistanceWeight = d;
 	}
