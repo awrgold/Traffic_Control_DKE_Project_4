@@ -64,6 +64,24 @@ public class Map {
 
 	public Rectangle getBounds() {
 		return bounds;
+	
+	public String toString() {
+		return "[Map]";
+	}
+	
+	public static void main(String[] args) {
+		Node node1 = new Node(0,0);
+		Node node2 = new Node(0,10);
+		
+		Edge edge = new Edge(node1,node2,50);
+		
+		Map map = new Map(Arrays.asList(node1,node2),Arrays.asList(edge));
+		
+		System.out.println("Created map");
+		
+		map.ensureCapacity(10);
+		
+		int x = 0;
 	}
 
     public int getNodeIndex(Node toFind){

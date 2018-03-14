@@ -48,21 +48,8 @@ public class Node {
 	public ArrayList<Edge> getOutEdges() {
 		return outEdges;
 	}
-
-	public void setNodeDistanceWeight(double d){
-		nodeDistanceWeight = d;
+	
+	public String toString() {
+		return "[Node@"+location+"]";
 	}
-
-	public double getNodeDistanceWeight(){
-		return nodeDistanceWeight;
-	}
-
-	public ArrayList<Node> getOutgoingNeighbors(){
-		ArrayList<Node> neighbors = new ArrayList<Node>();
-		for (Edge e : outEdges){
-			neighbors.add(e.getTo());
-		}
-		return neighbors;
-	}
-
 }

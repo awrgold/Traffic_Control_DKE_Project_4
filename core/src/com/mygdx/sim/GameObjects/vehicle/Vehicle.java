@@ -17,6 +17,10 @@ import com.mygdx.sim.Resources.Resources;
 
 public abstract class Vehicle {
 	
+	private static int lastGivenId = 0;
+	
+	private int id;
+	
 	/**
 	 * The node this vehicle starts its trip at.
 	 */
@@ -107,6 +111,18 @@ public abstract class Vehicle {
 	 */
 	private Sprite sprite;
 	
+	private double maxAcceleration = 1.4;
+	
+	public double getMaxAcceleration() {
+		return maxAcceleration;
+	}
+	
+	private double safetyHeadway = 1.5;
+	
+	public double getSafetyHeadway() {
+		return safetyHeadway;
+	}
+	
 	private void setSprite(String spriteName) {
 		this.spriteName = spriteName;
 		sprite = Resources.world.vehicleSprites.get(spriteName);
@@ -115,6 +131,8 @@ public abstract class Vehicle {
 	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Map graph) {
 
 		setSprite(spriteName);
+		
+		this.id = lastGivenId++;
 
 		// Set Start/Goal
 		this.startNode = startNode;
@@ -129,6 +147,10 @@ public abstract class Vehicle {
 		computePath(0);
 		
 		initialize();
+	}
+	
+	public String toString() {
+		return ("[Vehicle " + id + "]");
 	}
 	
 	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Map graph, Pathfinder pathfinder) {
@@ -301,5 +323,16 @@ public abstract class Vehicle {
 	
 	public double getSpeedAt(int timestep){
 		return speeds.get(timestep);
+	}
+	
+	public int hashCode() {
+		return id;
+	}
+	
+	public boolean equals(Object o) {
+		if(!(o instanceof Vehicle)) return false;
+		Vehicle v = (Vehicle) o;
+		
+		return (v.id == this.id);
 	}
 }

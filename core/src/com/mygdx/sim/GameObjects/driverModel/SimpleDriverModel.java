@@ -16,6 +16,10 @@ public class SimpleDriverModel implements DriverModel{
 	public SimpleDriverModel(int speed) {
 		this.speed = speed;		
 	}
+	
+	public String toString() {
+		return "[SimpleDriverModel " + speed + "]";
+	}
 
 	public double determineNewSpeed(TrafficManager mgr, Vehicle vehicle, int timestep) {
 		return speed;
