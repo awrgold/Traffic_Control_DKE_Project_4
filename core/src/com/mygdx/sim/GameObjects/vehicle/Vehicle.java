@@ -324,6 +324,14 @@ public abstract class Vehicle {
 	public double getSpeedAt(int timestep){
 		return speeds.get(timestep);
 	}
+
+	public Node getStartNode(){
+		return startNode;
+	}
+
+	public Node getGoalNode(){
+		return goalNode;
+	}
 	
 	public int hashCode() {
 		return id;

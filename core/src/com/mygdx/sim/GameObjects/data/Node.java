@@ -10,6 +10,7 @@ public class Node {
 
 	private ArrayList<Edge> inEdges = new ArrayList<Edge>();
 	private ArrayList<Edge> outEdges = new ArrayList<Edge>();
+	private Node parent;
 	private Coordinates location;
 	private double nodeDistanceWeight;
 
@@ -53,6 +54,13 @@ public class Node {
 		return "[Node@"+location+"]";
 	}
 
+	public void setParent(Node parent){
+		this.parent = parent;
+	}
+
+	public Node getParent(){
+		return parent;
+	}
 
 	public void setNodeDistanceWeight(double d){
 		this.nodeDistanceWeight = d;

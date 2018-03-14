@@ -27,73 +27,123 @@ public class AStarPathfinder extends Pathfinder {
 	 * @param goal
 	 * @return
 	 */
-	public Map search(Map map, Node start, Node goal){
 
-		// The set of nodes to be evaluated
+	List<Edge> path = new ArrayList<Edge>();
+
+	public void search(Map map, Node start, Node goal){
+
+		// The set of candidate nodes to be evaluated, starting with the start node
 		Stack<Node> open = new Stack<Node>();
+		open.push(start);
 		// The set of nodes already evaluated
 		List<Node> closed = new ArrayList<Node>();
-		closed.addAll(map.getNodes());
 		// Create a list of edges we have taken to get to where we are now
-		List<Node> cameFrom = new ArrayList<Node>();
-		// The map of distances from the starting node to any other node
-		Map fScore = new Map(map.getNodes(), map.getEdges());
+		ArrayList<Node> cameFrom = new ArrayList<Node>();
+		// Cost So Far: The map of distances from the starting node to nodes explored
+		Map costSoFar = new Map(map.getNodes(), map.getEdges());
 		// The map of distances from any given node to the goal node
-		Map gScore = new Map(map.getNodes(), map.getEdges());
+		Map costRemaining = new Map(map.getNodes(), map.getEdges());
 
 		// Set the g and f scores to max/min value (have not been evaluated yet)
-		for (Node n : fScore.getNodes()){
+		for (Node n : costSoFar.getNodes()){
 			n.setNodeDistanceWeight(MAX_VALUE);
 		}
 
-		//
-		gScore.getNodes().get(map.getNodeIndex(start)).setNodeDistanceWeight(0);
-		fScore.getNodes().get(map.getNodeIndex(start)).setNodeDistanceWeight(manhattanDistance(goal, start));
-		for (Node n : gScore.getNodes()){
+		// Set the manhattan distance from start to goal for the starting node
+		costRemaining.getNodes().get(map.getNodeIndex(start)).setNodeDistanceWeight(manhattanDistance(goal, start));
+
+		// Set the distance to the starting node as 0
+		costSoFar.getNodes().get(map.getNodeIndex(start)).setNodeDistanceWeight(0);
+
+		// Initialize the distances in gScore to infinity
+		for (Node n : costRemaining.getNodes()){
 			n.setNodeDistanceWeight(MAX_VALUE);
 		}
 
 		while (!open.isEmpty()){
 
 			// Lazy implementation of a priority queue because I hate comparators without tuples
+			// This does not *robustly* sort anything beyond the top element, but we don't need a robust sorting, just a "meh" sorting (for now)
 			for (Node n : open){
-				if (n.getNodeDistanceWeight() < open.peek().getNodeDistanceWeight()){
+				if (!n.equals(goal) && (n.getNodeDistanceWeight() < open.peek().getNodeDistanceWeight()) ){
 					Node temp = n;
 					open.remove(n);
 					open.push(temp);
 				}
 			}
 
-			Node current = open.peek();
-			if (current.equals(goal)) return reconstructPath(cameFrom, current);
+			// Set the current node as the most promising candidate in Open
+			Node current = open.pop();
+			closed.add(current);
 
+			// If we've reached the goal, return the path that got us there
+			if (current.equals(goal)) reconstructPath(cameFrom, current);
+
+			// For each neighbor of the current node
+			for (Node n : current.getOutgoingNeighbors()){
+
+				// Calculate the new cost to reach each neighbor of the current node from the start
+				double newCost = costSoFar.getNodes().get(map.getNodeIndex(current)).getNodeDistanceWeight() + manhattanDistance(current, n);
+
+				// If the neighbor is not evaluated yet OR newCost is less than the cost to get to the neighbor
+				if (open.contains(n) && newCost < costSoFar.getNodes().get(map.getNodeIndex(n)).getNodeDistanceWeight()) {
+
+					// Remove neighbor as the new path is better
+					open.remove(n);
+				}
+
+				if (!closed.contains(n) && !open.contains(n)){
+
+					// Update the cost to reach the neighbor n
+					costSoFar.getNodes().get(map.getNodeIndex(n)).setNodeDistanceWeight(newCost);
+
+					// Update the remaining cost from n to goal
+					costRemaining.getNodes().get(map.getNodeIndex(n)).setNodeDistanceWeight(newCost + manhattanDistance(goal, n));
+
+					// Add n to the candidate list
+					open.add(n);
+
+					// Set the parent of n as current
+					n.setParent(current);
+
+				}
+
+			}
+
+			/*
 			open.remove(current);
 			closed.add(current);
 
 			for (Node n : current.getOutgoingNeighbors()){
 
-				if (!closed.contains(n)){
+				if (!closed.contains(n) && !open.contains(n)){
 					open.add(n);
+					n.setParent(current);
 				}
 
-				double tempGScore = gScore.getNodes().get(map.getNodeIndex(start)).getNodeDistanceWeight() + manhattanDistance(current, n);
+				double tempGScore = costRemaining.getNodes().get(map.getNodeIndex(start)).getNodeDistanceWeight() + manhattanDistance(current, n);
 
-				if (tempGScore >= gScore.getNodes().get(map.getNodeIndex(n)).getNodeDistanceWeight()) continue;
+				if (tempGScore >= costRemaining.getNodes().get(map.getNodeIndex(n)).getNodeDistanceWeight()) continue;
 
 				cameFrom.set(map.getNodeIndex(n), current);
-				gScore.getNodes().get(map.getNodeIndex(n)).setNodeDistanceWeight(tempGScore);
-				fScore.getNodes().get(map.getNodeIndex(n)).setNodeDistanceWeight(gScore.getNodes().get(map.getNodeIndex(n)).getNodeDistanceWeight() + manhattanDistance(n, goal));
+				costRemaining.getNodes().get(map.getNodeIndex(n)).setNodeDistanceWeight(tempGScore);
+				costSoFar.getNodes().get(map.getNodeIndex(n)).setNodeDistanceWeight(costRemaining.getNodes().get(map.getNodeIndex(n)).getNodeDistanceWeight() + manhattanDistance(n, goal));
 			}
+			*/
 		}
-		return null;
+
 	}
 
 	// Not working yet
-	public Map reconstructPath(List cameFrom, Node current){
-		Map path = new Map(new ArrayList<Node>(), new ArrayList<Edge>());
+	public void reconstructPath(ArrayList<Node> cameFrom, Node current){
 
-
-		return path;
+		for (int i = 0; i < cameFrom.size() - 1; i ++){
+			for (Edge e : cameFrom.get(i).getOutEdges()){
+				if (e.getTo().equals(cameFrom.get(i+1)) || e.getTo().equals(current)){
+					path.add(e);
+				}
+			}
+		}
 	}
 
 	public double manhattanDistance(Node a, Node b){
@@ -101,11 +151,9 @@ public class AStarPathfinder extends Pathfinder {
 	}
 
 	// Not working yet
-
 	public List<Edge> findPath(Vehicle vehicle, int timestep) {
-		// TODO Auto-generated method stub
-
-		return vehicle.getEdgePath();
+		search(graph, vehicle.getStartNode(), vehicle.getGoalNode());
+		return this.path;
 	}
 
 
