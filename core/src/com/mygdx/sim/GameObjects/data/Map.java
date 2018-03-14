@@ -64,6 +64,7 @@ public class Map {
 
 	public Rectangle getBounds() {
 		return bounds;
+	}
 	
 	public String toString() {
 		return "[Map]";
