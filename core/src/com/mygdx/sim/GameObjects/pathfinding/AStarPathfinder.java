@@ -54,8 +54,8 @@ public class AStarPathfinder extends Pathfinder {
 			n.setNodeDistanceWeight(MAX_VALUE);
 		}
 
-		// Set the manhattan distance from start to goal for the starting node
-		costRemaining.getNodes().get(map.getNodeIndex(start)).setNodeDistanceWeight(manhattanDistance(goal, start));
+//		// Set the manhattan distance from start to goal for the starting node
+//		costRemaining.getNodes().get(map.getNodeIndex(start)).setNodeDistanceWeight(manhattanDistance(goal, start));
 
 		// Set the distance to the starting node as 0
 		costSoFar.getNodes().get(map.getNodeIndex(start)).setNodeDistanceWeight(0);
