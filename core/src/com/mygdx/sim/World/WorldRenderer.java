@@ -1,12 +1,15 @@
 package com.mygdx.sim.World;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
-import com.mygdx.sim.GameObjects.TrafficManager;
+import com.mygdx.sim.GameObjects.data.Coordinates;
 import com.mygdx.sim.GameObjects.data.Map;
 import com.mygdx.sim.GameObjects.data.Node;
 import com.mygdx.sim.GameObjects.vehicle.Vehicle;
@@ -20,6 +23,12 @@ public class WorldRenderer {
 	// Render Objects
 	private ShapeRenderer shapeRenderer;
 	private Rectangle scissor;
+	
+	// Time Step
+	private int timeStep = 0;
+	
+	// Vehicle History
+	public ArrayList<HashMap<Vehicle,Coordinates>> vehicleHistory;
 
 	public WorldRenderer(WorldController worldController) {
 
@@ -29,9 +38,15 @@ public class WorldRenderer {
 		// Render Objects
 		shapeRenderer = new ShapeRenderer();
 		scissor = new Rectangle();
+		
+		// Get Vehicle History
+		vehicleHistory = worldController.getVehicleHistory();
 	}
 
 	public void render(SpriteBatch spriteBatch) {
+		
+		// Increase Time Step
+		if(timeStep + 1 < vehicleHistory.size()) timeStep++;
 
 		// Calculate Scissors
 		ScissorStack.calculateScissors(worldController.getWorldCamera(), spriteBatch.getTransformMatrix(),
@@ -40,7 +55,8 @@ public class WorldRenderer {
 		ScissorStack.pushScissors(scissor);
 		{
 			this.drawMapNodes(spriteBatch);
-			this.drawMapVehicles(spriteBatch);
+			
+			this.drawMapVehicles(spriteBatch, timeStep);
 			spriteBatch.flush();
 		}
 		ScissorStack.popScissors();
@@ -69,12 +85,24 @@ public class WorldRenderer {
 		}
 	}
 
-	private void drawMapVehicles(SpriteBatch spriteBatch) {
+	private void drawMapVehicles(SpriteBatch spriteBatch, int timeStep) {
 		//TODO: Get Vehicle location based on timestamp
 		// Iterate through all vehicles
 		for (Vehicle vehicle : worldController.getVehicles()) {
-			spriteBatch.draw(Resources.ui.allScroll_icon, (float) (vehicle.getLocationCoordinates(10).getX() / 100 * Map.TILE_SIZE),
-					(float) (vehicle.getLocationCoordinates(10).getY() / 100 * Map.TILE_SIZE));
+			Coordinates previousCoord = vehicleHistory.get(timeStep - 1).get(vehicle);
+			Coordinates nextCoord = vehicleHistory.get(timeStep).get(vehicle);
+			
+			float x = (float) (previousCoord.getX() - nextCoord.getX());
+			float y = (float) (previousCoord.getY() - nextCoord.getY());
+			float rotation = 0;
+			
+			if(x > 0) rotation += 90;
+			else if(x < 0) rotation -= 90;
+			else if(y > 0) rotation -= 180;
+			else if(y < 0) rotation = 0;
+			
+			vehicle.draw(spriteBatch, (float) (nextCoord.getX() / 100 * Map.TILE_SIZE),
+					(float) (previousCoord.getY() / 100 * Map.TILE_SIZE), rotation);
 		}
 	}
 }

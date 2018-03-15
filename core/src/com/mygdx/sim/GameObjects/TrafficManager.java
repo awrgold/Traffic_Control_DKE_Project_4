@@ -203,8 +203,8 @@ public class TrafficManager {
 	}
 
 	public static TrafficManager createEnironment() {
-		Node node1 = new Node(0,0);
-		Node node2 = new Node(475,0);
+		Node node1 = new Node(200,200);
+		Node node2 = new Node(475,200);
 		Node node3 = new Node(475,1000);
 		Edge edge1 = new Edge(node1,node2);
 		Edge edge2 = new Edge(node2,node3);

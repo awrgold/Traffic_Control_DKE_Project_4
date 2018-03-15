@@ -256,8 +256,10 @@ public abstract class Vehicle {
 		return edge.getLocationIfTraveledDistance(distance);
 	}
 
-	public void draw(SpriteBatch batch) {
-		sprite.draw(batch);
+	public void draw(SpriteBatch spriteBatch, float x, float y, float rotation) {
+		sprite.setPosition(x, y);
+		sprite.setRotation(rotation);
+		sprite.draw(spriteBatch);
 	}
 	
 	public int getMaxSpeed(int timestep) {

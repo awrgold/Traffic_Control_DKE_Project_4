@@ -23,7 +23,7 @@ public class Map {
 		this.edges = edges;
 
 		// Temporary hardcoded map bound until we have a save and load feature
-		this.reset(10, 10);
+		this.reset(20, 20);
 
 		locationCache = new HashMap<Edge, ArrayList<ArrayList<Vehicle>>>();
 

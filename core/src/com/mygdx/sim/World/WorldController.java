@@ -1,10 +1,12 @@
 package com.mygdx.sim.World;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.sim.GameObjects.TrafficManager;
+import com.mygdx.sim.GameObjects.data.Coordinates;
 import com.mygdx.sim.GameObjects.data.Map;
 import com.mygdx.sim.GameObjects.data.Node;
 import com.mygdx.sim.GameObjects.vehicle.Vehicle;
@@ -42,6 +44,7 @@ public class WorldController {
 		
 		// Start Simulation
 		trafficManager.simulate(TrafficManager.TIMESTEPS);
+		
 	}
 
 	public void update() {
@@ -70,5 +73,9 @@ public class WorldController {
 
 	public List<Vehicle> getVehicles() {
 		return vehicles;
+	}
+	
+	public ArrayList<HashMap<Vehicle,Coordinates>> getVehicleHistory() {
+		return trafficManager.getHistory();
 	}
 }
