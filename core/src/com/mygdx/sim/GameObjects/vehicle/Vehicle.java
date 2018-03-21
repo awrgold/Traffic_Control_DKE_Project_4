@@ -125,8 +125,11 @@ public abstract class Vehicle {
 	
 	private void setSprite(String spriteName) {
 		this.spriteName = spriteName;
+		
 		sprite = Resources.world.vehicleSprites.get(spriteName);
+		sprite.setScale(0.25f);
 	}
+	
 
 	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Map graph) {
 

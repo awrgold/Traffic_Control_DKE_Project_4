@@ -2,10 +2,6 @@ package com.mygdx.sim.GameObjects.data;
 
 import java.util.ArrayList;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
-import static java.lang.Float.MAX_VALUE;
-
 public class Node {
 
 	private ArrayList<Edge> inEdges = new ArrayList<Edge>();

@@ -23,7 +23,7 @@ public class Map {
 		this.edges = edges;
 
 		// Temporary hardcoded map bound until we have a save and load feature
-		this.reset(20, 20);
+		this.reset(1000, 2000);
 
 		locationCache = new HashMap<Edge, ArrayList<ArrayList<Vehicle>>>();
 
@@ -56,9 +56,9 @@ public class Map {
 		return edges;
 	}
 
-	public void reset(int columns, int rows) {
+	public void reset(int maxX, int maxY) {
 		// Init Map Bounds
-		bounds = new Rectangle(0f, 0f, Map.TILE_SIZE * columns, Map.TILE_SIZE * rows);
+		bounds = new Rectangle(0f, 0f, maxX, maxY);
 
 	}
 

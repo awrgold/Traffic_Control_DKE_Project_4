@@ -1,0 +1,12 @@
+roads.png
+size: 854, 860
+format: RGBA8888
+filter: Linear, Linear
+repeat: repeat
+road
+	rotate: false
+	xy: 0, 705
+	size: 64, 64
+	orig: 0, 0
+	offset: 0, 0
+	index: -1
