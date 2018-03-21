@@ -54,8 +54,8 @@ public class AStarPathfinder extends Pathfinder {
 			n.setNodeDistanceWeight(MAX_VALUE);
 		}
 
-//		// Set the manhattan distance from start to goal for the starting node
-//		costRemaining.getNodes().get(map.getNodeIndex(start)).setNodeDistanceWeight(manhattanDistance(goal, start));
+		// Set the manhattan distance from start to goal for the starting node
+		costRemaining.getNodes().get(map.getNodeIndex(start)).setNodeDistanceWeight(manhattanDistance(goal, start));
 
 		// Set the distance to the starting node as 0
 		costSoFar.getNodes().get(map.getNodeIndex(start)).setNodeDistanceWeight(0);
@@ -78,7 +78,11 @@ public class AStarPathfinder extends Pathfinder {
 			closed.add(current);
 
 			// If we've reached the goal, return the path that got us there
-			if (current.equals(goal)) reconstructPath(cameFrom, current);
+			if (current.equals(goal)){
+				reconstructPath(cameFrom, current);
+				// Do I need to do this?
+				open.empty();
+			}
 
 			// For each neighbor of the current node
 			for (Node n : current.getOutgoingNeighbors()){
@@ -107,9 +111,7 @@ public class AStarPathfinder extends Pathfinder {
 
 					// Set the parent of n as current
 					n.setParent(current);
-
 				}
-
 			}
 
 			/*
@@ -155,7 +157,9 @@ public class AStarPathfinder extends Pathfinder {
 
 	// Return the path
 	public List<Edge> findPath(Vehicle vehicle, int timestep) {
-		search(graph, vehicle.getStartNode(), vehicle.getGoalNode());
+		if (timestep > 1){
+			search(graph, vehicle.getStartNode(), vehicle.getGoalNode());
+		}
 		return this.path;
 	}
 
