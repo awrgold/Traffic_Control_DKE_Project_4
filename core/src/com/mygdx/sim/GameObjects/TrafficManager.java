@@ -202,7 +202,7 @@ public class TrafficManager {
 		return new DistanceAndVehicle(smallestDistance, closestVehicle);
 	}
 
-	public static TrafficManager createEnironment() {
+	public static TrafficManager createEnvironment() {
 		Node node1 = new Node(200,200);
 		Node node2 = new Node(475,200);
 		Node node3 = new Node(475,1000);
@@ -248,11 +248,12 @@ public class TrafficManager {
 		Car car1 = new Car(node2,node3,map);
 		car1.setEdgePath(Arrays.asList(edge2));
 		car1.setDriverModel(new SimpleDriverModel(10));
-		
+
 		Car car2 = new Car(node2,node3,map);
 		car2.setEdgePath(Arrays.asList(edge2));
 		car2.setDriverModel(new IntelligentDriverModel());
-		
+
+
 		Car car3 = new Car(node1,node3,map);
 		car3.setEdgePath(Arrays.asList(edge1,edge2));
 		car3.setDriverModel(new IntelligentDriverModel());
