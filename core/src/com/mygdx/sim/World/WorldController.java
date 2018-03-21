@@ -34,7 +34,7 @@ public class WorldController {
 		worldCamera = new WorldCamera();
 
 		// Traffic Manager
-		trafficManager = TrafficManager.createEnironment();
+		trafficManager = TrafficManager.createEnvironment();
 		
 		// Get Vehicles
 		vehicles = trafficManager.getVehicles();
