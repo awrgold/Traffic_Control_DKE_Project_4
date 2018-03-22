@@ -219,17 +219,17 @@ public class TrafficManager {
 		
 		Car car1 = new Car(node1,node5,map);
 		// car1.setEdgePath(Arrays.asList(edge2));
-		car1.setDriverModel(new SimpleDriverModel(10));
-		
-		Car car2 = new Car(node1,node5,map);
+		car1.setDriverModel(new IntelligentDriverModel());
+
+		Car car2 = new Car(node1,node3,map);
 		//car2.setEdgePath(Arrays.asList(edge2));
 		car2.setDriverModel(new IntelligentDriverModel());
-		
-		Car car3 = new Car(node1,node5,map);
+
+		Car car3 = new Car(node1,node4,map);
 		//car3.setEdgePath(Arrays.asList(edge1,edge2));
 		car3.setDriverModel(new IntelligentDriverModel());
 		
-		List cars = Arrays.asList(car1,car2,car3);
+		List cars = Arrays.asList(car1, car3);
 		
 		TrafficManager tm = new TrafficManager(map,cars);
 

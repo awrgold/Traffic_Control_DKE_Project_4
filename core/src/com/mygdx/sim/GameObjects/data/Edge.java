@@ -1,6 +1,8 @@
 package com.mygdx.sim.GameObjects.data;
 
-public class Edge {
+import java.util.Comparator;
+
+public class Edge implements Comparator<Edge> {
 
     private Node from;
     private Node to;
@@ -27,6 +29,12 @@ public class Edge {
 
     public Node getTo(){
         return to;
+    }
+
+    @Override
+    public int compare(Edge e1, Edge e2) {
+        if (e1.getLength() > e2.getLength()) return 1;
+        return 0;
     }
 
     public void setSpeedLimit(int speedLimit){

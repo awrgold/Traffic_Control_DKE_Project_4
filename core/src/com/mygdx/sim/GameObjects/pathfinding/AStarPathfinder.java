@@ -16,7 +16,7 @@ import static java.lang.Double.MIN_VALUE;
 public class AStarPathfinder extends Pathfinder {
 
 	private boolean DEBUG = true;
-	private Comparator<Edge> c;
+	private Comparator<? super Edge> comparator;
 
 	public AStarPathfinder(Map graph) {
 		super(graph);
@@ -146,8 +146,8 @@ public class AStarPathfinder extends Pathfinder {
 		if(DEBUG) System.out.println("______________Running search______________");
 
 		// The set of candidate nodes to be evaluated, starting with the start node
-		PriorityQueue<Edge> O = new PriorityQueue<Edge>();
 		Stack<Edge> open = new Stack<Edge>();
+
 		for (Edge e : start.getOutEdges()){
 			open.push(e);
 			if(DEBUG) System.out.println("Pushed starting edge with length: " + e.getLength());
@@ -155,15 +155,15 @@ public class AStarPathfinder extends Pathfinder {
 
 		// Lazy implementation of a priority queue because I hate comparators without tuples
 		// This does not *robustly* sort anything beyond the top element, but we don't need a robust sorting, just a "meh" sorting (for now)
-		for (Edge e : open){
-			if (e.getLength() < open.peek().getLength()){
-				open.remove(e);
-				open.push(e);
-				if (DEBUG){
-					System.out.println("Sorting - edge e has length " + e.getLength() + " which is greater than " + open.peek().getLength());
-				}
-			}
-		}
+//		for (Edge e : open){
+//			if (e.getLength() < open.peek().getLength()){
+//				open.remove(e);
+//				open.push(e);
+//				if (DEBUG){
+//					System.out.println("Sorting - edge e has length " + e.getLength() + " which is greater than " + open.peek().getLength());
+//				}
+//			}
+//		}
 
 		// The set of nodes already evaluated
 		List<Edge> closed = new ArrayList<Edge>();
@@ -178,10 +178,21 @@ public class AStarPathfinder extends Pathfinder {
 
 
 		// Set the manhattan distance from start to goal for the starting node
-		costRemaining.getNodes().get(map.getNodeIndex(start)).setNodeDistanceWeight(manhattanDistance(goal, start));
+		costRemaining.getNode(start).setNodeDistanceWeight(manhattanDistance(goal, start));
+		if (DEBUG) System.out.println("Cost from start to goal: " + costRemaining.getNode(start).getNodeDistanceWeight());
 
 		// Set the distance to the starting node as 0
-		costSoFar.getNodes().get(map.getNodeIndex(start)).setNodeDistanceWeight(0);
+		costSoFar.getNode(start).setNodeDistanceWeight(0);
+
+		// Initialize the distances in the costs incurred so far as -infinity
+		for (Node n : costSoFar.getNodes()){
+			n.setNodeDistanceWeight(MIN_VALUE);
+		}
+
+		// Initialize the distances in the remaining distances to infinity
+		for (Node n : costRemaining.getNodes()){
+			n.setNodeDistanceWeight(MAX_VALUE);
+		}
 
 		if(DEBUG){
 			for (Edge e : costSoFar.getEdges()){
@@ -205,9 +216,9 @@ public class AStarPathfinder extends Pathfinder {
 
 				if (DEBUG) System.out.println("Goal found!");
 				cameFrom.add(current);
-				//reconstructEdgePath(cameFrom, current);
+				reconstructEdgePath(cameFrom, current);
 				// TODO: Do I need to do this? I think so to break the loop
-				open.empty();
+				open.clear();
 			}
 
 			// For each neighbor of the current node
@@ -238,7 +249,7 @@ public class AStarPathfinder extends Pathfinder {
 					if (DEBUG) System.out.println("Remaining cost from neighbor to goal: " + newCost + manhattanDistance(goal, e.getTo()));
 
 					// Add n to the candidate list
-					open.add(e);
+					open.push(e);
 
 					// Set the parent of n as current
 					cameFrom.add(current);
