@@ -15,6 +15,9 @@ import static java.lang.Double.MIN_VALUE;
 
 public class AStarPathfinder extends Pathfinder {
 
+	private boolean DEBUG = true;
+	private Comparator<Edge> c;
+
 	public AStarPathfinder(Map graph) {
 		super(graph);
 	}
@@ -138,6 +141,119 @@ public class AStarPathfinder extends Pathfinder {
 
 	}
 
+	public ArrayList<Edge> edgeSearch(Map map, Node start, Node goal){
+
+		if(DEBUG) System.out.println("______________Running search______________");
+
+		// The set of candidate nodes to be evaluated, starting with the start node
+		PriorityQueue<Edge> O = new PriorityQueue<Edge>();
+		Stack<Edge> open = new Stack<Edge>();
+		for (Edge e : start.getOutEdges()){
+			open.push(e);
+			if(DEBUG) System.out.println("Pushed starting edge with length: " + e.getLength());
+		}
+
+		// Lazy implementation of a priority queue because I hate comparators without tuples
+		// This does not *robustly* sort anything beyond the top element, but we don't need a robust sorting, just a "meh" sorting (for now)
+		for (Edge e : open){
+			if (e.getLength() < open.peek().getLength()){
+				open.remove(e);
+				open.push(e);
+				if (DEBUG){
+					System.out.println("Sorting - edge e has length " + e.getLength() + " which is greater than " + open.peek().getLength());
+				}
+			}
+		}
+
+		// The set of nodes already evaluated
+		List<Edge> closed = new ArrayList<Edge>();
+		// Create a list of edges we have taken to get to where we are now
+		ArrayList<Edge> cameFrom = new ArrayList<Edge>();
+		// Cost So Far: The map of distances from the starting node to nodes explored
+		Map costSoFar = new Map(map.getNodes(), map.getEdges());
+		// The map of distances from any given node to the goal node
+		Map costRemaining = new Map(map.getNodes(), map.getEdges());
+
+
+
+
+		// Set the manhattan distance from start to goal for the starting node
+		costRemaining.getNodes().get(map.getNodeIndex(start)).setNodeDistanceWeight(manhattanDistance(goal, start));
+
+		// Set the distance to the starting node as 0
+		costSoFar.getNodes().get(map.getNodeIndex(start)).setNodeDistanceWeight(0);
+
+		if(DEBUG){
+			for (Edge e : costSoFar.getEdges()){
+				System.out.println("costSoFar edge - " + e.toString() + " - length: " + costSoFar.getEdge(e).getLength());
+			}
+			for (Edge e : costRemaining.getEdges()){
+				System.out.println("costRemaining edge - " + e.toString() + " - length: " + costRemaining.getEdge(e).getLength());
+			}
+		}
+
+		// While there are still candidates to explore
+		while (!open.isEmpty()){
+			if(DEBUG) System.out.println("Search initiated");
+
+			// Set the current node as the most promising candidate in Open
+			Edge current = open.pop();
+			closed.add(current);
+
+			// If we've reached the goal, return the path that got us there
+			if (current.getTo().equals(goal)){
+
+				if (DEBUG) System.out.println("Goal found!");
+				cameFrom.add(current);
+				//reconstructEdgePath(cameFrom, current);
+				// TODO: Do I need to do this? I think so to break the loop
+				open.empty();
+			}
+
+			// For each neighbor of the current node
+			for (Edge e : current.getFrom().getOutEdges()){
+
+				// Calculate the new cost to reach each neighbor of the current node from the start
+				double newCost = costSoFar.getEdges().get(map.getNodeIndex(current.getFrom())).getLength() + manhattanDistance(current.getFrom(), e.getTo());
+				if (DEBUG) System.out.println("New cost: " + newCost);
+
+				// If the neighbor is not evaluated yet AND newCost is less than the cost to get to the neighbor
+				if (open.contains(e) && newCost < costSoFar.getNodes().get(map.getNodeIndex(e.getFrom())).getNodeDistanceWeight()) {
+					if (DEBUG) System.out.println("Neighbor is removed, other path is better.");
+					// Remove neighbor as the new path is better
+					open.remove(e);
+				}
+
+				// If the neighbor is not yet a candidate and has not been evaluated yet
+				if (!closed.contains(e) && !open.contains(e)){
+
+					if (DEBUG) System.out.println("Neighbor has not been evaluated and is not a candidate yet.");
+
+					// Update the cost to reach the neighbor n
+					costSoFar.getNodes().get(map.getNodeIndex(e.getFrom())).setNodeDistanceWeight(newCost);
+
+					// Update the remaining cost from n to goal
+					costRemaining.getNodes().get(map.getNodeIndex(e.getTo())).setNodeDistanceWeight(newCost + manhattanDistance(goal, e.getTo()));
+
+					if (DEBUG) System.out.println("Remaining cost from neighbor to goal: " + newCost + manhattanDistance(goal, e.getTo()));
+
+					// Add n to the candidate list
+					open.add(e);
+
+					// Set the parent of n as current
+					cameFrom.add(current);
+				}
+			}
+
+		}
+		if(DEBUG) System.out.println("Search completed, edge list size: " + cameFrom.size());
+		return cameFrom;
+	}
+
+	public void reconstructEdgePath(ArrayList<Edge> cameFrom, Edge current){
+		cameFrom.add(current);
+	}
+
 	// Reconstruct the shortest path leading to the goal
 	public void reconstructPath(ArrayList<Node> cameFrom, Node current){
 
@@ -157,10 +273,10 @@ public class AStarPathfinder extends Pathfinder {
 
 	// Return the path
 	public List<Edge> findPath(Vehicle vehicle, int timestep) {
-		if (timestep > 1){
-			search(graph, vehicle.getStartNode(), vehicle.getGoalNode());
-		}
-		return this.path;
+		// search(graph, vehicle.getStartNode(), vehicle.getGoalNode());
+		// return this.path;
+
+		return edgeSearch(graph, vehicle.getStartNode(), vehicle.getGoalNode());
 	}
 
 

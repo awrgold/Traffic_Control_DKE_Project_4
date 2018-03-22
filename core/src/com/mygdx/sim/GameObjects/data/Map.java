@@ -91,4 +91,18 @@ public class Map {
         }
         return -1;
     }
+
+    public Node getNode(Node toFind){
+    	for (Node n : getNodes()){
+    		if (n.equals(toFind)) return n;
+		}
+		return null;
+	}
+
+	public Edge getEdge(Edge toFind){
+    	for (Edge e : getEdges()){
+    		if (e.equals(toFind)) return e;
+		}
+		return null;
+	}
 }

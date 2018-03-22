@@ -19,8 +19,7 @@ public class TrafficSimulator extends Game {
 	public final MenuScreen menuScreen = new MenuScreen();
 	public final EditorScreen editorScreen = new EditorScreen();
 	public final SimulatorScreen simulatorScreen = new SimulatorScreen();
-	public final TrafficManager manager = new TrafficManager()
-	
+
 	// Rendering
 	private SpriteBatch batch;
 	
