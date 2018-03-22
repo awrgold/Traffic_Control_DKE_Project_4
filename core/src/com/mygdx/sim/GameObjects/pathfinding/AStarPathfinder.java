@@ -33,7 +33,7 @@ public class AStarPathfinder extends Pathfinder {
 
 	List<Edge> path = new ArrayList<Edge>();
 
-	public void search(Map map, Node start, Node goal){
+	public ArrayList<Edge> search(Map map, Node start, Node goal){
 
 		// The set of candidate nodes to be evaluated, starting with the start node
 		Stack<Node> open = new Stack<Node>();
@@ -143,6 +143,8 @@ public class AStarPathfinder extends Pathfinder {
 
 	public ArrayList<Edge> edgeSearch(Map map, Node start, Node goal){
 
+		if(DEBUG) System.out.println("Start node: " + start.toString() + " | Goal node: " + goal.toString());
+
 		if(DEBUG) System.out.println("______________Running search______________");
 
 		// The set of candidate nodes to be evaluated, starting with the start node
@@ -153,11 +155,15 @@ public class AStarPathfinder extends Pathfinder {
 			if(DEBUG) System.out.println("Pushed starting edge with length: " + e.getLength());
 		}
 
+		// Hoping this works?
+		Collections.sort(open);
+
 		// Lazy implementation of a priority queue because I hate comparators without tuples
 		// This does not *robustly* sort anything beyond the top element, but we don't need a robust sorting, just a "meh" sorting (for now)
+
+
 //		for (Edge e : open){
 //			if (e.getLength() < open.peek().getLength()){
-//				open.remove(e);
 //				open.push(e);
 //				if (DEBUG){
 //					System.out.println("Sorting - edge e has length " + e.getLength() + " which is greater than " + open.peek().getLength());
@@ -178,11 +184,8 @@ public class AStarPathfinder extends Pathfinder {
 
 
 		// Set the manhattan distance from start to goal for the starting node
-		costRemaining.getNode(start).setNodeDistanceWeight(manhattanDistance(goal, start));
+		costRemaining.getNode(start).setNodeDistanceWeight(manhattanDistance(start, goal));
 		if (DEBUG) System.out.println("Cost from start to goal: " + costRemaining.getNode(start).getNodeDistanceWeight());
-
-		// Set the distance to the starting node as 0
-		costSoFar.getNode(start).setNodeDistanceWeight(0);
 
 		// Initialize the distances in the costs incurred so far as -infinity
 		for (Node n : costSoFar.getNodes()){
@@ -194,6 +197,9 @@ public class AStarPathfinder extends Pathfinder {
 			n.setNodeDistanceWeight(MAX_VALUE);
 		}
 
+		// Set the distance to the starting node as 0
+		costSoFar.getNode(start).setNodeDistanceWeight(0);
+
 		if(DEBUG){
 			for (Edge e : costSoFar.getEdges()){
 				System.out.println("costSoFar edge - " + e.toString() + " - length: " + costSoFar.getEdge(e).getLength());
@@ -203,8 +209,10 @@ public class AStarPathfinder extends Pathfinder {
 			}
 		}
 
+
 		// While there are still candidates to explore
 		while (!open.isEmpty()){
+
 			if(DEBUG) System.out.println("Search initiated");
 
 			// Set the current node as the most promising candidate in Open
@@ -216,8 +224,7 @@ public class AStarPathfinder extends Pathfinder {
 
 				if (DEBUG) System.out.println("Goal found!");
 				cameFrom.add(current);
-				reconstructEdgePath(cameFrom, current);
-				// TODO: Do I need to do this? I think so to break the loop
+//				reconstructEdgePath(cameFrom, current);
 				open.clear();
 			}
 
@@ -225,11 +232,11 @@ public class AStarPathfinder extends Pathfinder {
 			for (Edge e : current.getFrom().getOutEdges()){
 
 				// Calculate the new cost to reach each neighbor of the current node from the start
-				double newCost = costSoFar.getEdges().get(map.getNodeIndex(current.getFrom())).getLength() + manhattanDistance(current.getFrom(), e.getTo());
+				double newCost = costSoFar.getEdge(e).getLength() + manhattanDistance(current.getFrom(), e.getTo());
 				if (DEBUG) System.out.println("New cost: " + newCost);
 
 				// If the neighbor is not evaluated yet AND newCost is less than the cost to get to the neighbor
-				if (open.contains(e) && newCost < costSoFar.getNodes().get(map.getNodeIndex(e.getFrom())).getNodeDistanceWeight()) {
+				if (open.contains(e) && newCost < costSoFar.getEdge(e).getLength()) {
 					if (DEBUG) System.out.println("Neighbor is removed, other path is better.");
 					// Remove neighbor as the new path is better
 					open.remove(e);
@@ -250,6 +257,7 @@ public class AStarPathfinder extends Pathfinder {
 
 					// Add n to the candidate list
 					open.push(e);
+					Collections.sort(open);
 
 					// Set the parent of n as current
 					cameFrom.add(current);
@@ -257,12 +265,19 @@ public class AStarPathfinder extends Pathfinder {
 			}
 
 		}
-		if(DEBUG) System.out.println("Search completed, edge list size: " + cameFrom.size());
+
+		if(DEBUG){
+			System.out.println("Search completed, edge list size: " + cameFrom.size() + ". Edges in cameFrom: ");
+			for (Edge e : cameFrom){
+				System.out.println("Edge from: " + e.getFrom().toString() + " | To: " + e.getTo().toString());
+			}
+		}
 		return cameFrom;
 	}
 
-	public void reconstructEdgePath(ArrayList<Edge> cameFrom, Edge current){
+	public ArrayList<Edge> reconstructEdgePath(ArrayList<Edge> cameFrom, Edge current){
 		cameFrom.add(current);
+		return cameFrom;
 	}
 
 	// Reconstruct the shortest path leading to the goal
@@ -279,7 +294,7 @@ public class AStarPathfinder extends Pathfinder {
 	}
 
 	public double manhattanDistance(Node a, Node b){
-		return Math.abs((a.getX()-b.getX()) - (a.getY()-b.getY()));
+		return Math.abs((a.getY()-b.getY()) + (a.getX()-b.getX()));
 	}
 
 	// Return the path
