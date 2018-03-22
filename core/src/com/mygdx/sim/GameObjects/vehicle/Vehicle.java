@@ -41,11 +41,13 @@ public abstract class Vehicle {
 	 * to its endpoint.
 	 */
 	List<Edge> edgePath;
-	
+
+	/*
 	//TODO: delete this, it's a temporary replacement for proper pathfinder
 	public void setEdgePath(List<Edge> edgePath) {
 		this.edgePath = edgePath;
 	}
+	*/
 	
 	/**
 	 * True means the car is allowed to move, false means it is not.
@@ -328,6 +330,14 @@ public abstract class Vehicle {
 	
 	public double getSpeedAt(int timestep){
 		return speeds.get(timestep);
+	}
+
+	public Node getStartNode(){
+		return startNode;
+	}
+
+	public Node getGoalNode(){
+		return goalNode;
 	}
 	
 	public int hashCode() {
