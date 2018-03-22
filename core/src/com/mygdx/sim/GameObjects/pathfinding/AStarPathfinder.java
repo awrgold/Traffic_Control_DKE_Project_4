@@ -33,11 +33,17 @@ public class AStarPathfinder extends Pathfinder {
 
 	List<Edge> path = new ArrayList<Edge>();
 
-	public ArrayList<Edge> search(Map map, Node start, Node goal){
+	public void search(Map map, Node start, Node goal){
+
+		if(DEBUG) System.out.println("Start node: " + start.toString() + " | Goal node: " + goal.toString());
+
+		if(DEBUG) System.out.println("______________Running search______________");
 
 		// The set of candidate nodes to be evaluated, starting with the start node
 		Stack<Node> open = new Stack<Node>();
 		open.push(start);
+		Collections.sort(open);
+
 		// The set of nodes already evaluated
 		List<Node> closed = new ArrayList<Node>();
 		// Create a list of edges we have taken to get to where we are now
@@ -60,21 +66,16 @@ public class AStarPathfinder extends Pathfinder {
 		// Set the manhattan distance from start to goal for the starting node
 		costRemaining.getNodes().get(map.getNodeIndex(start)).setNodeDistanceWeight(manhattanDistance(goal, start));
 
+		if (DEBUG) System.out.println("Cost from start to goal: " + costRemaining.getNode(start).getNodeDistanceWeight());
+
 		// Set the distance to the starting node as 0
 		costSoFar.getNodes().get(map.getNodeIndex(start)).setNodeDistanceWeight(0);
+
 
 		// While there are still candidates to explore
 		while (!open.isEmpty()){
 
-			// Lazy implementation of a priority queue because I hate comparators without tuples
-			// This does not *robustly* sort anything beyond the top element, but we don't need a robust sorting, just a "meh" sorting (for now)
-			for (Node n : open){
-				if (n.getNodeDistanceWeight() < open.peek().getNodeDistanceWeight()){
-					Node temp = n;
-					open.remove(n);
-					open.push(temp);
-				}
-			}
+			if(DEBUG) System.out.println("While loop initiated");
 
 			// Set the current node as the most promising candidate in Open
 			Node current = open.pop();
@@ -82,8 +83,8 @@ public class AStarPathfinder extends Pathfinder {
 
 			// If we've reached the goal, return the path that got us there
 			if (current.equals(goal)){
+				if (DEBUG) System.out.println("Goal found!");
 				reconstructPath(cameFrom, current);
-				// Do I need to do this?
 				open.empty();
 			}
 
@@ -92,9 +93,12 @@ public class AStarPathfinder extends Pathfinder {
 
 				// Calculate the new cost to reach each neighbor of the current node from the start
 				double newCost = costSoFar.getNodes().get(map.getNodeIndex(current)).getNodeDistanceWeight() + manhattanDistance(current, n);
+				if (DEBUG) System.out.println("New cost: " + newCost);
+
 
 				// If the neighbor is not evaluated yet AND newCost is less than the cost to get to the neighbor
 				if (open.contains(n) && newCost < costSoFar.getNodes().get(map.getNodeIndex(n)).getNodeDistanceWeight()) {
+					if (DEBUG) System.out.println("Neighbor is removed, other path is better.");
 
 					// Remove neighbor as the new path is better
 					open.remove(n);
@@ -103,14 +107,19 @@ public class AStarPathfinder extends Pathfinder {
 				// If the neighbor is not yet a candidate and has not been evaluated yet
 				if (!closed.contains(n) && !open.contains(n)){
 
+					if (DEBUG) System.out.println("Neighbor has not been evaluated and is not a candidate yet.");
+
 					// Update the cost to reach the neighbor n
 					costSoFar.getNodes().get(map.getNodeIndex(n)).setNodeDistanceWeight(newCost);
 
 					// Update the remaining cost from n to goal
 					costRemaining.getNodes().get(map.getNodeIndex(n)).setNodeDistanceWeight(newCost + manhattanDistance(goal, n));
 
+					if (DEBUG) System.out.println("Remaining cost from neighbor to goal: " + newCost + manhattanDistance(goal, n));
+
 					// Add n to the candidate list
 					open.add(n);
+					Collections.sort(open);
 
 					// Set the parent of n as current
 					n.setParent(current);
@@ -137,6 +146,12 @@ public class AStarPathfinder extends Pathfinder {
 				costSoFar.getNodes().get(map.getNodeIndex(n)).setNodeDistanceWeight(costRemaining.getNodes().get(map.getNodeIndex(n)).getNodeDistanceWeight() + manhattanDistance(n, goal));
 			}
 			*/
+		}
+		if(DEBUG){
+			System.out.println("Search completed, node list size: " + cameFrom.size() + ". Nodes in cameFrom: ");
+			for (Node n : cameFrom){
+				System.out.println("Node: " + n.toString());
+			}
 		}
 
 	}
@@ -299,8 +314,8 @@ public class AStarPathfinder extends Pathfinder {
 
 	// Return the path
 	public List<Edge> findPath(Vehicle vehicle, int timestep) {
-		// search(graph, vehicle.getStartNode(), vehicle.getGoalNode());
-		// return this.path;
+//		 search(graph, vehicle.getStartNode(), vehicle.getGoalNode());
+//		 return this.path;
 
 		return edgeSearch(graph, vehicle.getStartNode(), vehicle.getGoalNode());
 	}

@@ -2,7 +2,7 @@ package com.mygdx.sim.GameObjects.data;
 
 import java.util.ArrayList;
 
-public class Node {
+public class Node implements Comparable{
 
 	private ArrayList<Edge> inEdges = new ArrayList<Edge>();
 	private ArrayList<Edge> outEdges = new ArrayList<Edge>();
@@ -75,5 +75,8 @@ public class Node {
 	}
 
 
-
+	@Override
+	public int compareTo(Object o) {
+		return 0;
+	}
 }
