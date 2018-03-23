@@ -154,7 +154,7 @@ public class TrafficManager {
 		ArrayList<DistanceAndVehicle> candidates = new ArrayList<DistanceAndVehicle>();
 		for (Vehicle vehicle2 : vehiclesOnCurrentEdge) {
 			double distance = distanceUntilNow + vehicle2.getTraveledDistance(timestep);
-			if(distance - Util.DELTA_EPSILON > 0)
+			if(distance - Util.DELTA_EPSILON > 0 && vehicle2.isMoving())
 				candidates.add(new DistanceAndVehicle(distance,vehicle2));			
 		}
 		

@@ -335,4 +335,8 @@ public abstract class Vehicle {
 		
 		return (v.id == this.id);
 	}
+
+	public boolean isMoving() {
+		return moving;
+	}
 }
