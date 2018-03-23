@@ -2,13 +2,14 @@ package com.mygdx.sim.GameObjects.data;
 
 import java.util.ArrayList;
 
-public class Node implements Comparable{
+public class Node implements Comparable<Node> {
 
 	private ArrayList<Edge> inEdges = new ArrayList<Edge>();
 	private ArrayList<Edge> outEdges = new ArrayList<Edge>();
-	private Node parent;
+	private Node previousNode;
 	private Coordinates location;
 	private double nodeDistanceWeight;
+	private double nodeDistanceWeightEstimate;
 
 	public Node(double xCoordinate, double yCoordinate) {
 		location = new Coordinates(xCoordinate, yCoordinate);
@@ -50,20 +51,28 @@ public class Node implements Comparable{
 		return "[Node@"+location+"]";
 	}
 
-	public void setParent(Node parent){
-		this.parent = parent;
+	public void setPreviousNode(Node previousNode){
+		this.previousNode = previousNode;
 	}
 
-	public Node getParent(){
-		return parent;
+	public Node getPreviousNode(){
+		return previousNode;
 	}
 
-	public void setNodeDistanceWeight(double d){
-		this.nodeDistanceWeight = d;
+	public void setNodeDistanceWeight(double nodeDistanceWeight){
+		this.nodeDistanceWeight = nodeDistanceWeight;
 	}
 
 	public double getNodeDistanceWeight(){
 		return nodeDistanceWeight;
+	}
+	
+	public void setNodeDistanceWeightEstimate(double nodeDistanceWeightEstimate){
+		this.nodeDistanceWeightEstimate = nodeDistanceWeightEstimate;
+	}
+
+	public double getNodeDistanceEstimate(){
+		return nodeDistanceWeightEstimate;
 	}
 
 	public ArrayList<Node> getOutgoingNeighbors(){
@@ -75,8 +84,10 @@ public class Node implements Comparable{
 	}
 
 
-	@Override
-	public int compareTo(Object o) {
+	public int compareTo(Node node) {
+		if(this.nodeDistanceWeightEstimate < node.getNodeDistanceEstimate()) return -1;
+		if(this.nodeDistanceWeightEstimate > node.getNodeDistanceEstimate()) return 1;
+		
 		return 0;
 	}
 }

@@ -1,17 +1,19 @@
 package com.mygdx.sim.GameObjects.pathfinding;
 
-import java.util.*;
-import java.util.PriorityQueue.*;
+import static java.lang.Double.MAX_VALUE;
+import static java.lang.Double.MIN_VALUE;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Stack;
 
 import com.mygdx.sim.GameObjects.data.Edge;
 import com.mygdx.sim.GameObjects.data.Map;
 import com.mygdx.sim.GameObjects.data.Node;
 import com.mygdx.sim.GameObjects.vehicle.Vehicle;
-import javafx.scene.layout.Priority;
-
-import static java.lang.Double.MAX_VALUE;
-import static java.lang.Double.MIN_VALUE;
 
 public class AStarPathfinder extends Pathfinder {
 
@@ -33,7 +35,7 @@ public class AStarPathfinder extends Pathfinder {
 
 	List<Edge> path = new ArrayList<Edge>();
 
-	public void search(Map map, Node start, Node goal){
+	/*public void search(Map map, Node start, Node goal){
 
 		if(DEBUG) System.out.println("Start node: " + start.toString() + " | Goal node: " + goal.toString());
 
@@ -145,7 +147,6 @@ public class AStarPathfinder extends Pathfinder {
 				costRemaining.getNodes().get(map.getNodeIndex(n)).setNodeDistanceWeight(tempGScore);
 				costSoFar.getNodes().get(map.getNodeIndex(n)).setNodeDistanceWeight(costRemaining.getNodes().get(map.getNodeIndex(n)).getNodeDistanceWeight() + manhattanDistance(n, goal));
 			}
-			*/
 		}
 		if(DEBUG){
 			System.out.println("Search completed, node list size: " + cameFrom.size() + ". Nodes in cameFrom: ");
@@ -154,7 +155,81 @@ public class AStarPathfinder extends Pathfinder {
 			}
 		}
 
+	}*/
+
+	
+	public List<Edge> searchPath(Map map, Node start, Node goal) {
+		
+		// Initialize priority queue
+		PriorityQueue<Node> priorityQueue = new PriorityQueue<Node>();
+		
+		// Set all other weights to infinity
+		for(Node node : map.getNodes()) {
+			node.setNodeDistanceWeight(MAX_VALUE);
+		}
+		
+		// Set start node weight to 0
+		start.setNodeDistanceWeight(0);
+		
+		
+		// Add start node to queue
+		priorityQueue.add(start);
+		
+		// While the queue is not empty
+		while(!priorityQueue.isEmpty()) {
+			
+			Node currentNode = priorityQueue.poll();
+			
+			// If we have found the goal
+			if(currentNode.equals(goal)) {
+				return createPath(goal);
+			}
+			
+			// Loop through all outgoing edges
+			for(Edge edge : currentNode.getOutEdges()) {
+				Node nextNode = edge.getTo();
+				
+				// The cost is the cost from traveling to the next node (Edge length)
+				double newCost = currentNode.getNodeDistanceWeight() + edge.getLength();
+				
+				// If new cost is lower than the currently set cost
+				if(newCost < nextNode.getNodeDistanceWeight()) {
+					nextNode.setNodeDistanceWeight(newCost);
+					nextNode.setPreviousNode(currentNode);
+					// The estimated weight is the cost from traveling to the next edge + manhatten distance
+					nextNode.setNodeDistanceWeightEstimate(newCost + manhattanDistance(currentNode, nextNode));
+					
+					priorityQueue.add(nextNode);
+				}
+			}
+		}
+		
+		// TODO We found no valid path
+		return null;
 	}
+	
+	public List<Edge> createPath(Node node) {
+		
+		// Construct Path from Goal to Start
+		while(node.getPreviousNode() != null) {
+			Node previousNode = node.getPreviousNode();
+			
+			for(Edge edge : previousNode.getOutEdges()) {
+				if(edge.getTo().equals(node)) {
+					path.add(edge);
+					break;
+				}
+			}
+			
+			node = previousNode;
+		}
+		
+		// Reverse List so List goes from Start to Goal
+		Collections.reverse(path);
+		
+		return path;
+	}
+
 
 	public ArrayList<Edge> edgeSearch(Map map, Node start, Node goal){
 
@@ -317,7 +392,7 @@ public class AStarPathfinder extends Pathfinder {
 //		 search(graph, vehicle.getStartNode(), vehicle.getGoalNode());
 //		 return this.path;
 
-		return edgeSearch(graph, vehicle.getStartNode(), vehicle.getGoalNode());
+		return searchPath(graph, vehicle.getStartNode(), vehicle.getGoalNode());
 	}
 
 
