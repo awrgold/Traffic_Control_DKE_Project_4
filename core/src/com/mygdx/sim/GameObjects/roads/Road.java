@@ -1,37 +1,38 @@
 package com.mygdx.sim.GameObjects.roads;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.mygdx.sim.GameObjects.data.Coordinates;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.mygdx.sim.GameObjects.data.Edge;
 import com.mygdx.sim.Resources.Resources;
 
 public class Road {
 
-	// Coordinates
-	private Coordinates startPoint;
-	private Coordinates endPoint;
-
 	// Sprite Parameters
 	private String spriteName;
-	private float width;
+	private float length;
 	private float angle;
+	private float posX;
+	private float posY;
 
 	// Sprites
 	private Sprite sprite;
 
-	public Road(Coordinates startPoint, Coordinates endPoint, String spriteName) {
-		this.startPoint = startPoint;
-		this.endPoint = endPoint;
-
+	
+	public Road(Edge edge, String spriteName) {
+		
 		this.spriteName = spriteName;
-
-		width = (float) Math.sqrt(
-				Math.pow(endPoint.getX() - startPoint.getX(), 2) + Math.pow(endPoint.getY() - startPoint.getY(), 2));
-		angle = (float) Math.asin((endPoint.getY() - startPoint.getY()) / width);
-		angle = (float) Math.toDegrees(angle);
-
 		setSprite(spriteName);
+		
+		length = (float) edge.getLength() + sprite.getRegionHeight();
+		
+		angle = (float) Math.asin((edge.getTo().getY() - edge.getFrom().getY()) / edge.getLength());
+		angle = (float) Math.toDegrees(angle);
+		
+		
+		
+		posX = (float) edge.getFrom().getX() - sprite.getRegionWidth() / 2;
+		posY = (float) edge.getFrom().getY() - sprite.getRegionHeight() / 2;
 	}
 
 	public void setSprite(String spriteName) {
@@ -41,7 +42,7 @@ public class Road {
 	}
 
 	public void draw(SpriteBatch spriteBatch) {
-		spriteBatch.draw(sprite, (float) startPoint.getX(), (float) startPoint.getY(), 0, 0, width,
-				sprite.getRegionWidth(), 1f, 1f, angle, false);
+		spriteBatch.draw(sprite, posX, posY, sprite.getRegionWidth() / 2, sprite.getRegionHeight() / 2,
+				length, sprite.getRegionWidth(), 1f, 1f, angle, false);
 	}
 }

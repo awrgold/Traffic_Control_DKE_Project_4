@@ -1,7 +1,7 @@
 vehicles.png
 size: 370, 407
 format: RGBA8888
-filter: Linear, Linear
+filter: Nearest, Nearest
 repeat: none
 car
 	rotate: false

@@ -3,6 +3,7 @@ package com.mygdx.sim.Resources;
 import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -38,9 +39,6 @@ public class World {
 
 		for (AtlasRegion atlasRegion : vehicleSpritesAtlas.getRegions()) {
 
-			// Set Filter to Nearest Neighbor
-			atlasRegion.getTexture().setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
-
 			// Map Name to Sprite in HashMap
 			vehicleSprites.put(atlasRegion.name, vehicleSpritesAtlas.createSprite(atlasRegion.name));
 		}
@@ -56,8 +54,10 @@ public class World {
 		
 		for(AtlasRegion atlasRegion : roadSpritesAtlas.getRegions()) {
 			
+			Texture texture = atlasRegion.getTexture();
 			// Set Filter to Nearest Neighbor
-			atlasRegion.getTexture().setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+			texture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+			texture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
 			
 			// Map Name to Sprite in HashMap
 			roadSprites.put(atlasRegion.name, roadSpritesAtlas.createSprite(atlasRegion.name));
