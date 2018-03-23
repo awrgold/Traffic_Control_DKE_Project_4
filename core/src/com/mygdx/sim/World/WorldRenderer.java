@@ -2,8 +2,8 @@ package com.mygdx.sim.World;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
 import com.mygdx.sim.GameObjects.data.Coordinates;
-import com.mygdx.sim.GameObjects.data.Map;
 import com.mygdx.sim.GameObjects.data.Node;
 import com.mygdx.sim.GameObjects.roads.Road;
 import com.mygdx.sim.GameObjects.vehicle.Vehicle;
@@ -27,7 +26,11 @@ public class WorldRenderer {
 	private Rectangle scissor;
 
 	// Time Step
-	private int timeStep = 0;
+	private int timeStep = 1;
+
+	// Simulation Speed
+	private float simulationSpeed = 0.2f;
+	private float timer = 0;
 
 	// Vehicle History
 	public ArrayList<HashMap<Vehicle, Coordinates>> vehicleHistory;
@@ -47,9 +50,15 @@ public class WorldRenderer {
 
 	public void render(SpriteBatch spriteBatch) {
 
-		// Increase Time Step
-		if (timeStep + 1 < vehicleHistory.size())
-			timeStep++;
+		timer += Gdx.graphics.getDeltaTime();
+		if (timer >= simulationSpeed) {
+			// Increase Time Step
+			if (timeStep + 1 < vehicleHistory.size())
+				timeStep++;
+
+			// Reset Timer
+			timer = 0f;
+		}
 
 		// Calculate Scissors
 		ScissorStack.calculateScissors(worldController.getWorldCamera(), spriteBatch.getTransformMatrix(),
@@ -57,9 +66,8 @@ public class WorldRenderer {
 
 		ScissorStack.pushScissors(scissor);
 		{
-			this.drawMapNodes(spriteBatch);
-
 			this.drawMapRoads(spriteBatch);
+			this.drawMapNodes(spriteBatch);
 			this.drawMapVehicles(spriteBatch, timeStep);
 			spriteBatch.flush();
 		}
@@ -106,14 +114,20 @@ public class WorldRenderer {
 			float y = (float) (previousCoord.getY() - nextCoord.getY());
 			float rotation = 0;
 
-			if (x > 0)
-				rotation += 90;
-			else if (x < 0)
+			if (x > 0) {
 				rotation -= 90;
-			else if (y > 0)
+			}
+			else if (x < 0) {
+				rotation += 90;
+			}
+			else if (y > 0) {
 				rotation -= 180;
-			else if (y < 0)
+			}
+			else if (y < 0) {
 				rotation = 0;
+			}
+			
+			rotation += (float) Math.toDegrees(Math.atan2(y, x));
 
 			vehicle.draw(spriteBatch, (float) nextCoord.getX(), (float) previousCoord.getY(), rotation);
 		}

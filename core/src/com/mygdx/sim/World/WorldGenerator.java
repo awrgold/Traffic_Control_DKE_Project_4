@@ -3,29 +3,28 @@ package com.mygdx.sim.World;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mygdx.sim.GameObjects.data.Coordinates;
-import com.mygdx.sim.GameObjects.data.Node;
+import com.mygdx.sim.GameObjects.data.Edge;
 import com.mygdx.sim.GameObjects.roads.Road;
 
 public class WorldGenerator {
-	
+
 	// World Controller
 	private WorldController worldController;
-	
+
 	// Roads
 	List<Road> roads;
-	
+
 	public WorldGenerator(WorldController worldController) {
-		roads = new ArrayList<Road>();
+		this.worldController = worldController;
 		
-		generateRoads(worldController.getNodes());
+		roads = new ArrayList<Road>();
+
+		generateRoads(worldController.getEdges());
 	}
-	
-	public void generateRoads(List<Node> nodes) {
-		for(Node node : nodes) {
-			for(Node nodeOutgoing : node.getOutgoingNeighbors()) {
-				roads.add(new Road(new Coordinates(node.getX(), node.getY()), new Coordinates(nodeOutgoing.getX(), nodeOutgoing.getY()), "road"));
-			}
+
+	public void generateRoads(List<Edge> edges) {
+		for (Edge edge : edges) {
+			roads.add(new Road(edge, "road"));
 		}
 	}
 

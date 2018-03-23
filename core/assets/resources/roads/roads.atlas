@@ -1,11 +1,11 @@
 roads.png
 size: 854, 860
 format: RGBA8888
-filter: Linear, Linear
-repeat: repeat
+filter: Nearest, Nearest
+repeat: none
 road
 	rotate: false
-	xy: 0, 705
+	xy: 320, 576
 	size: 64, 64
 	orig: 0, 0
 	offset: 0, 0

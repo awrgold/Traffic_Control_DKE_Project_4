@@ -15,7 +15,6 @@ public class Map {
 	HashMap<Edge, ArrayList<ArrayList<Vehicle>>> locationCache;
 
 	// GUI Map Variables
-	public static final int TILE_SIZE = 32;
 	private Rectangle bounds;
 
 	public Map(List<Node> nodes, List<Edge> edges) {
@@ -23,7 +22,7 @@ public class Map {
 		this.edges = edges;
 
 		// Temporary hardcoded map bound until we have a save and load feature
-		this.reset(1000, 2000);
+		this.reset(2000, 2000);
 
 		locationCache = new HashMap<Edge, ArrayList<ArrayList<Vehicle>>>();
 

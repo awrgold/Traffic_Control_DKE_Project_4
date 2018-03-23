@@ -13,7 +13,6 @@ import com.mygdx.sim.GameObjects.data.Map;
 import com.mygdx.sim.GameObjects.data.Node;
 import com.mygdx.sim.GameObjects.data.Util;
 import com.mygdx.sim.GameObjects.driverModel.IntelligentDriverModel;
-import com.mygdx.sim.GameObjects.driverModel.SimpleDriverModel;
 import com.mygdx.sim.GameObjects.vehicle.Car;
 import com.mygdx.sim.GameObjects.vehicle.Vehicle;
 

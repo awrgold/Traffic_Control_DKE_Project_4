@@ -7,6 +7,7 @@ import java.util.List;
 import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.sim.GameObjects.TrafficManager;
 import com.mygdx.sim.GameObjects.data.Coordinates;
+import com.mygdx.sim.GameObjects.data.Edge;
 import com.mygdx.sim.GameObjects.data.Map;
 import com.mygdx.sim.GameObjects.data.Node;
 import com.mygdx.sim.GameObjects.roads.Road;
@@ -80,6 +81,10 @@ public class WorldController {
 
 	public List<Node> getNodes() {
 		return map.getNodes();
+	}
+	
+	public List<Edge> getEdges() {
+		return map.getEdges();
 	}
 
 	public List<Vehicle> getVehicles() {
