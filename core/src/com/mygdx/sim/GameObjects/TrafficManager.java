@@ -215,6 +215,16 @@ public class TrafficManager {
 	public static double euclideanDistance(Node a, Node b){
 		return Math.abs(Math.sqrt(Math.pow((a.getY()-b.getY()), 2) + Math.pow((a.getX() - b.getX()), 2)));
 	}
+	
+	public static void main(String[] args) {
+		TrafficManager tm = createEnvironment();
+		
+		tm.simulate(TIMESTEPS);
+		
+		System.out.println("Simulation completed");
+		
+		int x =0;
+	}
 
 	public static TrafficManager createEnvironment() {
 
