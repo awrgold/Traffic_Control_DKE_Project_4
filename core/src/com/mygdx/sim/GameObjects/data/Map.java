@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.mygdx.sim.GameObjects.TrafficManager;
 import com.mygdx.sim.GameObjects.vehicle.Vehicle;
 
 public class Map {
@@ -22,7 +23,7 @@ public class Map {
 		this.edges = edges;
 
 		// Temporary hardcoded map bound until we have a save and load feature
-		this.reset(2000, 2000);
+		this.reset(TrafficManager.MAP_X_DIM, TrafficManager.MAP_Y_DIM);
 
 		locationCache = new HashMap<Edge, ArrayList<ArrayList<Vehicle>>>();
 

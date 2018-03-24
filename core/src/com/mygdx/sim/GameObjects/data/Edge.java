@@ -97,8 +97,13 @@ public class Edge implements Comparable<Edge> {
     	return ("["+from+","+to+"]");
     }
 
-    @Override
-    public int compareTo(Edge o) {
-        return 0;
+    public int compareTo(Edge edge) {
+        if((this.getFrom().equals(edge.getFrom()) || this.getFrom().equals(edge.getTo())) &&
+                (this.getTo().equals(edge.getFrom()) || this.getTo().equals(edge.getTo()))){
+            return 0;
+
+        }
+        return -1;
     }
+
 }

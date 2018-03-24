@@ -23,9 +23,10 @@ public class TrafficManager {
 	private final static int RIDICULOUS_SPEED = 1000;
 
 	// Temporary map bounds
-	private final static int MAP_X_DIM = 1000;
-	private final static int MAP_Y_DIM = 1000;
-	private final static int GRID_FACTOR = 10;
+	public final static int MAP_X_DIM = 1000;
+	public final static int MAP_Y_DIM = 1000;
+	public final static int GRID_FACTOR = 10;
+	public final static int vehicleCount = 10;
 
 
 	private Map map;
@@ -211,6 +212,10 @@ public class TrafficManager {
 		return Math.abs((a.getY()-b.getY()) + (a.getX()-b.getX()));
 	}
 
+	public static double euclideanDistance(Node a, Node b){
+		return Math.abs(Math.sqrt(Math.pow((a.getY()-b.getY()), 2) + Math.pow((a.getX() - b.getX()), 2)));
+	}
+
 	public static TrafficManager createEnvironment() {
 
 		List<Node> mapNodes = new ArrayList<Node>();
@@ -219,9 +224,7 @@ public class TrafficManager {
 		int nodeCount = 0;
 		int edgeCount = 0;
 		for (int i = 0; i < MAP_X_DIM; i++){
-//			System.out.println("Looping X: " + i);
 			for (int j = 0; j < MAP_Y_DIM; j++){
-//				System.out.println("Looping Y: " + j);
 				if (i % (MAP_X_DIM/GRID_FACTOR) == 0 && j % (MAP_Y_DIM/GRID_FACTOR) == 0){
 					System.out.println("Adding node at: (" + i + ", " + j + ")");
 					mapNodes.add(new Node(i,j));
@@ -232,18 +235,47 @@ public class TrafficManager {
 		}
 
 		for (int i = 0; i < mapNodes.size(); i++){
-//			System.out.println("Looping Edges X: " + i);
 			for (int j = 0; j < mapNodes.size(); j++){
-//				System.out.println("Looping Edges Y: " + j);
-				if ((manhattanDistance(mapNodes.get(i), mapNodes.get(j)) == (MAP_X_DIM/GRID_FACTOR) ||
-						manhattanDistance(mapNodes.get(i), mapNodes.get(j)) == (MAP_Y_DIM/GRID_FACTOR)))  {
+				if ((euclideanDistance(mapNodes.get(i), mapNodes.get(j)) == (MAP_X_DIM/GRID_FACTOR) ||
+						euclideanDistance(mapNodes.get(i), mapNodes.get(j)) == (MAP_Y_DIM/GRID_FACTOR)))  {
+
+					// This method doubles the edges for some reason, trying to figure out why.
+					// Need to find out if mapEdges contains an edge between two points already.
+//					Edge temp = new Edge(mapNodes.get(i), mapNodes.get(j));
+//					for (Edge e : mapEdges){
+//						if (temp.compareTo(e) == 0){
+//
+//						}
+//					}
+
+
 					System.out.println("Adding Edge between: (" + mapNodes.get(i).getLocation().toString() + ", " + mapNodes.get(j).getLocation().toString() + ")");
 					mapEdges.add(new Edge(mapNodes.get(i), mapNodes.get(j)));
 					edgeCount++;
 					System.out.println("Edges: " + edgeCount);
+
 				}
 			}
 		}
+		List<Vehicle> cars = new ArrayList<Vehicle>();
+		Map map = new Map(mapNodes, mapEdges);
+
+
+//		for (int i = 0; i < vehicleCount; i++){
+//			for (int j = vehicleCount-1; j > 0; j--){
+//				Car temp = new Car(mapNodes.get(i), mapNodes.get(j), map);
+//				temp.setDriverModel(new IntelligentDriverModel());
+//				cars.add(temp);
+//
+//			}
+//
+////			Car temp = new Car(mapNodes.get((int)(Math.random()*mapNodes.size())), mapNodes.get((int)(Math.random()*mapNodes.size())), map);
+////			cars.add(temp);
+////			temp.setDriverModel(new IntelligentDriverModel());
+//
+//		}
+
+
 
 		/*
 		Node node1 = new Node(200,200);
@@ -259,23 +291,49 @@ public class TrafficManager {
 		Edge edge6 = new Edge(node1,node3);
 		*/
 		
-		Map map = new Map(mapNodes, mapEdges);
-		
-		Car car1 = new Car(mapNodes.get(0),mapNodes.get(mapNodes.size()-1),map);
-		// car1.setEdgePath(Arrays.asList(edge2));
-		car1.setDriverModel(new IntelligentDriverModel());
-//
-//
-//		Car car2 = new Car(node1,node3,map);
-//		//car2.setEdgePath(Arrays.asList(edge2));
-//		car2.setDriverModel(new IntelligentDriverModel());
-//
-//		Car car3 = new Car(node1,node4,map);
-//		//car3.setEdgePath(Arrays.asList(edge1,edge2));
-//		car3.setDriverModel(new IntelligentDriverModel());
 
-		List cars = Arrays.asList(car1);
 		
+		Car car1 = new Car(mapNodes.get((int)(Math.random()*(MAP_X_DIM/GRID_FACTOR))),mapNodes.get((int)(Math.random()*(MAP_Y_DIM/GRID_FACTOR))),map);
+		car1.setDriverModel(new IntelligentDriverModel());
+		cars.add(car1);
+
+//		Car car2 = new Car(mapNodes.get(1),mapNodes.get(mapNodes.size()-2),map);
+//		car2.setDriverModel(new IntelligentDriverModel());
+//		cars.add(car2);
+//
+//		Car car3 = new Car(mapNodes.get(2),mapNodes.get(mapNodes.size()-3),map);
+//		car3.setDriverModel(new IntelligentDriverModel());
+//		cars.add(car3);
+//
+//		Car car4 = new Car(mapNodes.get(2),mapNodes.get(mapNodes.size()-4),map);
+//		car3.setDriverModel(new IntelligentDriverModel());
+//		cars.add(car4);
+//
+//		Car car5 = new Car(mapNodes.get(2),mapNodes.get(mapNodes.size()-5),map);
+//		car3.setDriverModel(new IntelligentDriverModel());
+//		cars.add(car5);
+//
+//		Car car6 = new Car(mapNodes.get(2),mapNodes.get(mapNodes.size()-6),map);
+//		car3.setDriverModel(new IntelligentDriverModel());
+//		cars.add(car6);
+//
+//		Car car7 = new Car(mapNodes.get(2),mapNodes.get(mapNodes.size()-7),map);
+//		car3.setDriverModel(new IntelligentDriverModel());
+//		cars.add(car7);
+//
+//		Car car8 = new Car(mapNodes.get(2),mapNodes.get(mapNodes.size()-8),map);
+//		car3.setDriverModel(new IntelligentDriverModel());
+//		cars.add(car8);
+//
+//		Car car9 = new Car(mapNodes.get(2),mapNodes.get(mapNodes.size()-9),map);
+//		car3.setDriverModel(new IntelligentDriverModel());
+//		cars.add(car9);
+//
+//		Car car10 = new Car(mapNodes.get(2),mapNodes.get(mapNodes.size()-10),map);
+//		car3.setDriverModel(new IntelligentDriverModel());
+//		cars.add(car10);
+
+
 		TrafficManager tm = new TrafficManager(map,cars);
 
 		int y = 0;
