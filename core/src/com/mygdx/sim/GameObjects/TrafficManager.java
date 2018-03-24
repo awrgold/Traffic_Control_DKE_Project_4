@@ -322,11 +322,17 @@ public class TrafficManager {
 	}
 
 	public static void main(String[] args) {
-		TrafficManager tm = createSimpleTestcase();
+		TrafficManager tm1 = createSimpleTestcase();
 		
-		tm.simulate(TIMESTEPS);
+		tm1.simulate(TIMESTEPS);
 		
-		System.out.println("Simulation completed");
+		System.out.println("Simple test case simulation completed");
+		
+		TrafficManager tm2 = createEnvironment();
+		
+		tm2.simulate(TIMESTEPS);
+
+		System.out.println("Andrew-generated test case simulation completed");
 		
 		int x =0;
 	}
