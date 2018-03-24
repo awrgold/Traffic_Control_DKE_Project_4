@@ -97,7 +97,7 @@ public class AStarPathfinder extends Pathfinder {
 					break;
 				}
 			}
-			
+			node.setPreviousNode(null);
 			node = previousNode;
 		}
 		
