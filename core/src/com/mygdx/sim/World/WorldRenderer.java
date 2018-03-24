@@ -29,7 +29,7 @@ public class WorldRenderer {
 	private int timeStep = 1;
 
 	// Simulation Speed
-	private float simulationSpeed = 0.4f;
+	private float simulationSpeed = 0.05f;
 	private float timer = 0;
 
 	// Vehicle History
