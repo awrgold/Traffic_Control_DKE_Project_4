@@ -129,7 +129,7 @@ public abstract class Vehicle {
 		this.spriteName = spriteName;
 		
 		sprite = Resources.world.vehicleSprites.get(spriteName);
-		sprite.setScale(0.25f);
+		sprite.setScale(0.5f);
 	}
 	
 
