@@ -42,12 +42,12 @@ public abstract class Vehicle {
 	 */
 	List<Edge> edgePath;
 
-	/*
-	//TODO: delete this, it's a temporary replacement for proper pathfinder
+	
+	// DO NOT USE THIS! This is for testing *ONLY*.
 	public void setEdgePath(List<Edge> edgePath) {
 		this.edgePath = edgePath;
 	}
-	*/
+	
 	
 	/**
 	 * True means the car is allowed to move, false means it is not.
