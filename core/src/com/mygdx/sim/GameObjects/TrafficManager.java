@@ -43,8 +43,16 @@ public class TrafficManager {
 		
 		ensureCapacity(lastComputedTimestep);
 		
-		for(Vehicle vehicle : vehicles)
+		for(Vehicle vehicle : vehicles) {
 			history.get(lastComputedTimestep).put(vehicle, vehicle.getLocationCoordinates(lastComputedTimestep));
+			
+			// Validation of the path	
+			List<Edge> edgePath = vehicle.getEdgePath();
+			for(int i=0; i< edgePath.size()-1; i++)
+				if(! edgePath.get(i+1).getFrom().equals(edgePath.get(i).getTo())) 
+					throw new RuntimeException("EdgePath of vehicle " + this + " implies teleportation");
+	
+		}
 	}
 	
 	public Map getMap() {
