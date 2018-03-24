@@ -87,6 +87,8 @@ public class AStarPathfinder extends Pathfinder {
 	
 	public List<Edge> createPath(Node node) {
 		
+		List<Edge> path = new ArrayList<Edge>();
+		
 		// Construct Path from Goal to Start
 		while(node.getPreviousNode() != null) {
 			Node previousNode = node.getPreviousNode();
