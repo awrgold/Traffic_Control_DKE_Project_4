@@ -261,19 +261,19 @@ public class TrafficManager {
 		Map map = new Map(mapNodes, mapEdges);
 
 
-//		for (int i = 0; i < vehicleCount; i++){
+		for (int i = 0; i < vehicleCount; i++){
 //			for (int j = vehicleCount-1; j > 0; j--){
 //				Car temp = new Car(mapNodes.get(i), mapNodes.get(j), map);
 //				temp.setDriverModel(new IntelligentDriverModel());
 //				cars.add(temp);
 //
 //			}
-//
-////			Car temp = new Car(mapNodes.get((int)(Math.random()*mapNodes.size())), mapNodes.get((int)(Math.random()*mapNodes.size())), map);
-////			cars.add(temp);
-////			temp.setDriverModel(new IntelligentDriverModel());
-//
-//		}
+
+			Car temp = new Car(mapNodes.get((int)(Math.random()*mapNodes.size())), mapNodes.get((int)(Math.random()*mapNodes.size())), map);
+			cars.add(temp);
+			temp.setDriverModel(new IntelligentDriverModel());
+
+		}
 
 
 
@@ -293,9 +293,9 @@ public class TrafficManager {
 		
 
 		
-		Car car1 = new Car(mapNodes.get((int)(Math.random()*(MAP_X_DIM/GRID_FACTOR))),mapNodes.get((int)(Math.random()*(MAP_Y_DIM/GRID_FACTOR))),map);
-		car1.setDriverModel(new IntelligentDriverModel());
-		cars.add(car1);
+//		Car car1 = new Car(mapNodes.get((int)(Math.random()*(MAP_X_DIM/GRID_FACTOR))),mapNodes.get((int)(Math.random()*(MAP_Y_DIM/GRID_FACTOR))),map);
+//		car1.setDriverModel(new IntelligentDriverModel());
+//		cars.add(car1);
 
 //		Car car2 = new Car(mapNodes.get(1),mapNodes.get(mapNodes.size()-2),map);
 //		car2.setDriverModel(new IntelligentDriverModel());
