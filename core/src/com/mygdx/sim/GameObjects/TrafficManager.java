@@ -241,6 +241,8 @@ public class TrafficManager {
 
 					// This method doubles the edges for some reason, trying to figure out why.
 					// Need to find out if mapEdges contains an edge between two points already.
+					// Problem is, when doubling edges it makes an edge between node A and B, then again between
+					// ... nodes B and A, which is an identical edge but cannot be easily compared.
 //					Edge temp = new Edge(mapNodes.get(i), mapNodes.get(j));
 //					for (Edge e : mapEdges){
 //						if (temp.compareTo(e) == 0){
@@ -267,64 +269,6 @@ public class TrafficManager {
 			temp.setDriverModel(new IntelligentDriverModel());
 
 		}
-
-
-
-		/*
-		Node node1 = new Node(200,200);
-		Node node2 = new Node(475,200);
-		Node node3 = new Node(475,1000);
-		Node node4 = new Node(1000, 1000);
-		Node node5 = new Node(1000, 500);
-		Edge edge1 = new Edge(node1,node2);
-		Edge edge2 = new Edge(node2,node3);
-		Edge edge3 = new Edge(node3,node4);
-		Edge edge4 = new Edge(node2,node5);
-		Edge edge5 = new Edge(node5,node4);
-		Edge edge6 = new Edge(node1,node3);
-		*/
-		
-
-		
-//		Car car1 = new Car(mapNodes.get((int)(Math.random()*(MAP_X_DIM/GRID_FACTOR))),mapNodes.get((int)(Math.random()*(MAP_Y_DIM/GRID_FACTOR))),map);
-//		car1.setDriverModel(new IntelligentDriverModel());
-//		cars.add(car1);
-
-//		Car car2 = new Car(mapNodes.get(1),mapNodes.get(mapNodes.size()-2),map);
-//		car2.setDriverModel(new IntelligentDriverModel());
-//		cars.add(car2);
-//
-//		Car car3 = new Car(mapNodes.get(2),mapNodes.get(mapNodes.size()-3),map);
-//		car3.setDriverModel(new IntelligentDriverModel());
-//		cars.add(car3);
-//
-//		Car car4 = new Car(mapNodes.get(2),mapNodes.get(mapNodes.size()-4),map);
-//		car3.setDriverModel(new IntelligentDriverModel());
-//		cars.add(car4);
-//
-//		Car car5 = new Car(mapNodes.get(2),mapNodes.get(mapNodes.size()-5),map);
-//		car3.setDriverModel(new IntelligentDriverModel());
-//		cars.add(car5);
-//
-//		Car car6 = new Car(mapNodes.get(2),mapNodes.get(mapNodes.size()-6),map);
-//		car3.setDriverModel(new IntelligentDriverModel());
-//		cars.add(car6);
-//
-//		Car car7 = new Car(mapNodes.get(2),mapNodes.get(mapNodes.size()-7),map);
-//		car3.setDriverModel(new IntelligentDriverModel());
-//		cars.add(car7);
-//
-//		Car car8 = new Car(mapNodes.get(2),mapNodes.get(mapNodes.size()-8),map);
-//		car3.setDriverModel(new IntelligentDriverModel());
-//		cars.add(car8);
-//
-//		Car car9 = new Car(mapNodes.get(2),mapNodes.get(mapNodes.size()-9),map);
-//		car3.setDriverModel(new IntelligentDriverModel());
-//		cars.add(car9);
-//
-//		Car car10 = new Car(mapNodes.get(2),mapNodes.get(mapNodes.size()-10),map);
-//		car3.setDriverModel(new IntelligentDriverModel());
-//		cars.add(car10);
 
 
 		TrafficManager tm = new TrafficManager(map,cars);
