@@ -95,6 +95,7 @@ public class AStarPathfinder extends Pathfinder {
 			for(Edge edge : previousNode.getOutEdges()) {
 				if(edge.getTo().equals(node)) {
 					path.add(edge);
+
 					break;
 				}
 			}
@@ -240,6 +241,7 @@ public class AStarPathfinder extends Pathfinder {
 	// Return the path
 	public List<Edge> findPath(Vehicle vehicle, int timestep) {
 
+		System.out.println("Path size for: " + vehicle.toString() + " = " + searchPath(graph, vehicle.getStartNode(), vehicle.getGoalNode()).size());
 		return searchPath(graph, vehicle.getStartNode(), vehicle.getGoalNode());
 	}
 

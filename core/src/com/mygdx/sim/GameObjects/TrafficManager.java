@@ -226,8 +226,8 @@ public class TrafficManager {
 		for (int i = 0; i < MAP_X_DIM; i++){
 			for (int j = 0; j < MAP_Y_DIM; j++){
 				if (i % (MAP_X_DIM/GRID_FACTOR) == 0 && j % (MAP_Y_DIM/GRID_FACTOR) == 0){
-					System.out.println("Adding node at: (" + i + ", " + j + ")");
 					mapNodes.add(new Node(i,j));
+					System.out.println("Adding node at: (" + i + ", " + j + ")");
 					nodeCount++;
 					System.out.println("Nodes: " + nodeCount);
 				}
