@@ -14,7 +14,6 @@ import com.mygdx.sim.GameObjects.data.Edge;
 import com.mygdx.sim.GameObjects.data.Map;
 import com.mygdx.sim.GameObjects.data.Node;
 import com.mygdx.sim.GameObjects.vehicle.Vehicle;
-import javafx.scene.layout.Priority;
 
 public class AStarPathfinder extends Pathfinder {
 
