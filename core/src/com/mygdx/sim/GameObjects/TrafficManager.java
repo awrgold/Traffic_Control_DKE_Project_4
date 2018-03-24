@@ -23,10 +23,10 @@ public class TrafficManager {
 	private final static int RIDICULOUS_SPEED = 1000;
 
 	// Temporary map bounds
-	public final static int MAP_X_DIM = 1000;
-	public final static int MAP_Y_DIM = 1000;
+	public final static int MAP_X_DIM = 10000;
+	public final static int MAP_Y_DIM = 10000;
 	public final static int GRID_FACTOR = 10;
-	public final static int vehicleCount = 10;
+	public final static int vehicleCount = 5;
 
 
 	private Map map;
@@ -262,13 +262,6 @@ public class TrafficManager {
 
 
 		for (int i = 0; i < vehicleCount; i++){
-//			for (int j = vehicleCount-1; j > 0; j--){
-//				Car temp = new Car(mapNodes.get(i), mapNodes.get(j), map);
-//				temp.setDriverModel(new IntelligentDriverModel());
-//				cars.add(temp);
-//
-//			}
-
 			Car temp = new Car(mapNodes.get((int)(Math.random()*mapNodes.size())), mapNodes.get((int)(Math.random()*mapNodes.size())), map);
 			cars.add(temp);
 			temp.setDriverModel(new IntelligentDriverModel());

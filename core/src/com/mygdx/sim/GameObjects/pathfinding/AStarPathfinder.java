@@ -73,7 +73,7 @@ public class AStarPathfinder extends Pathfinder {
 				if(newCost < nextNode.getNodeDistanceWeight()) {
 					nextNode.setNodeDistanceWeight(newCost);
 					nextNode.setPreviousNode(currentNode);
-					// The estimated weight is the cost from traveling to the next edge + manhatten distance
+					// The estimated weight is the cost from traveling to the next edge + manhattan distance
 					nextNode.setNodeDistanceWeightEstimate(newCost + manhattanDistance(currentNode, nextNode));
 					
 					priorityQueue.add(nextNode);
