@@ -74,6 +74,15 @@ public class Node implements Comparable<Node> {
 	public double getNodeDistanceEstimate(){
 		return nodeDistanceWeightEstimate;
 	}
+	
+	public boolean equals(Object o) {
+		if(!(o instanceof Node))
+			return false;
+		
+		Node node2 = (Node) o;
+		
+		return this.getLocation().equals(node2.getLocation());
+	}
 
 	public ArrayList<Node> getOutgoingNeighbors(){
 		ArrayList<Node> outgoingNeighbors = new ArrayList<Node>();
