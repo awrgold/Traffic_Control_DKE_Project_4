@@ -1,6 +1,9 @@
 package com.mygdx.sim.GameObjects.roads;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mygdx.sim.GameObjects.data.Edge;
@@ -9,40 +12,45 @@ import com.mygdx.sim.Resources.Resources;
 public class Road {
 
 	// Sprite Parameters
-	private String spriteName;
+	private String textureName;
 	private float length;
 	private float angle;
 	private float posX;
 	private float posY;
 
-	// Sprites
-	private Sprite sprite;
+	// Texture
+	private Texture texture;
+	private TextureRegion textureRegion;
 
-	
-	public Road(Edge edge, String spriteName) {
-		
-		this.spriteName = spriteName;
-		setSprite(spriteName);
-		
-		length = (float) edge.getLength() + sprite.getRegionHeight();
-		
+	public Road(Edge edge, String textureName) {
+
+		this.textureName = textureName;
+		setSprite(textureName);
+
+		length = (float) edge.getLength() + texture.getWidth();
+
 		angle = (float) Math.asin((edge.getTo().getY() - edge.getFrom().getY()) / edge.getLength());
 		angle = (float) Math.toDegrees(angle);
-		
-		
-		
-		posX = (float) edge.getFrom().getX() - sprite.getRegionWidth() / 2;
-		posY = (float) edge.getFrom().getY() - sprite.getRegionHeight() / 2;
+
+		posX = (float) edge.getFrom().getX() - texture.getWidth() / 2;
+		posY = (float) edge.getFrom().getY() - texture.getHeight() / 2;
+
+		texture = new Texture(Gdx.files.internal("resources/roads/road_1.png"));
+		texture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+		texture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
+
+		textureRegion = new TextureRegion(texture, 0, 0, texture.getWidth() * (int) (length / texture.getWidth()),
+				texture.getHeight());
 	}
 
-	public void setSprite(String spriteName) {
-		this.spriteName = spriteName;
+	public void setSprite(String textureName) {
+		this.textureName = textureName;
 
-		sprite = Resources.world.roadSprites.get("road");
+		texture = Resources.world.roadTextures.get(textureName);
 	}
 
 	public void draw(SpriteBatch spriteBatch) {
-		spriteBatch.draw(sprite, posX, posY, sprite.getRegionWidth() / 2, sprite.getRegionHeight() / 2,
-				length, sprite.getRegionWidth(), 1f, 1f, angle, false);
+		spriteBatch.draw(textureRegion, posX, posY, texture.getWidth() / 2, texture.getHeight() / 2, length,
+				texture.getHeight(), 1f, 1f, angle);
 	}
 }

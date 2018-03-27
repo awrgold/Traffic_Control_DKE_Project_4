@@ -29,7 +29,7 @@ public class WorldRenderer {
 	private int timeStep = 1;
 
 	// Simulation Speed
-	private float simulationSpeed = 0.05f;
+	private float simulationSpeed = 0.1f;
 	private float timer = 0;
 
 	// Vehicle History
@@ -116,18 +116,15 @@ public class WorldRenderer {
 
 			if (x > 0) {
 				rotation += 90;
-			}
-			else if (x < 0) {
+			} else if (x < 0) {
 				rotation -= 90;
-			}
-			else if (y > 0) {
+			} else if (y > 0) {
 				rotation += 180;
-			}
-			else if (y < 0) {
+			} else if (y < 0) {
 				rotation = 0;
 			}
-			
-			//rotation += (float) Math.toDegrees(Math.atan2(y, x));
+
+			// rotation = (float) Math.toDegrees(Math.atan2(y, x));
 
 			vehicle.draw(spriteBatch, (float) nextCoord.getX(), (float) previousCoord.getY(), rotation);
 		}

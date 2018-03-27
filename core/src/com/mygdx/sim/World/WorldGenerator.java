@@ -16,7 +16,7 @@ public class WorldGenerator {
 
 	public WorldGenerator(WorldController worldController) {
 		this.worldController = worldController;
-		
+
 		roads = new ArrayList<Road>();
 
 		generateRoads(worldController.getEdges());

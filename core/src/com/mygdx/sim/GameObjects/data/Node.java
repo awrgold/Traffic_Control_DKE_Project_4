@@ -46,57 +46,58 @@ public class Node implements Comparable<Node> {
 	public ArrayList<Edge> getOutEdges() {
 		return outEdges;
 	}
-	
+
 	public String toString() {
-		return "[Node@"+location+"]";
+		return "[Node@" + location + "]";
 	}
 
-	public void setPreviousNode(Node previousNode){
+	public void setPreviousNode(Node previousNode) {
 		this.previousNode = previousNode;
 	}
 
-	public Node getPreviousNode(){
+	public Node getPreviousNode() {
 		return previousNode;
 	}
 
-	public void setNodeDistanceWeight(double nodeDistanceWeight){
+	public void setNodeDistanceWeight(double nodeDistanceWeight) {
 		this.nodeDistanceWeight = nodeDistanceWeight;
 	}
 
-	public double getNodeDistanceWeight(){
+	public double getNodeDistanceWeight() {
 		return nodeDistanceWeight;
 	}
-	
-	public void setNodeDistanceWeightEstimate(double nodeDistanceWeightEstimate){
+
+	public void setNodeDistanceWeightEstimate(double nodeDistanceWeightEstimate) {
 		this.nodeDistanceWeightEstimate = nodeDistanceWeightEstimate;
 	}
 
-	public double getNodeDistanceEstimate(){
+	public double getNodeDistanceEstimate() {
 		return nodeDistanceWeightEstimate;
 	}
-	
+
 	public boolean equals(Object o) {
-		if(!(o instanceof Node))
+		if (!(o instanceof Node))
 			return false;
-		
-		Node node2 = (Node) o;
-		
-		return this.getLocation().equals(node2.getLocation());
+
+		return this.getLocation().equals(((Node) o).getLocation());
 	}
 
-	public ArrayList<Node> getOutgoingNeighbors(){
+	public ArrayList<Node> getOutgoingNeighbors() {
 		ArrayList<Node> outgoingNeighbors = new ArrayList<Node>();
-		for (Edge e : outEdges){
+
+		for (Edge e : outEdges) {
 			outgoingNeighbors.add(e.getTo());
 		}
+
 		return outgoingNeighbors;
 	}
 
-
 	public int compareTo(Node node) {
-		if(this.nodeDistanceWeightEstimate < node.getNodeDistanceEstimate()) return -1;
-		if(this.nodeDistanceWeightEstimate > node.getNodeDistanceEstimate()) return 1;
-		
+		if (this.nodeDistanceWeightEstimate < node.getNodeDistanceEstimate())
+			return -1;
+		if (this.nodeDistanceWeightEstimate > node.getNodeDistanceEstimate())
+			return 1;
+
 		return 0;
 	}
 }

@@ -16,17 +16,16 @@ public class World {
 	public TextureAtlas vehicleSpritesAtlas;
 	public HashMap<String, Sprite> vehicleSprites;
 
-	// Road Sprites
-	public TextureAtlas roadSpritesAtlas;
-	public HashMap<String, Sprite> roadSprites;
+	// Road Textures
+	public HashMap<String, Texture> roadTextures;
 
 	public World() {
 
 		// Initialize Vehicle Sprites
 		this.initVehicleSprites();
-		
-		// Initialize Road Sprites
-		this.initRoadSprites();
+
+		// Initialize Road Textures
+		this.initRoadTextures();
 	}
 
 	private void initVehicleSprites() {
@@ -44,29 +43,25 @@ public class World {
 		}
 	}
 
-	private void initRoadSprites() {
+	private void initRoadTextures() {
 
-		// Load Atlas
-		roadSpritesAtlas = new TextureAtlas(Gdx.files.internal("resources/roads/roads.atlas"));
-		
 		// Create HashMap
-		roadSprites = new HashMap<String, Sprite>();
-		
-		for(AtlasRegion atlasRegion : roadSpritesAtlas.getRegions()) {
-			
-			Texture texture = atlasRegion.getTexture();
-			// Set Filter to Nearest Neighbor
-			texture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
-			texture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
-			
-			// Map Name to Sprite in HashMap
-			roadSprites.put(atlasRegion.name, roadSpritesAtlas.createSprite(atlasRegion.name));
-		}
+		roadTextures = new HashMap<String, Texture>();
+
+		// Create Texture
+		Texture texture = new Texture(Gdx.files.internal("resources/roads/road_1.png"));
+
+		// Set Filter to Nearest Neighbor
+		texture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+
+		// Make texture wrap around texture region
+		texture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
+
+		roadTextures.put("road", texture);
 	}
 
 	public void dispose() {
 		vehicleSpritesAtlas.dispose();
-		roadSpritesAtlas.dispose();
 	}
 
 }

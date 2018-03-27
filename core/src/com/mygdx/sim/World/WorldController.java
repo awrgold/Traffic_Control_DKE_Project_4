@@ -37,7 +37,7 @@ public class WorldController {
 
 		// Traffic Manager
 		trafficManager = TrafficManager.createEnvironment();
-		
+
 		// Get Vehicles
 		vehicles = trafficManager.getVehicles();
 
@@ -82,7 +82,7 @@ public class WorldController {
 	public List<Node> getNodes() {
 		return map.getNodes();
 	}
-	
+
 	public List<Edge> getEdges() {
 		return map.getEdges();
 	}
