@@ -29,7 +29,7 @@ public class WorldRenderer {
 	private int timeStep = 1;
 
 	// Simulation Speed
-	private float simulationSpeed = 0.1f;
+	private float simulationSpeed = 0.5f;
 	private float timer = 0;
 
 	// Vehicle History
@@ -61,7 +61,7 @@ public class WorldRenderer {
 		}
 
 		// Calculate Scissors
-		ScissorStack.calculateScissors(worldController.getWorldCamera(), spriteBatch.getTransformMatrix(),
+		/*ScissorStack.calculateScissors(worldController.getWorldCamera(), spriteBatch.getTransformMatrix(),
 				worldController.getBounds(), scissor);
 
 		ScissorStack.pushScissors(scissor);
@@ -71,10 +71,14 @@ public class WorldRenderer {
 			this.drawMapVehicles(spriteBatch, timeStep);
 			spriteBatch.flush();
 		}
-		ScissorStack.popScissors();
+		ScissorStack.popScissors();*/
+		
+		this.drawMapRoads(spriteBatch);
+		this.drawMapNodes(spriteBatch);
+		this.drawMapVehicles(spriteBatch, timeStep);
 
 		// Draw Outline
-		this.drawMapOutline();
+		//this.drawMapOutline();
 	}
 
 	private void drawMapOutline() {
