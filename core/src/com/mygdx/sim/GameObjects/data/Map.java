@@ -12,6 +12,7 @@ import com.mygdx.sim.GameObjects.vehicle.Vehicle;
 public class Map {
 	private List<Node> nodes = new ArrayList<Node>();
 	private List<Edge> edges = new ArrayList<Edge>();
+	private List<Node> destinations = new ArrayList<Node>();
 
 	HashMap<Edge, ArrayList<ArrayList<Vehicle>>> locationCache;
 
@@ -54,6 +55,10 @@ public class Map {
 
 	public List<Edge> getEdges() {
 		return edges;
+	}
+
+	public List<Node> getDestinations() {
+		return destinations;
 	}
 
 	public void reset(int maxX, int maxY) {
@@ -102,6 +107,13 @@ public class Map {
 	public Edge getEdge(Edge toFind){
     	for (Edge e : getEdges()){
     		if (e.equals(toFind)) return e;
+		}
+		return null;
+	}
+
+	public Node getDestination(Node toFind){
+		for (Node n : getDestinations()){
+			if (n.equals(toFind)) return n;
 		}
 		return null;
 	}

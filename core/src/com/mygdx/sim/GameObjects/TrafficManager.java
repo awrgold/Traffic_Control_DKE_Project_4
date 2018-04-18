@@ -24,10 +24,12 @@ public class TrafficManager {
 	private final static int RIDICULOUS_SPEED = 1000;
 
 	// Temporary map bounds
-	public final static int MAP_X_DIM = 10000;
-	public final static int MAP_Y_DIM = 10000;
+	public final static int MAP_X_DIM = 1000;
+	public final static int MAP_Y_DIM = 1000;
 	public final static int GRID_FACTOR = 10;
-	public final static int vehicleCount = 5;
+	public final static int vehicleCount = 50;
+	public final static int numUrbanCenters = 3;
+	public final static int uCenterWeight = 3;
 
 
 	private Map map;
@@ -258,13 +260,16 @@ public class TrafficManager {
 
 		List<Node> mapNodes = new ArrayList<Node>();
 		List<Edge> mapEdges = new ArrayList<Edge>();
+		List<Node> mapDestinations = new ArrayList<Node>();
 
 		int nodeCount = 0;
 		int edgeCount = 0;
 		for (int i = 0; i < MAP_X_DIM; i++){
 			for (int j = 0; j < MAP_Y_DIM; j++){
 				if (i % (MAP_X_DIM/GRID_FACTOR) == 0 && j % (MAP_Y_DIM/GRID_FACTOR) == 0){
-					mapNodes.add(new Node(i,j));
+					Node n = new Node(i,j);
+					n.makeDestination();
+					mapNodes.add(n);
 					System.out.println("Adding node at: (" + i + ", " + j + ")");
 					nodeCount++;
 					System.out.println("Nodes: " + nodeCount);
@@ -281,13 +286,6 @@ public class TrafficManager {
 					// Need to find out if mapEdges contains an edge between two points already.
 					// Problem is, when doubling edges it makes an edge between node A and B, then again between
 					// ... nodes B and A, which is an identical edge but cannot be easily compared.
-//					Edge temp = new Edge(mapNodes.get(i), mapNodes.get(j));
-//					for (Edge e : mapEdges){
-//						if (temp.compareTo(e) == 0){
-//
-//						}
-//					}
-
 
 					System.out.println("Adding Edge between: (" + mapNodes.get(i).getLocation().toString() + ", " + mapNodes.get(j).getLocation().toString() + ")");
 					mapEdges.add(new Edge(mapNodes.get(i), mapNodes.get(j)));
@@ -302,9 +300,20 @@ public class TrafficManager {
 
 
 		for (int i = 0; i < vehicleCount; i++){
-			Car temp = new Car(mapNodes.get((int)(Math.random()*mapNodes.size())), mapNodes.get((int)(Math.random()*mapNodes.size())), map);
-			cars.add(temp);
-			temp.setDriverModel(new IntelligentDriverModel());
+			int x = (int)(Math.random()*mapNodes.size());
+			int y = (int)(Math.random()*mapNodes.size());
+
+			if (mapNodes.get(y).isDestination()){
+				Car temp = new Car(mapNodes.get(x), mapNodes.get(y), map);
+				cars.add(temp);
+				temp.setDriverModel(new IntelligentDriverModel());
+			}
+
+			if (!mapNodes.get(y).isDestination()){
+				y = (int)(Math.random()*mapNodes.size());
+			}
+
+
 
 		}
 
@@ -312,10 +321,44 @@ public class TrafficManager {
 		TrafficManager tm = new TrafficManager(map,cars);
 
 		int y = 0;
+
+		// createNeighborhoods(mapNodes, numUrbanCenters);
 		
 		return tm;
 		
 	}
+
+
+	/**
+	 * The idea is to create priority neighborhoods such as urban/suburban centers that cars are more likely to head
+	 * towards. However, since intersections have multiple nodes, we need to redefine several parameters. First of
+	 * all, we need to classify what a "destination" node is, such that a car does not decide to choose the middle of
+	 * an intersection as his "destination." This is necessary because we have to define priority to a specific node
+	 * (as a car chooses only a node as his destination) so only destination nodes can receive priority.
+	 * @param nodes - Map nodes
+	 * @param numUrbanCenters - the number of Urban Centers designed for this map
+	 */
+	private static void createNeighborhoods(List<Node> nodes, int numUrbanCenters){
+		int centers = numUrbanCenters;
+
+		if (centers == 0) return;
+		for (Node n : nodes){
+			if (n.isDestination() && Math.random() < .1 && centers > 0){
+				n.setNodePriorityWeight(uCenterWeight);
+				for (Node i : n.getOutgoingNeighbors()){
+					i.setNodePriorityWeight(n.getNodePriorityWeight()-1);
+				}
+				for (Node j : n.getIncomingNeighbors()){
+					j.setNodePriorityWeight(n.getNodePriorityWeight()-1);
+				}
+				centers--;
+			}
+		}
+
+
+
+	}
+
 	
 	public String toString() {
 		return "[TrafficManager]";
