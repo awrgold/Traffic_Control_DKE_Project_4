@@ -21,8 +21,16 @@ public class Node implements Comparable<Node> {
 		location = coords;
 	}
 
+	public Node(){
+
+	}
+
 	public Coordinates getLocation() {
 		return location;
+	}
+
+	public void setLocation(Coordinates coords){
+		this.location = coords;
 	}
 
 	public double getX() {
