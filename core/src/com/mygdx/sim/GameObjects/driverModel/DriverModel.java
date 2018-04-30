@@ -4,5 +4,5 @@ import com.mygdx.sim.GameObjects.TrafficManager;
 import com.mygdx.sim.GameObjects.vehicle.Vehicle;
 
 public interface DriverModel {
-	public double determineNewSpeed(TrafficManager mgr, Vehicle vehicle, int timestep);
+	public double determineAcceleration(TrafficManager mgr, Vehicle vehicle, int timestep);
 }
