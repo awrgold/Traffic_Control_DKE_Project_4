@@ -1,5 +1,6 @@
 package com.mygdx.sim.GameObjects;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -19,7 +20,12 @@ import com.mygdx.sim.GameObjects.vehicle.Vehicle;
 
 public class TrafficManager {
 	
-	public final static int TIMESTEPS = 1000;
+	// Duration of the simulation (hours, minutes, seconds)
+	public final Time DURATION = new Time(8,0,0);
+	
+	// Sampling frequency. Larger number means higher fidelity of the model, but also more computation
+	public final int TIMESTEPS_PER_SECOND = 2;
+	
 	private final static int VIEW_DISTANCE = 500;
 	private final static int RIDICULOUS_SPEED = 1000;
 
@@ -232,6 +238,14 @@ public class TrafficManager {
 		
 	}
 	
+	public double getDurationOfTimestepInSeconds() {
+		return 1./TIMESTEPS_PER_SECOND;
+	}
+	
+	public int getMaximumTimesteps() {
+		return TIMESTEPS_PER_SECOND*(DURATION.getSeconds() + 60 * (DURATION.getMinutes() + 60 * DURATION.getHours()));
+	}
+	
 	public String toString() {
 		return "[TrafficManager]";
 	}
@@ -261,7 +275,7 @@ public class TrafficManager {
 		
 		TrafficManager tm = new TrafficManager(map,cars);
 		
-		tm.simulate(TIMESTEPS);
+		tm.simulate(tm.getMaximumTimesteps());
 		
 		int y= 0;
 	}
