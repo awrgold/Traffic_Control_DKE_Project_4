@@ -260,41 +260,98 @@ public class TrafficManager {
 
 		List<Node> mapNodes = new ArrayList<Node>();
 		List<Edge> mapEdges = new ArrayList<Edge>();
+		List<IntersectionSingle> intersections = new ArrayList<IntersectionSingle>();
 		List<Node> mapDestinations = new ArrayList<Node>();
 
 		int nodeCount = 0;
 		int edgeCount = 0;
-		for (int i = 0; i < MAP_X_DIM; i++){
-			for (int j = 0; j < MAP_Y_DIM; j++){
-				if (i % (MAP_X_DIM/GRID_FACTOR) == 0 && j % (MAP_Y_DIM/GRID_FACTOR) == 0){
-					Node n = new Node(i,j);
-					n.makeDestination();
-					mapNodes.add(n);
-					System.out.println("Adding node at: (" + i + ", " + j + ")");
-					nodeCount++;
-					System.out.println("Nodes: " + nodeCount);
-				}
-			}
-		}
+		int intersectionCount = 0;
 
-		for (int i = 0; i < mapNodes.size(); i++){
-			for (int j = 0; j < mapNodes.size(); j++){
-				if ((euclideanDistance(mapNodes.get(i), mapNodes.get(j)) == (MAP_X_DIM/GRID_FACTOR) ||
-						euclideanDistance(mapNodes.get(i), mapNodes.get(j)) == (MAP_Y_DIM/GRID_FACTOR)))  {
+//		for (int i = 0; i < MAP_X_DIM; i++){
+//			for (int j = 0; j < MAP_Y_DIM; j++){
+//				if (i % (MAP_X_DIM/GRID_FACTOR) == 0 && j % (MAP_Y_DIM/GRID_FACTOR) == 0){
+//					Node n = new Node(i,j);
+//					n.makeDestination();
+//					mapNodes.add(n);
+//					System.out.println("Adding node at: (" + i + ", " + j + ")");
+//					nodeCount++;
+//					System.out.println("Nodes: " + nodeCount);
+//				}
+//			}
+//		}
+//
+//		for (int i = 0; i < mapNodes.size(); i++){
+//			for (int j = 0; j < mapNodes.size(); j++){
+//				if ((euclideanDistance(mapNodes.get(i), mapNodes.get(j)) == (MAP_X_DIM/GRID_FACTOR) ||
+//						euclideanDistance(mapNodes.get(i), mapNodes.get(j)) == (MAP_Y_DIM/GRID_FACTOR)))  {
+//
+//					// This method doubles the edges for some reason, trying to figure out why.
+//					// Need to find out if mapEdges contains an edge between two points already.
+//					// Problem is, when doubling edges it makes an edge between node A and B, then again between
+//					// ... nodes B and A, which is an identical edge but cannot be easily compared.
+//
+//					System.out.println("Adding Edge between: (" + mapNodes.get(i).getLocation().toString() + ", " + mapNodes.get(j).getLocation().toString() + ")");
+//					mapEdges.add(new Edge(mapNodes.get(i), mapNodes.get(j)));
+//					edgeCount++;
+//					System.out.println("Edges: " + edgeCount);
+//
+//				}
+//			}
+//		}
 
-					// This method doubles the edges for some reason, trying to figure out why.
-					// Need to find out if mapEdges contains an edge between two points already.
-					// Problem is, when doubling edges it makes an edge between node A and B, then again between
-					// ... nodes B and A, which is an identical edge but cannot be easily compared.
 
-					System.out.println("Adding Edge between: (" + mapNodes.get(i).getLocation().toString() + ", " + mapNodes.get(j).getLocation().toString() + ")");
-					mapEdges.add(new Edge(mapNodes.get(i), mapNodes.get(j)));
+
+		for (int i = 0; i < intersections.size(); i++){
+			for (int j = 0; j < intersections.size(); j++){
+				if ((euclideanDistance(intersections.get(i).getCenterpoint(), intersections.get(j).getCenterpoint()) == (MAP_X_DIM/GRID_FACTOR) ||
+						euclideanDistance(intersections.get(i).getCenterpoint(), intersections.get(j).getCenterpoint()) == (MAP_Y_DIM/GRID_FACTOR)))  {
+
+					System.out.println("Adding intersection between: (" + intersections.get(i).getCenterpoint().toString() + ", " + intersections.get(j).getCenterpoint().toString() + ")");
+
+					// Loop over the outer nodes in intersection i
+					for (int k = 0; k < intersections.get(i).getOuterNodes().size(); k++) {
+						// Loop over the out edges in the outer nodes in intersection i
+						for (Edge e : intersections.get(i).getOuterNodes().get(k).getOutEdges()){
+							// if the edge has no toNode
+							if (e.getTo() == null){
+								// loop over intersection j's outer nodes
+								for (int l = 0; l < intersections.get(j).getOuterNodes().size(); l++){
+									// loop over the out edges in the outer nodes in intersection j
+									for (Edge g : intersections.get(j).getOuterNodes().get(l).getOutEdges()){
+										if (g.getFrom() == null){
+
+										}
+									}
+								}
+							}
+						}
+
+
+					}
+					intersections.add(new Edge(mapNodes.get(i), mapNodes.get(j)));
 					edgeCount++;
 					System.out.println("Edges: " + edgeCount);
 
 				}
 			}
 		}
+
+		for (int i = 0; i < MAP_X_DIM; i++){
+			for (int j = 0; j < MAP_Y_DIM; j++){
+				if (i % (MAP_X_DIM/GRID_FACTOR) == 0 && j % (MAP_Y_DIM/GRID_FACTOR) == 0){
+					IntersectionSingle inter = new IntersectionSingle();
+					inter.setCenterpoint(new Coordinates(i,j));
+					intersections.add(inter);
+					System.out.println("Adding intersection at: (" + i + ", " + j + ")");
+					intersectionCount++;
+					System.out.println("Nodes: " + nodeCount);
+				}
+			}
+		}
+
+
+
+
 		List<Vehicle> cars = new ArrayList<Vehicle>();
 		Map map = new Map(mapNodes, mapEdges);
 

@@ -6,12 +6,14 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.mygdx.sim.GameObjects.IntersectionSingle;
 import com.mygdx.sim.GameObjects.TrafficManager;
 import com.mygdx.sim.GameObjects.vehicle.Vehicle;
 
 public class Map {
 	private List<Node> nodes = new ArrayList<Node>();
 	private List<Edge> edges = new ArrayList<Edge>();
+	private List<IntersectionSingle> intersections = new ArrayList<IntersectionSingle>();
 	private List<Node> destinations = new ArrayList<Node>();
 
 	HashMap<Edge, ArrayList<ArrayList<Vehicle>>> locationCache;
@@ -31,6 +33,24 @@ public class Map {
 		for (Edge edge : edges)
 			locationCache.put(edge, new ArrayList<ArrayList<Vehicle>>());
 	}
+
+	public Map(List<Node> nodes, List<Edge> edges, List<IntersectionSingle> intersections) {
+		this.nodes = nodes;
+		this.edges = edges;
+		this.intersections = intersections;
+
+		// Temporary hardcoded map bound until we have a save and load feature
+		this.reset(TrafficManager.MAP_X_DIM, TrafficManager.MAP_Y_DIM);
+
+		locationCache = new HashMap<Edge, ArrayList<ArrayList<Vehicle>>>();
+
+		for (Edge edge : edges)
+			locationCache.put(edge, new ArrayList<ArrayList<Vehicle>>());
+
+
+	}
+
+
 
 	public ArrayList<Vehicle> getVehiclesAt(Edge edge, int timestep) {
 		return locationCache.get(edge).get(timestep);
@@ -55,6 +75,10 @@ public class Map {
 
 	public List<Edge> getEdges() {
 		return edges;
+	}
+
+	public List<IntersectionSingle> getIntersections() {
+		return intersections;
 	}
 
 	public List<Node> getDestinations() {
@@ -117,4 +141,8 @@ public class Map {
 		}
 		return null;
 	}
+
+
+
+
 }

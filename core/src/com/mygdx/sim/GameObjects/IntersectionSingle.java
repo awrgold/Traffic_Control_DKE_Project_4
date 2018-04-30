@@ -2,6 +2,7 @@ package com.mygdx.sim.GameObjects;
 
 import java.util.ArrayList;
 
+import com.mygdx.sim.GameObjects.data.Coordinates;
 import com.mygdx.sim.GameObjects.data.Edge;
 import com.mygdx.sim.GameObjects.data.Node;
 
@@ -9,8 +10,18 @@ public class IntersectionSingle {
 
     private ArrayList<Node> innerNodes;
     private ArrayList<Node> outerNodes;
+    private Node centerpoint = new Node();
     private ArrayList<Edge> edges;
     private ArrayList<Stoplight> stoplights;
+
+    /**
+     * Intersections are hard-coded for now. They are single lanes.
+     * There are two sets of vertices, inner and outer nodes.
+     * Outer nodes only have one in and one out edge, inner nodes have 3 in and 3 out edges
+     * Inner nodes are for making turns
+     * Outer nodes are for entering/exiting the intersection
+     * When creating the map, the outer edges must be looped over such that a "to" node is added to their outer edge
+     */
 
     public IntersectionSingle(){
 
@@ -85,8 +96,6 @@ public class IntersectionSingle {
         }
     }
 
-
-
     public ArrayList<Stoplight> getStoplights(){
         return stoplights;
     }
@@ -103,8 +112,34 @@ public class IntersectionSingle {
         return outerNodes;
     }
 
+    public ArrayList<Edge> getNullOutEdges(){
+        ArrayList<Edge> nullOuts = new ArrayList<Edge>();
+        for (int i = 0; i < getOuterNodes().size(); i++){
+            for (int j = 0; j < getOuterNodes().get(i).getOutEdges().size(); j++){
+                if (getOuterNodes().get(i).getOutEdges().get(j).getTo() == null){
+                    nullOuts.add(getOuterNodes().get(i).getOutEdges().get(j));
+                }
+            }
+        }
+        return nullOuts;
+    }
 
-    public ArrayList<Edge> getEdges() {
+    public ArrayList<Edge> getNullInEdges(){
+        ArrayList<Edge> nullIns = new ArrayList<Edge>();
+        for (int i = 0; i < getOuterNodes().size(); i++){
+            for (int j = 0; j < getOuterNodes().get(i).getInEdges().size(); j++){
+                if (getOuterNodes().get(i).getOutEdges().get(j).getTo() == null){
+                    nullIns.add(getOuterNodes().get(i).getInEdges().get(j));
+                }
+            }
+        }
+        return nullIns;
+
+
+
+
+
+        public ArrayList<Edge> getEdges() {
         return edges;
     }
 
@@ -113,4 +148,23 @@ public class IntersectionSingle {
     }
 
 
+    public Node getCenterpoint() {
+        return centerpoint;
+    }
+
+    public void setCenterpoint(Coordinates centerpoint) {
+        this.centerpoint.setLocation(centerpoint);
+    }
+
+    public void connectIntersections(IntersectionSingle a, IntersectionSingle b){
+        for (int i = 0; i < a.getNullOutEdges().size(); i++) {
+            for (int j = 0; j < b.getNullInEdges().size(); j++) {
+                a.getNullOutEdges().get(i).setTo(b.getNullInEdges().get(j).getTo());
+            }
+        }
+
+        a.getNullOutEdges().get(1).setTo(b.getNullInEdges().get(2));
+
+
+    }
 }
