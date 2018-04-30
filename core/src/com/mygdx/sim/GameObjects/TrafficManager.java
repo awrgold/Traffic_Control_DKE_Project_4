@@ -246,6 +246,24 @@ public class TrafficManager {
 		return TIMESTEPS_PER_SECOND*(DURATION.getSeconds() + 60 * (DURATION.getMinutes() + 60 * DURATION.getHours()));
 	}
 	
+	public static Time getTimeAtTimestep(int timestep) {
+		int totalSeconds = timestep/TIMESTEPS_PER_SECOND;
+		
+		int seconds = totalSeconds % 60;
+		
+		totalSeconds -= seconds;		
+		totalSeconds /= 60;
+		
+		int minutes = totalSeconds % 60;
+		
+		totalSeconds -= minutes;
+		totalSeconds /= 60;
+		
+		int hours = totalSeconds;
+		
+		return new Time(hours,minutes,seconds);
+	}
+
 	public String toString() {
 		return "[TrafficManager]";
 	}
@@ -278,5 +296,7 @@ public class TrafficManager {
 		tm.simulate(getMaximumTimesteps());
 		
 		System.out.println("Done with " + tm.lastComputedTimestep + " timesteps.");
+		
+		System.out.println(getTimeAtTimestep(tm.lastComputedTimestep));
 	}
 }
