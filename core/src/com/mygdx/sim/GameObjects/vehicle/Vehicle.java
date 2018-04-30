@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygdx.sim.GameObjects.TrafficManager;
 import com.mygdx.sim.GameObjects.data.Coordinates;
 import com.mygdx.sim.GameObjects.data.Edge;
 import com.mygdx.sim.GameObjects.data.Map;
@@ -169,6 +170,22 @@ public abstract class Vehicle {
 		this.edgePath = pathfinder.findPath(this,timestep);
 	}
 	
+	public void accelerate(int timestep, double acceleration) {
+		if(computedSpeeds.get(timestep)) {
+			System.out.println("You're trying to set a speed that has already been set. You're doing something wrong.");
+			return;
+		}
+		
+		double previousSpeed = 0;
+		if(timestep!=0) 
+			previousSpeed = speeds.get(timestep-1);
+		
+		double newSpeed = previousSpeed + acceleration * TrafficManager.TIMESTEPS_PER_SECOND;
+		
+		speeds.set(timestep, newSpeed);
+		computedSpeeds.set(timestep, true);
+	}
+	
 	/**
 	 * Applies the previous speed of this car to the previous location to compute the new location.
 	 * @param timestep - the timestep up to which we are moving.
@@ -186,7 +203,7 @@ public abstract class Vehicle {
 		}
 		
 		// Get the speed we are moving at
-		double speed = speeds.get(timestep-1);
+		double speed = speeds.get(timestep-1)/TrafficManager.TIMESTEPS_PER_SECOND;
 		
 		// Get the index of the edge we are currently on
 		int edgeIdx = edgeIndices.get(timestep-1);
@@ -269,15 +286,15 @@ public abstract class Vehicle {
 	 * @param timestep - the timestep for which we're setting the speed
 	 * @param speed - the speed at that timestep
 	 */
-	public void setSpeed(int timestep, double speed) {
-		if(computedSpeeds.get(timestep)) {
-			System.out.println("You're trying to set a speed that has already been set. You're doing something wrong.");
-			return;
-		}
-		
-		speeds.set(timestep, speed);
-		computedSpeeds.set(timestep, true);
-	}
+//	public void setSpeed(int timestep, double speed) {
+//		if(computedSpeeds.get(timestep)) {
+//			System.out.println("You're trying to set a speed that has already been set. You're doing something wrong.");
+//			return;
+//		}
+//		
+//		speeds.set(timestep, speed);
+//		computedSpeeds.set(timestep, true);
+//	}
 	
 	/**
 	 * Initializes the history-keeping ArrayLists to hold at least one element.

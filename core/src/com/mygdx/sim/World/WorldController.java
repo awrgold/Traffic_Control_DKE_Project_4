@@ -41,7 +41,7 @@ public class WorldController {
 		map = trafficManager.getMap();
 		
 		// Start Simulation
-		trafficManager.simulate(TrafficManager.TIMESTEPS);
+		trafficManager.simulate(trafficManager.getMaximumTimesteps());
 	}
 
 	public void update() {
