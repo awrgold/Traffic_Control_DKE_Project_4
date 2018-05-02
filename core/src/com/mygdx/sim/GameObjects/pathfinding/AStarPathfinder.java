@@ -1,17 +1,15 @@
 package com.mygdx.sim.GameObjects.pathfinding;
 
-import java.util.*;
-import java.util.PriorityQueue.*;
+import static java.lang.Double.MAX_VALUE;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
 
 import com.mygdx.sim.GameObjects.data.Edge;
 import com.mygdx.sim.GameObjects.data.Map;
 import com.mygdx.sim.GameObjects.data.Node;
 import com.mygdx.sim.GameObjects.vehicle.Vehicle;
-import javafx.scene.layout.Priority;
-
-import static java.lang.Double.MAX_VALUE;
-import static java.lang.Double.MIN_VALUE;
 
 public class AStarPathfinder extends Pathfinder {
 
