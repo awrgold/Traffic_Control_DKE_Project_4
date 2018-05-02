@@ -25,11 +25,14 @@ public class WorldRenderer {
 	private ShapeRenderer shapeRenderer;
 	private Rectangle scissor;
 
+	// Paused
+	private boolean paused = false;
+
 	// Time Step
 	private int timeStep = 1;
 
 	// Simulation Speed
-	private float simulationSpeed = 0.5f;
+	private float simulationSpeed = 0.1f;
 	private float timer = 0;
 
 	// Vehicle History
@@ -50,35 +53,34 @@ public class WorldRenderer {
 
 	public void render(SpriteBatch spriteBatch) {
 
-		timer += Gdx.graphics.getDeltaTime();
-		if (timer >= simulationSpeed) {
-			// Increase Time Step
-			if (timeStep + 1 < vehicleHistory.size())
-				timeStep++;
+		if (!paused) {
+			timer += Gdx.graphics.getDeltaTime();
+			if (timer >= simulationSpeed) {
+				// Increase Time Step
+				if (timeStep + 1 < vehicleHistory.size())
+					timeStep++;
 
-			// Reset Timer
-			timer = 0f;
+				// Reset Timer
+				timer = 0f;
+			}
 		}
 
 		// Calculate Scissors
-		/*ScissorStack.calculateScissors(worldController.getWorldCamera(), spriteBatch.getTransformMatrix(),
-				worldController.getBounds(), scissor);
+		/*
+		 * ScissorStack.calculateScissors(worldController.getWorldCamera(),
+		 * spriteBatch.getTransformMatrix(), worldController.getBounds(), scissor);
+		 * 
+		 * ScissorStack.pushScissors(scissor); { this.drawMapRoads(spriteBatch);
+		 * this.drawMapNodes(spriteBatch); this.drawMapVehicles(spriteBatch, timeStep);
+		 * spriteBatch.flush(); } ScissorStack.popScissors();
+		 */
 
-		ScissorStack.pushScissors(scissor);
-		{
-			this.drawMapRoads(spriteBatch);
-			this.drawMapNodes(spriteBatch);
-			this.drawMapVehicles(spriteBatch, timeStep);
-			spriteBatch.flush();
-		}
-		ScissorStack.popScissors();*/
-		
 		this.drawMapRoads(spriteBatch);
 		this.drawMapNodes(spriteBatch);
 		this.drawMapVehicles(spriteBatch, timeStep);
 
 		// Draw Outline
-		//this.drawMapOutline();
+		// this.drawMapOutline();
 	}
 
 	private void drawMapOutline() {
@@ -116,19 +118,9 @@ public class WorldRenderer {
 
 			float x = (float) (previousCoord.getX() - nextCoord.getX());
 			float y = (float) (previousCoord.getY() - nextCoord.getY());
-			float rotation = 0;
-
-			if (x > 0) {
-				rotation += 90;
-			} else if (x < 0) {
-				rotation -= 90;
-			} else if (y > 0) {
-				rotation += 180;
-			} else if (y < 0) {
-				rotation = 0;
-			}
-
-			// rotation = (float) Math.toDegrees(Math.atan2(y, x));
+			float rotation = 90;
+			
+			rotation += (float) Math.toDegrees(Math.atan2(y, x));
 
 			vehicle.draw(spriteBatch, (float) nextCoord.getX(), (float) previousCoord.getY(), rotation);
 		}

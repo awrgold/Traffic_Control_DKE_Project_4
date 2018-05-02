@@ -26,8 +26,8 @@ public class TrafficManager {
 	// Temporary map bounds
 	public final static int MAP_X_DIM = 1000;
 	public final static int MAP_Y_DIM = 1000;
-	public final static int GRID_FACTOR = 10;
-	public final static int vehicleCount = 50;
+	public final static int GRID_FACTOR = 2;
+	public final static int vehicleCount = 1;
 	public final static int numUrbanCenters = 3;
 	public final static int uCenterWeight = 3;
 
@@ -280,7 +280,7 @@ public class TrafficManager {
 		for (int i = 0; i < mapNodes.size(); i++){
 			for (int j = 0; j < mapNodes.size(); j++){
 				if ((euclideanDistance(mapNodes.get(i), mapNodes.get(j)) == (MAP_X_DIM/GRID_FACTOR) ||
-						euclideanDistance(mapNodes.get(i), mapNodes.get(j)) == (MAP_Y_DIM/GRID_FACTOR)))  {
+						euclideanDistance(mapNodes.get(i), mapNodes.get(j)) == (MAP_Y_DIM/GRID_FACTOR)) && i != j)  {
 
 					// This method doubles the edges for some reason, trying to figure out why.
 					// Need to find out if mapEdges contains an edge between two points already.
