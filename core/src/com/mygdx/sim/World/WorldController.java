@@ -51,8 +51,7 @@ public class WorldController {
 		worldGenerator = new WorldGenerator(this);
 
 		// Start Simulation
-		trafficManager.simulate(TrafficManager.TIMESTEPS);
-
+		trafficManager.simulate(trafficManager.getMaximumTimesteps());
 	}
 
 	public void update() {

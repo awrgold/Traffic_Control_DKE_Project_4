@@ -21,8 +21,14 @@ public class SimpleDriverModel implements DriverModel{
 		return "[SimpleDriverModel " + speed + "]";
 	}
 
-	public double determineNewSpeed(TrafficManager mgr, Vehicle vehicle, int timestep) {
-		return speed;
+	public double determineAcceleration(TrafficManager mgr, Vehicle vehicle, int timestep) {
+		if (timestep==0)
+			return 0;
+		
+		if(vehicle.getSpeedAt(timestep-1) < speed)
+			return speed/10;
+		
+		return 0;
 	}
 
 }

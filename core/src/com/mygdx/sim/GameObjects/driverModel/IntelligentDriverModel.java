@@ -8,10 +8,9 @@ public class IntelligentDriverModel implements DriverModel{
 	
 	private final static int EXPONENT = 4;
 	private final static double LINEAR_JAM_DISTANCE = 2.0;
-	private final static double NON_LINEAR_JAM_DISTANCE = 3.0;
+	private final static double NON_LINEAR_JAM_DISTANCE = 3.0;	
 	
-	
-	public double determineNewSpeed(TrafficManager mgr, Vehicle vehicle, int timestep) {
+	public double determineAcceleration(TrafficManager mgr, Vehicle vehicle, int timestep) {
 		if(timestep == 0) 
 			return 0;
 		
@@ -48,9 +47,7 @@ public class IntelligentDriverModel implements DriverModel{
 		
 		double acceleration = maximumAcceleration * (1 - freeRoadTerm - interactionTerm);
 		
-		double newSpeed = currentSpeed + acceleration;
-		
-		return Math.max(newSpeed, 0);
+		return Math.max(acceleration, 0);
 	}
 	
 

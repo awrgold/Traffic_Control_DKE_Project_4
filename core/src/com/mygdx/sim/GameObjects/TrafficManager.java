@@ -1,5 +1,6 @@
 package com.mygdx.sim.GameObjects;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -19,7 +20,12 @@ import com.mygdx.sim.GameObjects.vehicle.Vehicle;
 
 public class TrafficManager {
 	
-	public final static int TIMESTEPS = 1000;
+	// Duration of the simulation (hours, minutes, seconds)
+	public final static Time DURATION = new Time(8,0,0);
+
+	// Sampling frequency. Larger number means higher fidelity of the model, but also more computation
+	public final static int TIMESTEPS_PER_SECOND = 2;
+
 	private final static int VIEW_DISTANCE = 500;
 	private final static int RIDICULOUS_SPEED = 1000;
 
@@ -47,13 +53,13 @@ public class TrafficManager {
 		
 		for(Vehicle vehicle : vehicles) {
 			history.get(lastComputedTimestep).put(vehicle, vehicle.getLocationCoordinates(lastComputedTimestep));
-			
-			// Validation of the path	
+
+			// Validation of the path
 			List<Edge> edgePath = vehicle.getEdgePath();
 			for(int i=0; i< edgePath.size()-1; i++)
-				if(! edgePath.get(i+1).getFrom().equals(edgePath.get(i).getTo())) 
+				if(! edgePath.get(i+1).getFrom().equals(edgePath.get(i).getTo()))
 					throw new RuntimeException("EdgePath of vehicle " + this + " implies teleportation");
-	
+
 		}
 	}
 	
@@ -102,13 +108,13 @@ public class TrafficManager {
 			for(Vehicle vehicle : vehicles)
 				map.getLocationCache().get(vehicle.getEdgeAt(lastComputedTimestep)).get(lastComputedTimestep).add(vehicle);
 				
-			// Set speeds for the current timestep
+			// Set accelerations for the current timestep
 			for (Vehicle vehicle : vehicles) {
-				// Use the driver model the vehicle uses to determine the vehicle's new speed
-				double newSpeed = vehicle.getDriverModel().determineNewSpeed(this,vehicle,lastComputedTimestep);
+				// Use the driver model the vehicle uses to determine the vehicle's acceleration
+				double acceleration = vehicle.getDriverModel().determineAcceleration(this,vehicle,lastComputedTimestep);
 				
-				// Set the new speed
-				vehicle.setSpeed(lastComputedTimestep, newSpeed);
+				// Set the acceleration
+				vehicle.accelerate(lastComputedTimestep, acceleration);
 
 				/*
 				 * Ask our pathfinding algorithm for a path - It can still return
@@ -171,7 +177,7 @@ public class TrafficManager {
 		ArrayList<DistanceAndVehicle> candidates = new ArrayList<DistanceAndVehicle>();
 		for (Vehicle vehicle2 : vehiclesOnCurrentEdge) {
 			double distance = distanceUntilNow + vehicle2.getTraveledDistance(timestep);
-			if(distance - Util.DELTA_EPSILON > 0)
+			if(distance - Util.DELTA_EPSILON > 0 && vehicle2.isMoving())
 				candidates.add(new DistanceAndVehicle(distance,vehicle2));			
 		}
 		
@@ -226,7 +232,7 @@ public class TrafficManager {
 	public static double euclideanDistance(Node a, Node b){
 		return Math.abs(Math.sqrt(Math.pow((a.getY()-b.getY()), 2) + Math.pow((a.getX() - b.getX()), 2)));
 	}
-	
+
 	public static TrafficManager createSimpleTestcase() {
 		Node node1 = new Node(0,0);
 		Node node2 = new Node(475,0);
@@ -380,9 +386,9 @@ public class TrafficManager {
 		int y = 0;
 
 		// createNeighborhoods(mapNodes, numUrbanCenters);
-		
+
 		return tm;
-		
+
 	}
 
 
@@ -417,6 +423,32 @@ public class TrafficManager {
 	}
 
 	
+	public static double getDurationOfTimestepInSeconds() {
+		return 1./TIMESTEPS_PER_SECOND;
+	}
+
+	public static int getMaximumTimesteps() {
+		return TIMESTEPS_PER_SECOND*(DURATION.getSeconds() + 60 * (DURATION.getMinutes() + 60 * DURATION.getHours()));
+	}
+
+	public static Time getTimeAtTimestep(int timestep) {
+		int totalSeconds = timestep/TIMESTEPS_PER_SECOND;
+
+		int seconds = totalSeconds % 60;
+
+		totalSeconds -= seconds;
+		totalSeconds /= 60;
+
+		int minutes = totalSeconds % 60;
+
+		totalSeconds -= minutes;
+		totalSeconds /= 60;
+
+		int hours = totalSeconds;
+
+		return new Time(hours,minutes,seconds);
+	}
+
 	public String toString() {
 		return "[TrafficManager]";
 	}
@@ -434,6 +466,12 @@ public class TrafficManager {
 
 		System.out.println("Andrew-generated test case simulation completed");
 		
-		int x =0;
+		TrafficManager tm = new TrafficManager(map,cars);
+		
+		tm.simulate(getMaximumTimesteps());
+
+		System.out.println("Done with " + tm.lastComputedTimestep + " timesteps.");
+
+		System.out.println(getTimeAtTimestep(tm.lastComputedTimestep));
 	}
 }
