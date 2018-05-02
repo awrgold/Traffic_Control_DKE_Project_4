@@ -32,8 +32,8 @@ public class TrafficManager {
 	// Temporary map bounds
 	public final static int MAP_X_DIM = 1000;
 	public final static int MAP_Y_DIM = 1000;
-	public final static int GRID_FACTOR = 10;
-	public final static int vehicleCount = 50;
+	public final static int GRID_FACTOR = 5; // GRID_FACTOR = N -> where the map is NxN grid
+	public final static int vehicleCount = 10;
 	public final static int numUrbanCenters = 3;
 	public final static int uCenterWeight = 3;
 
@@ -262,79 +262,33 @@ public class TrafficManager {
 		return tm;
 	}
 
-	public static TrafficManager createEnvironment() {
+	public static TrafficManager createGrid(){
 
-		List<Node> mapNodes = new ArrayList<Node>();
-		List<Edge> mapEdges = new ArrayList<Edge>();
-		List<IntersectionSingle> intersections = new ArrayList<IntersectionSingle>();
-		List<Node> mapDestinations = new ArrayList<Node>();
+        List<Node> mapNodes = new ArrayList<Node>();
+        List<Edge> mapEdges = new ArrayList<Edge>();
+        int nodeCount = 0;
+        int edgeCount = 0;
 
-		int nodeCount = 0;
-		int edgeCount = 0;
-		int intersectionCount = 0;
+		for (int i = 0; i < MAP_X_DIM; i++){
+			for (int j = 0; j < MAP_Y_DIM; j++){
+				if (i % (MAP_X_DIM/GRID_FACTOR) == 0 && j % (MAP_Y_DIM/GRID_FACTOR) == 0){
+					Node n = new Node(i,j);
+					n.makeDestination();
+					mapNodes.add(n);
+					System.out.println("Adding node at: (" + i + ", " + j + ")");
+					nodeCount++;
+					System.out.println("Nodes: " + nodeCount);
+				}
+			}
+		}
 
-//		for (int i = 0; i < MAP_X_DIM; i++){
-//			for (int j = 0; j < MAP_Y_DIM; j++){
-//				if (i % (MAP_X_DIM/GRID_FACTOR) == 0 && j % (MAP_Y_DIM/GRID_FACTOR) == 0){
-//					Node n = new Node(i,j);
-//					n.makeDestination();
-//					mapNodes.add(n);
-//					System.out.println("Adding node at: (" + i + ", " + j + ")");
-//					nodeCount++;
-//					System.out.println("Nodes: " + nodeCount);
-//				}
-//			}
-//		}
-//
-//		for (int i = 0; i < mapNodes.size(); i++){
-//			for (int j = 0; j < mapNodes.size(); j++){
-//				if ((euclideanDistance(mapNodes.get(i), mapNodes.get(j)) == (MAP_X_DIM/GRID_FACTOR) ||
-//						euclideanDistance(mapNodes.get(i), mapNodes.get(j)) == (MAP_Y_DIM/GRID_FACTOR)))  {
-//
-//					// This method doubles the edges for some reason, trying to figure out why.
-//					// Need to find out if mapEdges contains an edge between two points already.
-//					// Problem is, when doubling edges it makes an edge between node A and B, then again between
-//					// ... nodes B and A, which is an identical edge but cannot be easily compared.
-//
-//					System.out.println("Adding Edge between: (" + mapNodes.get(i).getLocation().toString() + ", " + mapNodes.get(j).getLocation().toString() + ")");
-//					mapEdges.add(new Edge(mapNodes.get(i), mapNodes.get(j)));
-//					edgeCount++;
-//					System.out.println("Edges: " + edgeCount);
-//
-//				}
-//			}
-//		}
+		for (int i = 0; i < mapNodes.size(); i++){
+			for (int j = 0; j < mapNodes.size(); j++){
+				if ((euclideanDistance(mapNodes.get(i), mapNodes.get(j)) == (MAP_X_DIM/GRID_FACTOR) ||
+						euclideanDistance(mapNodes.get(i), mapNodes.get(j)) == (MAP_Y_DIM/GRID_FACTOR)))  {
 
-
-
-		for (int i = 0; i < intersections.size(); i++){
-			for (int j = 0; j < intersections.size(); j++){
-				if ((euclideanDistance(intersections.get(i).getCenterpoint(), intersections.get(j).getCenterpoint()) == (MAP_X_DIM/GRID_FACTOR) ||
-						euclideanDistance(intersections.get(i).getCenterpoint(), intersections.get(j).getCenterpoint()) == (MAP_Y_DIM/GRID_FACTOR)))  {
-
-					System.out.println("Adding intersection between: (" + intersections.get(i).getCenterpoint().toString() + ", " + intersections.get(j).getCenterpoint().toString() + ")");
-
-					// Loop over the outer nodes in intersection i
-					for (int k = 0; k < intersections.get(i).getOuterNodes().size(); k++) {
-						// Loop over the out edges in the outer nodes in intersection i
-						for (Edge e : intersections.get(i).getOuterNodes().get(k).getOutEdges()){
-							// if the edge has no toNode
-							if (e.getTo() == null){
-								// loop over intersection j's outer nodes
-								for (int l = 0; l < intersections.get(j).getOuterNodes().size(); l++){
-									// loop over the out edges in the outer nodes in intersection j
-									for (Edge g : intersections.get(j).getOuterNodes().get(l).getOutEdges()){
-										if (g.getFrom() == null){
-
-										}
-									}
-								}
-							}
-						}
-
-
-					}
-					intersections.add(new Edge(mapNodes.get(i), mapNodes.get(j)));
+					System.out.println("Adding Edge between: (" + mapNodes.get(i).getLocation().toString() + ", " + mapNodes.get(j).getLocation().toString() + ")");
+					mapEdges.add(new Edge(mapNodes.get(i), mapNodes.get(j)));
 					edgeCount++;
 					System.out.println("Edges: " + edgeCount);
 
@@ -342,54 +296,124 @@ public class TrafficManager {
 			}
 		}
 
-		for (int i = 0; i < MAP_X_DIM; i++){
-			for (int j = 0; j < MAP_Y_DIM; j++){
-				if (i % (MAP_X_DIM/GRID_FACTOR) == 0 && j % (MAP_Y_DIM/GRID_FACTOR) == 0){
-					IntersectionSingle inter = new IntersectionSingle();
-					inter.setCenterpoint(new Coordinates(i,j));
-					intersections.add(inter);
-					System.out.println("Adding intersection at: (" + i + ", " + j + ")");
-					intersectionCount++;
-					System.out.println("Nodes: " + nodeCount);
-				}
-			}
-		}
+        List<Vehicle> cars = new ArrayList<Vehicle>();
+        Map map = new Map(mapNodes, mapEdges);
 
 
+        for (int i = 0; i < vehicleCount; i++){
+            int x = (int)(Math.random()*mapNodes.size());
+            int y = (int)(Math.random()*mapNodes.size());
 
+            if (mapNodes.get(y).isDestination() && !mapNodes.get(x).equals(mapNodes.get(y))){
+                Car temp = new Car(mapNodes.get(x), mapNodes.get(y), map);
+                cars.add(temp);
+                temp.setDriverModel(new IntelligentDriverModel());
+            }
 
-		List<Vehicle> cars = new ArrayList<Vehicle>();
-		Map map = new Map(mapNodes, mapEdges);
+            /*
+            Does not need to exist now, but for later when nodes are sometimes not destinations.
+             */
+//            if (!mapNodes.get(y).isDestination() && !mapNodes.get(y).equals(mapNodes.get(x))){
+//                y = (int)(Math.random()*mapNodes.size());
+//            }
 
+        }
 
-		for (int i = 0; i < vehicleCount; i++){
-			int x = (int)(Math.random()*mapNodes.size());
-			int y = (int)(Math.random()*mapNodes.size());
+        TrafficManager tm = new TrafficManager(map,cars);
+        int y = 0;
+        // createNeighborhoods(mapNodes, numUrbanCenters);
 
-			if (mapNodes.get(y).isDestination()){
-				Car temp = new Car(mapNodes.get(x), mapNodes.get(y), map);
-				cars.add(temp);
-				temp.setDriverModel(new IntelligentDriverModel());
-			}
+        return tm;
 
-			if (!mapNodes.get(y).isDestination()){
-				y = (int)(Math.random()*mapNodes.size());
-			}
+    }
 
-
-
-		}
-
-
-		TrafficManager tm = new TrafficManager(map,cars);
-
-		int y = 0;
-
-		// createNeighborhoods(mapNodes, numUrbanCenters);
-
-		return tm;
-
-	}
+//	public static TrafficManager createEnvironment() {
+//
+//		List<Node> mapNodes = new ArrayList<Node>();
+//		List<Edge> mapEdges = new ArrayList<Edge>();
+//		List<IntersectionSingle> intersections = new ArrayList<IntersectionSingle>();
+//		List<Node> mapDestinations = new ArrayList<Node>();
+//
+//		int nodeCount = 0;
+//		int edgeCount = 0;
+//		int intersectionCount = 0;
+//
+//
+//		for (int i = 0; i < intersections.size(); i++){
+//			for (int j = 0; j < intersections.size(); j++){
+//				if ((euclideanDistance(intersections.get(i).getCenterpoint(), intersections.get(j).getCenterpoint()) == (MAP_X_DIM/GRID_FACTOR) ||
+//						euclideanDistance(intersections.get(i).getCenterpoint(), intersections.get(j).getCenterpoint()) == (MAP_Y_DIM/GRID_FACTOR)))  {
+//
+//					System.out.println("Adding intersection between: (" + intersections.get(i).getCenterpoint().toString() + ", " + intersections.get(j).getCenterpoint().toString() + ")");
+//
+//					// Loop over the outer nodes in intersection i
+//					for (int k = 0; k < intersections.get(i).getOuterNodes().size(); k++) {
+//						// Loop over the out edges in the outer nodes in intersection i
+//						for (Edge e : intersections.get(i).getOuterNodes().get(k).getOutEdges()){
+//							// if the edge has no toNode
+//							if (e.getTo() == null){
+//								// loop over intersection j's outer nodes
+//								for (int l = 0; l < intersections.get(j).getOuterNodes().size(); l++){
+//									// loop over the out edges in the outer nodes in intersection j
+//									for (Edge g : intersections.get(j).getOuterNodes().get(l).getOutEdges()){
+//										if (g.getFrom() == null){
+//
+//										}
+//									}
+//								}
+//							}
+//						}
+//
+//
+//					}
+//					intersections.add(new Edge(mapNodes.get(i), mapNodes.get(j)));
+//					edgeCount++;
+//					System.out.println("Edges: " + edgeCount);
+//
+//				}
+//			}
+//		}
+//
+//		for (int i = 0; i < MAP_X_DIM; i++){
+//			for (int j = 0; j < MAP_Y_DIM; j++){
+//				if (i % (MAP_X_DIM/GRID_FACTOR) == 0 && j % (MAP_Y_DIM/GRID_FACTOR) == 0){
+//					IntersectionSingle inter = new IntersectionSingle();
+//					inter.setCenterpoint(new Coordinates(i,j));
+//					intersections.add(inter);
+//					System.out.println("Adding intersection at: (" + i + ", " + j + ")");
+//					intersectionCount++;
+//					System.out.println("Nodes: " + nodeCount);
+//				}
+//			}
+//		}
+//
+//		List<Vehicle> cars = new ArrayList<Vehicle>();
+//		Map map = new Map(mapNodes, mapEdges);
+//
+//		for (int i = 0; i < vehicleCount; i++){
+//			int x = (int)(Math.random()*mapNodes.size());
+//			int y = (int)(Math.random()*mapNodes.size());
+//
+//			if (mapNodes.get(y).isDestination()){
+//				Car temp = new Car(mapNodes.get(x), mapNodes.get(y), map);
+//				cars.add(temp);
+//				temp.setDriverModel(new IntelligentDriverModel());
+//			}
+//
+//			if (!mapNodes.get(y).isDestination()){
+//				y = (int)(Math.random()*mapNodes.size());
+//			}
+//		}
+//
+//		TrafficManager tm = new TrafficManager(map,cars);
+//
+//		int y = 0;
+//
+//		// createNeighborhoods(mapNodes, numUrbanCenters);
+//
+//		return tm;
+//
+//	}
 
 
 	/**
@@ -456,22 +480,22 @@ public class TrafficManager {
 	public static void main(String[] args) {
 		TrafficManager tm1 = createSimpleTestcase();
 		
-		tm1.simulate(TIMESTEPS);
+		tm1.simulate();
 		
 		System.out.println("Simple test case simulation completed");
 		
-		TrafficManager tm2 = createEnvironment();
+		TrafficManager tm2 = createGrid();
 		
-		tm2.simulate(TIMESTEPS);
+		tm2.simulate(TIMESTEPS_PER_SECOND);
 
 		System.out.println("Andrew-generated test case simulation completed");
-		
-		TrafficManager tm = new TrafficManager(map,cars);
-		
-		tm.simulate(getMaximumTimesteps());
 
-		System.out.println("Done with " + tm.lastComputedTimestep + " timesteps.");
+//		TrafficManager tm = new TrafficManager(map,cars);
+		
+		tm2.simulate(getMaximumTimesteps());
 
-		System.out.println(getTimeAtTimestep(tm.lastComputedTimestep));
+		System.out.println("Done with " + tm2.lastComputedTimestep + " timesteps.");
+
+		System.out.println(getTimeAtTimestep(tm2.lastComputedTimestep));
 	}
 }

@@ -124,24 +124,24 @@ public class IntersectionSingle {
         return nullOuts;
     }
 
-    public ArrayList<Edge> getNullInEdges(){
-        ArrayList<Edge> nullIns = new ArrayList<Edge>();
-        for (int i = 0; i < getOuterNodes().size(); i++){
-            for (int j = 0; j < getOuterNodes().get(i).getInEdges().size(); j++){
-                if (getOuterNodes().get(i).getOutEdges().get(j).getTo() == null){
-                    nullIns.add(getOuterNodes().get(i).getInEdges().get(j));
-                }
-            }
-        }
-        return nullIns;
-
-
-
-
-
-        public ArrayList<Edge> getEdges() {
-        return edges;
-    }
+//    public ArrayList<Edge> getNullInEdges(){
+//        ArrayList<Edge> nullIns = new ArrayList<Edge>();
+//        for (int i = 0; i < getOuterNodes().size(); i++){
+//            for (int j = 0; j < getOuterNodes().get(i).getInEdges().size(); j++){
+//                if (getOuterNodes().get(i).getOutEdges().get(j).getTo() == null){
+//                    nullIns.add(getOuterNodes().get(i).getInEdges().get(j));
+//                }
+//            }
+//        }
+//        return nullIns;
+//
+//
+//
+//
+//
+//        public ArrayList<Edge> getEdges() {
+//        return edges;
+//    }
 
     public void setEdges(ArrayList<Edge> edges) {
         this.edges = edges;
@@ -156,15 +156,15 @@ public class IntersectionSingle {
         this.centerpoint.setLocation(centerpoint);
     }
 
-    public void connectIntersections(IntersectionSingle a, IntersectionSingle b){
-        for (int i = 0; i < a.getNullOutEdges().size(); i++) {
-            for (int j = 0; j < b.getNullInEdges().size(); j++) {
-                a.getNullOutEdges().get(i).setTo(b.getNullInEdges().get(j).getTo());
-            }
-        }
-
-        a.getNullOutEdges().get(1).setTo(b.getNullInEdges().get(2));
-
-
-    }
+//    public void connectIntersections(IntersectionSingle a, IntersectionSingle b){
+//        for (int i = 0; i < a.getNullOutEdges().size(); i++) {
+//            for (int j = 0; j < b.getNullInEdges().size(); j++) {
+//                a.getNullOutEdges().get(i).setTo(b.getNullInEdges().get(j).getTo());
+//            }
+//        }
+//
+//        a.getNullOutEdges().get(1).setTo(b.getNullInEdges().get(2));
+//
+//
+//    }
 }

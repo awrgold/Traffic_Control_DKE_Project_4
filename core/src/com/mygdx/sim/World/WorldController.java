@@ -36,7 +36,7 @@ public class WorldController {
 		vehicles = new ArrayList<Vehicle>();
 
 		// Traffic Manager
-		trafficManager = TrafficManager.createEnvironment();
+		trafficManager = TrafficManager.createGrid();
 
 		// Get Vehicles
 		vehicles = trafficManager.getVehicles();
