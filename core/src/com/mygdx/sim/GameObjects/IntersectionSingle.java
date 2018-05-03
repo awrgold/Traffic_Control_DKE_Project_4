@@ -124,24 +124,17 @@ public class IntersectionSingle {
         return nullOuts;
     }
 
-//    public ArrayList<Edge> getNullInEdges(){
-//        ArrayList<Edge> nullIns = new ArrayList<Edge>();
-//        for (int i = 0; i < getOuterNodes().size(); i++){
-//            for (int j = 0; j < getOuterNodes().get(i).getInEdges().size(); j++){
-//                if (getOuterNodes().get(i).getOutEdges().get(j).getTo() == null){
-//                    nullIns.add(getOuterNodes().get(i).getInEdges().get(j));
-//                }
-//            }
-//        }
-//        return nullIns;
-//
-//
-//
-//
-//
-//        public ArrayList<Edge> getEdges() {
-//        return edges;
-//    }
+    public ArrayList<Edge> getNullInEdges(){
+        ArrayList<Edge> nullIns = new ArrayList<Edge>();
+        for (int i = 0; i < getOuterNodes().size(); i++){
+            for (int j = 0; j < getOuterNodes().get(i).getInEdges().size(); j++){
+                if (getOuterNodes().get(i).getInEdges().get(j).getTo() == null){
+                    nullIns.add(getOuterNodes().get(i).getInEdges().get(j));
+                }
+            }
+        }
+        return nullIns;
+    }
 
     public void setEdges(ArrayList<Edge> edges) {
         this.edges = edges;

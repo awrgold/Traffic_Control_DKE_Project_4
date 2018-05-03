@@ -29,8 +29,10 @@ public class Road {
 
 		length = (float) edge.getLength() + texture.getWidth();
 
-		angle = (float) Math.asin((edge.getTo().getY() - edge.getFrom().getY()) / edge.getLength());
-		angle = (float) Math.toDegrees(angle);
+		int x = (int) (edge.getTo().getX() - edge.getFrom().getX());
+		int y =  (int) (edge.getTo().getY() - edge.getFrom().getY());
+
+		angle = (float) Math.toDegrees(Math.atan2(y, x));
 
 		posX = (float) edge.getFrom().getX() - texture.getWidth() / 2;
 		posY = (float) edge.getFrom().getY() - texture.getHeight() / 2;
