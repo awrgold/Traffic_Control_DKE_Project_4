@@ -313,7 +313,7 @@ public class TrafficManager {
         }
 
         TrafficManager tm = new TrafficManager(map,vehicles);
-		tm.createIntersections(map);
+		// tm.createIntersections(map);
 
 		int y = 0;
 
@@ -473,17 +473,14 @@ public class TrafficManager {
 			if (n.isDestination() && Math.random() < .1 && centers > 0){
 				n.setNodePriorityWeight(uCenterWeight);
 				for (Node i : n.getOutgoingNeighbors()){
-					i.setNodePriorityWeight(n.getNodePriorityWeight()-1);
+					i.setNodePriorityWeight(n.getNodePriorityWeight()*.5);
 				}
 				for (Node j : n.getIncomingNeighbors()){
-					j.setNodePriorityWeight(n.getNodePriorityWeight()-1);
+					j.setNodePriorityWeight(n.getNodePriorityWeight()*.5);
 				}
 				centers--;
 			}
 		}
-
-
-
 	}
 
 	

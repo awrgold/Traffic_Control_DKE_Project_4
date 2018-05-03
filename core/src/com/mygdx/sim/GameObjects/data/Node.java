@@ -10,7 +10,7 @@ public class Node implements Comparable<Node> {
 	private Coordinates location;
 	private double nodeDistanceWeight;
 	private double nodeDistanceWeightEstimate;
-	private double nodePriorityWeight;
+	private double nodePriorityWeight = 0;
 	private boolean isDestination;
 
 	public Node(double xCoordinate, double yCoordinate) {
@@ -73,7 +73,7 @@ public class Node implements Comparable<Node> {
 		return nodePriorityWeight;
 	}
 
-	public void setNodePriorityWeight(int nodePriorityWeight) {
+	public void setNodePriorityWeight(double nodePriorityWeight) {
 		this.nodePriorityWeight = nodePriorityWeight;
 	}
 
