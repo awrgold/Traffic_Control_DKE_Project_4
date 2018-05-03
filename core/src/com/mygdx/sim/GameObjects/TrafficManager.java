@@ -323,6 +323,8 @@ public class TrafficManager {
 
     }
 
+
+    /*
 	public static TrafficManager createIntersections(Map grid) {
 
 		List<Node> mapNodes = grid.getNodes();
@@ -451,6 +453,7 @@ public class TrafficManager {
 		return tm;
 
 	}
+	*/
 
 
 	/**

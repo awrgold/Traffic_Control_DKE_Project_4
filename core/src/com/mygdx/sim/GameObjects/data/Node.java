@@ -10,7 +10,7 @@ public class Node implements Comparable<Node> {
 	private Coordinates location;
 	private double nodeDistanceWeight;
 	private double nodeDistanceWeightEstimate;
-	private int nodePriorityWeight;
+	private double nodePriorityWeight;
 	private boolean isDestination;
 
 	public Node(double xCoordinate, double yCoordinate) {
@@ -69,7 +69,7 @@ public class Node implements Comparable<Node> {
 		return previousNode;
 	}
 
-	public int getNodePriorityWeight() {
+	public double getNodePriorityWeight() {
 		return nodePriorityWeight;
 	}
 
