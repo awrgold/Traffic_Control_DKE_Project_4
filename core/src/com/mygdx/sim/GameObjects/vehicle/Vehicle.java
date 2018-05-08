@@ -38,6 +38,15 @@ public abstract class Vehicle {
 	final int maxSpeed;
 	
 	/**
+	 * The physical length of the vehicle in meters.
+	 */
+	private double length = 4;
+	
+	public double getLength() {
+		return length;
+	}
+	
+	/**
 	 * The edges that this vehicle is supposed to travel from its start point
 	 * to its endpoint.
 	 */
@@ -126,7 +135,7 @@ public abstract class Vehicle {
 	
 	private void setSprite(String spriteName) {
 		this.spriteName = spriteName;
-		sprite = Resources.world.vehicleSprites.get(spriteName);
+//		sprite = Resources.world.vehicleSprites.get(spriteName);
 	}
 
 	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Map graph) {

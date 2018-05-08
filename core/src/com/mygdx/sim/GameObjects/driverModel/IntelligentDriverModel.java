@@ -19,6 +19,8 @@ public class IntelligentDriverModel implements DriverModel{
 		double maximumAcceleration = vehicle.getMaxAcceleration();
 		double safetyTimeHeadway = vehicle.getSafetyHeadway();
 		
+		double vehicleLength = vehicle.getLength();
+		
 		double currentSpeed = vehicle.getSpeedAt(timestep-1);
 		
 		double deceleration = 3;
@@ -34,6 +36,7 @@ public class IntelligentDriverModel implements DriverModel{
 		double safetyHeadway = safetyTimeHeadway * currentSpeed;
 		
 		double desiredGap = LINEAR_JAM_DISTANCE
+				+ vehicleLength
 				+ NON_LINEAR_JAM_DISTANCE*Math.sqrt(currentSpeed/desiredSpeed)
 				+ safetyHeadway
 				+ currentSpeed*approachingRate/(2*Math.sqrt(maximumAcceleration*deceleration));
