@@ -1,17 +1,12 @@
 package com.mygdx.sim.GameObjects;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import com.mygdx.sim.GameObjects.data.Coordinates;
-import com.mygdx.sim.GameObjects.data.DistanceAndSpeed;
-import com.mygdx.sim.GameObjects.data.DistanceAndVehicle;
-import com.mygdx.sim.GameObjects.data.Edge;
-import com.mygdx.sim.GameObjects.data.Map;
-import com.mygdx.sim.GameObjects.data.Node;
-import com.mygdx.sim.GameObjects.data.Util;
+import com.mygdx.sim.GameObjects.data.*;
 import com.mygdx.sim.GameObjects.driverModel.IntelligentDriverModel;
 import com.mygdx.sim.GameObjects.driverModel.SimpleDriverModel;
 import com.mygdx.sim.GameObjects.vehicle.Car;
@@ -255,6 +250,26 @@ public class TrafficManager {
 		
 		return tm;
 	}
+
+	/*
+	I've commented this out because I run in a lot of issues, although the map can be created with my Node & Edge lists
+	public static TrafficManager createTestFromFile() {
+		MapReader mr = new MapReader();
+		HashMap<String, Node> nodeMap = mr.readNodes();
+		HashMap<String, Edge> edgeMap = mr.readEdges(nodeMap);
+
+        List<Node> nodeList = new ArrayList<Node>(nodeMap.values());
+        List<Edge> edgeList = new ArrayList<Edge>(edgeMap.values());
+
+		Map map = new Map(nodeList,edgeList);
+
+
+
+		//TrafficManager tm = new TrafficManager(map);
+
+		return tm;
+	}
+	*/
 
 	public static TrafficManager createEnvironment() {
 
