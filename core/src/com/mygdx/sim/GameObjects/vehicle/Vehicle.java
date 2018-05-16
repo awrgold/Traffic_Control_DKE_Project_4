@@ -294,7 +294,7 @@ public abstract class Vehicle {
 	}
 	
 	public int getMaxSpeed(int timestep) {
-		return Math.min(maxSpeed, getEdgeAt(timestep).getSpeedLimit());
+		return (int) Math.min(maxSpeed, getEdgeAt(timestep).getSpeedLimit());
 	}
 	
 	/**
