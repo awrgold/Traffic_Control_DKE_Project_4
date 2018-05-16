@@ -1,6 +1,8 @@
 package com.mygdx.sim.GameObjects.data;
 
-public class Edge {
+import java.util.Comparator;
+
+public class Edge implements Comparable<Edge> {
 
     private Node from;
     private Node to;
@@ -20,7 +22,7 @@ public class Edge {
         
         this.speedLimit = speedLimit;
     }
-    
+
     public Node getFrom(){
         return from;
     }
@@ -28,6 +30,8 @@ public class Edge {
     public Node getTo(){
         return to;
     }
+
+
 
     public void setSpeedLimit(int speedLimit){
         this.speedLimit = speedLimit;
@@ -92,4 +96,14 @@ public class Edge {
     public String toString() {
     	return ("["+from+","+to+"]");
     }
+
+    public int compareTo(Edge edge) {
+        if((this.getFrom().equals(edge.getFrom()) || this.getFrom().equals(edge.getTo())) &&
+                (this.getTo().equals(edge.getFrom()) || this.getTo().equals(edge.getTo()))){
+            return 0;
+
+        }
+        return -1;
+    }
+
 }

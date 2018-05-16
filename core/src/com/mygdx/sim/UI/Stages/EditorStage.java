@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.sim.Resources.Resources;
-import com.mygdx.sim.UI.Components.Sidebar.SidebarPanel;
+import com.mygdx.sim.UI.Components.Sidebar.Sidebar;
 import com.mygdx.sim.World.WorldController;
 
 public class EditorStage extends Stage {
@@ -13,7 +13,7 @@ public class EditorStage extends Stage {
 	private WorldController worldController;
 
 	// UI
-	private SidebarPanel sidebarPanel;
+	private Sidebar sidebar;
 
 	// All Scroll
 	private Vector2 scrollCenter;
@@ -27,9 +27,8 @@ public class EditorStage extends Stage {
 		this.worldController = worldController;
 
 		// Sidebar
-		sidebarPanel = new SidebarPanel(Resources.ui.skin, worldController);
-
-		this.addActor(sidebarPanel);
+		sidebar = new Sidebar(Resources.ui.skin, worldController);
+		this.addActor(sidebar);
 	}
 
 	@Override
@@ -46,7 +45,7 @@ public class EditorStage extends Stage {
 	public void resize(int width, int height) {
 		this.getViewport().update(width, height, true);
 
-		sidebarPanel.resize(width, height);
+		sidebar.resize(width, height);
 	}
 
 	private void drawScrollCenter() {

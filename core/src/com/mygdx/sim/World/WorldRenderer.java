@@ -1,14 +1,18 @@
 package com.mygdx.sim.World;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
-import com.mygdx.sim.GameObjects.TrafficManager;
-import com.mygdx.sim.GameObjects.data.Map;
+import com.mygdx.sim.GameObjects.data.Coordinates;
 import com.mygdx.sim.GameObjects.data.Node;
+import com.mygdx.sim.GameObjects.roads.Road;
 import com.mygdx.sim.GameObjects.vehicle.Vehicle;
 import com.mygdx.sim.Resources.Resources;
 
@@ -21,6 +25,19 @@ public class WorldRenderer {
 	private ShapeRenderer shapeRenderer;
 	private Rectangle scissor;
 
+	// Paused
+	private boolean paused = false;
+
+	// Time Step
+	private int timeStep = 1;
+
+	// Simulation Speed
+	private float simulationSpeed = 0.1f;
+	private float timer = 0;
+
+	// Vehicle History
+	public ArrayList<HashMap<Vehicle, Coordinates>> vehicleHistory;
+
 	public WorldRenderer(WorldController worldController) {
 
 		// World Controller
@@ -29,24 +46,41 @@ public class WorldRenderer {
 		// Render Objects
 		shapeRenderer = new ShapeRenderer();
 		scissor = new Rectangle();
+
+		// Get Vehicle History
+		vehicleHistory = worldController.getVehicleHistory();
 	}
 
 	public void render(SpriteBatch spriteBatch) {
 
-		// Calculate Scissors
-		ScissorStack.calculateScissors(worldController.getWorldCamera(), spriteBatch.getTransformMatrix(),
-				worldController.getBounds(), scissor);
+		if (!paused) {
+			timer += Gdx.graphics.getDeltaTime();
+			if (timer >= simulationSpeed) {
+				// Increase Time Step
+				if (timeStep + 1 < vehicleHistory.size())
+					timeStep++;
 
-		ScissorStack.pushScissors(scissor);
-		{
-			this.drawMapNodes(spriteBatch);
-			this.drawMapVehicles(spriteBatch);
-			spriteBatch.flush();
+				// Reset Timer
+				timer = 0f;
+			}
 		}
-		ScissorStack.popScissors();
+
+		// Calculate Scissors
+		/*
+		 * ScissorStack.calculateScissors(worldController.getWorldCamera(),
+		 * spriteBatch.getTransformMatrix(), worldController.getBounds(), scissor);
+		 * 
+		 * ScissorStack.pushScissors(scissor); { this.drawMapRoads(spriteBatch);
+		 * this.drawMapNodes(spriteBatch); this.drawMapVehicles(spriteBatch, timeStep);
+		 * spriteBatch.flush(); } ScissorStack.popScissors();
+		 */
+
+		this.drawMapRoads(spriteBatch);
+		this.drawMapNodes(spriteBatch);
+		this.drawMapVehicles(spriteBatch, timeStep);
 
 		// Draw Outline
-		this.drawMapOutline();
+		// this.drawMapOutline();
 	}
 
 	private void drawMapOutline() {
@@ -64,17 +98,31 @@ public class WorldRenderer {
 
 		// Iterate through all nodes
 		for (Node node : worldController.getNodes()) {
-			spriteBatch.draw(Resources.ui.allScroll_icon, (float) (node.getX() / 100 * Map.TILE_SIZE),
-					(float) (node.getY() / 100 * Map.TILE_SIZE));
+			spriteBatch.draw(Resources.ui.allScroll_icon, (float) (node.getX()), (float) (node.getY()));
 		}
 	}
 
-	private void drawMapVehicles(SpriteBatch spriteBatch) {
-		//TODO: Get Vehicle location based on timestamp
+	private void drawMapRoads(SpriteBatch spriteBatch) {
+
+		// Iterate through all roads
+		for (Road road : worldController.getRoads()) {
+			road.draw(spriteBatch);
+		}
+	}
+
+	private void drawMapVehicles(SpriteBatch spriteBatch, int timeStep) {
 		// Iterate through all vehicles
 		for (Vehicle vehicle : worldController.getVehicles()) {
-			spriteBatch.draw(Resources.ui.allScroll_icon, (float) (vehicle.getLocationCoordinates(10).getX() / 100 * Map.TILE_SIZE),
-					(float) (vehicle.getLocationCoordinates(10).getY() / 100 * Map.TILE_SIZE));
+			Coordinates previousCoord = vehicleHistory.get(timeStep - 1).get(vehicle);
+			Coordinates nextCoord = vehicleHistory.get(timeStep).get(vehicle);
+
+			float x = (float) (previousCoord.getX() - nextCoord.getX());
+			float y = (float) (previousCoord.getY() - nextCoord.getY());
+			float rotation = 90;
+			
+			rotation += (float) Math.toDegrees(Math.atan2(y, x));
+
+			vehicle.draw(spriteBatch, (float) nextCoord.getX(), (float) previousCoord.getY(), rotation);
 		}
 	}
 }
