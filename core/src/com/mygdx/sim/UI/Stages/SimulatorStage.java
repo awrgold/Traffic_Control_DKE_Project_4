@@ -2,7 +2,9 @@ package com.mygdx.sim.UI.Stages;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.sim.Resources.Resources;
+import com.mygdx.sim.UI.Components.Navbar.Navbar;
 import com.mygdx.sim.World.WorldController;
 
 public class SimulatorStage extends Stage {
@@ -13,8 +15,20 @@ public class SimulatorStage extends Stage {
 	// All Scroll
 	private Vector2 scrollCenter;
 
+	// UI
+	private Navbar navbar;
+
 	public SimulatorStage(WorldController worldController) {
+		
+		// Viewport | Camera
+		super(new ScreenViewport());
+
+		// World Controller
 		this.worldController = worldController;
+
+		// Navbar
+		navbar = new Navbar(Resources.ui.skin, worldController);
+		this.addActor(navbar);
 	}
 
 	@Override
@@ -24,12 +38,14 @@ public class SimulatorStage extends Stage {
 			this.drawScrollCenter();
 		}
 		this.getBatch().end();
-		
+
 		super.draw();
 	}
 
 	public void resize(int width, int height) {
 		this.getViewport().update(width, height, true);
+
+		navbar.resize(width, height);
 	}
 
 	private void drawScrollCenter() {
@@ -41,7 +57,7 @@ public class SimulatorStage extends Stage {
 			Resources.ui.allScroll_icon.draw(this.getBatch());
 		}
 	}
-	
+
 	public void setScrollCenterPos(Vector2 scrollCenter) {
 		this.scrollCenter = scrollCenter;
 	}

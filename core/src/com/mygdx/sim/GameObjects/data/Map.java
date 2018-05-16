@@ -6,16 +6,17 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.mygdx.sim.GameObjects.TrafficManager;
 import com.mygdx.sim.GameObjects.vehicle.Vehicle;
 
 public class Map {
 	private List<Node> nodes = new ArrayList<Node>();
 	private List<Edge> edges = new ArrayList<Edge>();
+	private List<Node> destinations = new ArrayList<Node>();
 
 	HashMap<Edge, ArrayList<ArrayList<Vehicle>>> locationCache;
 
 	// GUI Map Variables
-	public static final int TILE_SIZE = 32;
 	private Rectangle bounds;
 
 	public Map(List<Node> nodes, List<Edge> edges) {
@@ -23,7 +24,7 @@ public class Map {
 		this.edges = edges;
 
 		// Temporary hardcoded map bound until we have a save and load feature
-		this.reset(10, 10);
+		this.reset(TrafficManager.MAP_X_DIM, TrafficManager.MAP_Y_DIM);
 
 		locationCache = new HashMap<Edge, ArrayList<ArrayList<Vehicle>>>();
 
@@ -56,9 +57,13 @@ public class Map {
 		return edges;
 	}
 
-	public void reset(int columns, int rows) {
+	public List<Node> getDestinations() {
+		return destinations;
+	}
+
+	public void reset(int maxX, int maxY) {
 		// Init Map Bounds
-		bounds = new Rectangle(0f, 0f, Map.TILE_SIZE * columns, Map.TILE_SIZE * rows);
+		bounds = new Rectangle(0f, 0f, maxX, maxY);
 
 	}
 
@@ -91,4 +96,25 @@ public class Map {
         }
         return -1;
     }
+
+    public Node getNode(Node toFind){
+    	for (Node n : getNodes()){
+    		if (n.equals(toFind)) return n;
+		}
+		return null;
+	}
+
+	public Edge getEdge(Edge toFind){
+    	for (Edge e : getEdges()){
+    		if (e.equals(toFind)) return e;
+		}
+		return null;
+	}
+
+	public Node getDestination(Node toFind){
+		for (Node n : getDestinations()){
+			if (n.equals(toFind)) return n;
+		}
+		return null;
+	}
 }

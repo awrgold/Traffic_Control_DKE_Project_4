@@ -3,11 +3,9 @@ package com.mygdx.sim.UI.Components.Sidebar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.mygdx.sim.UI.Components.DefaultScrollPane;
-import com.mygdx.sim.UI.Components.SidebarTabButton;
-import com.mygdx.sim.UI.Components.SidebarTabs;
 import com.mygdx.sim.World.WorldController;
 
-public class SidebarPanel extends Table {
+public class Sidebar extends Table {
 
 	// Sidebar Tabs
 	private SidebarTabs sidebarTabs;
@@ -15,7 +13,7 @@ public class SidebarPanel extends Table {
 	// Sidebar Menus
 	private SidebarConfigMenu mnu_config;
 
-	public SidebarPanel(Skin skin, WorldController worldController) {
+	public Sidebar(Skin skin, WorldController worldController) {
 		
 		// Menus
 		mnu_config = new SidebarConfigMenu(worldController);

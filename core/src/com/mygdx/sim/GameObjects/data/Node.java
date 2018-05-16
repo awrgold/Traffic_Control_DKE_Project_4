@@ -2,16 +2,16 @@ package com.mygdx.sim.GameObjects.data;
 
 import java.util.ArrayList;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
-import static java.lang.Float.MAX_VALUE;
-
-public class Node {
+public class Node implements Comparable<Node> {
 
 	private ArrayList<Edge> inEdges = new ArrayList<Edge>();
 	private ArrayList<Edge> outEdges = new ArrayList<Edge>();
+	private Node previousNode;
 	private Coordinates location;
 	private double nodeDistanceWeight;
+	private double nodeDistanceWeightEstimate;
+	private int nodePriorityWeight;
+	private boolean isDestination;
 
 	public Node(double xCoordinate, double yCoordinate) {
 		location = new Coordinates(xCoordinate, yCoordinate);
@@ -48,27 +48,85 @@ public class Node {
 	public ArrayList<Edge> getOutEdges() {
 		return outEdges;
 	}
-	
+
 	public String toString() {
-		return "[Node@"+location+"]";
+		return "[Node@" + location + "]";
 	}
 
-
-	public void setNodeDistanceWeight(double d){
-		this.nodeDistanceWeight = d;
+	public void setPreviousNode(Node previousNode) {
+		this.previousNode = previousNode;
 	}
 
-	public double getNodeDistanceWeight(){
+	public Node getPreviousNode() {
+		return previousNode;
+	}
+
+	public int getNodePriorityWeight() {
+		return nodePriorityWeight;
+	}
+
+	public void setNodePriorityWeight(int nodePriorityWeight) {
+		this.nodePriorityWeight = nodePriorityWeight;
+	}
+
+	public void setNodeDistanceWeight(double nodeDistanceWeight) {
+		this.nodeDistanceWeight = nodeDistanceWeight;
+	}
+
+	public double getNodeDistanceWeight() {
 		return nodeDistanceWeight;
 	}
 
-	public ArrayList<Node> getOutgoingNeighbors(){
+	public void setNodeDistanceWeightEstimate(double nodeDistanceWeightEstimate) {
+		this.nodeDistanceWeightEstimate = nodeDistanceWeightEstimate;
+	}
+
+	public double getNodeDistanceEstimate() {
+		return nodeDistanceWeightEstimate;
+	}
+
+	public boolean equals(Object o) {
+		if (!(o instanceof Node))
+			return false;
+
+		return this.getLocation().equals(((Node) o).getLocation());
+	}
+
+	public ArrayList<Node> getOutgoingNeighbors() {
 		ArrayList<Node> outgoingNeighbors = new ArrayList<Node>();
-		for (Edge e : outEdges){
+
+		for (Edge e : outEdges) {
 			outgoingNeighbors.add(e.getTo());
 		}
+
 		return outgoingNeighbors;
 	}
 
+	public ArrayList<Node> getIncomingNeighbors() {
+		ArrayList<Node> incomingNeighbors = new ArrayList<Node>();
 
+		for (Edge e : inEdges) {
+			incomingNeighbors.add(e.getFrom());
+		}
+
+		return incomingNeighbors;
+	}
+
+	public boolean isDestination() {
+		return isDestination;
+	}
+
+	public void makeDestination() {
+		if (!isDestination) isDestination = true;
+	}
+
+
+	public int compareTo(Node node) {
+		if (this.nodeDistanceWeightEstimate < node.getNodeDistanceEstimate())
+			return -1;
+		if (this.nodeDistanceWeightEstimate > node.getNodeDistanceEstimate())
+			return 1;
+
+		return 0;
+	}
 }
