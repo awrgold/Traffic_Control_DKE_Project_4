@@ -36,7 +36,7 @@ public class WorldController {
 		vehicles = new ArrayList<Vehicle>();
 
 		// Traffic Manager
-		trafficManager = TrafficManager.createEnvironment();
+		trafficManager = TrafficManager.createGrid();
 
 		// Get Vehicles
 		vehicles = trafficManager.getVehicles();
@@ -51,7 +51,7 @@ public class WorldController {
 		worldGenerator = new WorldGenerator(this);
 
 		// Start Simulation
-		trafficManager.simulate(trafficManager.getMaximumTimesteps());
+		//trafficManager.simulate(trafficManager.getMaximumTimesteps());
 	}
 
 	public void update() {

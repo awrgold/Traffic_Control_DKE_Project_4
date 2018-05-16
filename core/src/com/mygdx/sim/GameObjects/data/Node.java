@@ -10,7 +10,7 @@ public class Node implements Comparable<Node> {
 	private Coordinates location;
 	private double nodeDistanceWeight;
 	private double nodeDistanceWeightEstimate;
-	private int nodePriorityWeight;
+	private double nodePriorityWeight = 0;
 	private boolean isDestination;
 
 	public Node(double xCoordinate, double yCoordinate) {
@@ -21,8 +21,16 @@ public class Node implements Comparable<Node> {
 		location = coords;
 	}
 
+	public Node(){
+
+	}
+
 	public Coordinates getLocation() {
 		return location;
+	}
+
+	public void setLocation(Coordinates coords){
+		this.location = coords;
 	}
 
 	public double getX() {
@@ -61,11 +69,11 @@ public class Node implements Comparable<Node> {
 		return previousNode;
 	}
 
-	public int getNodePriorityWeight() {
+	public double getNodePriorityWeight() {
 		return nodePriorityWeight;
 	}
 
-	public void setNodePriorityWeight(int nodePriorityWeight) {
+	public void setNodePriorityWeight(double nodePriorityWeight) {
 		this.nodePriorityWeight = nodePriorityWeight;
 	}
 

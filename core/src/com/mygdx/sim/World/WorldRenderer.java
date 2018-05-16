@@ -77,7 +77,7 @@ public class WorldRenderer {
 
 		this.drawMapRoads(spriteBatch);
 		this.drawMapNodes(spriteBatch);
-		this.drawMapVehicles(spriteBatch, timeStep);
+		//this.drawMapVehicles(spriteBatch, timeStep);
 
 		// Draw Outline
 		// this.drawMapOutline();
