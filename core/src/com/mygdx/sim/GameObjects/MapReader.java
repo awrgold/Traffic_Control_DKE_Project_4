@@ -76,12 +76,19 @@ public class MapReader {
                         String id = properties[1];
                         String from = properties[3];
                         String to = properties[5];
-                        int priority = Integer.parseInt(properties[7]);
-                        String type = properties[9];
-                        double speed = Double.parseDouble(properties[13]);
+                        //int priority = Integer.parseInt(properties[7]);
+                        //String type = properties[9];
+                        double speed = 30;
+                        //if(properties.length >= 13) {
+                            //speed = Double.parseDouble(properties[13]);
+                        //}
 
-                        edgeMap.put(id, new Edge(nodeMap.get(from),nodeMap.get(to), (int) speed));
-                        edgeMap.put(id + "#2", new Edge(nodeMap.get(to),nodeMap.get(from), (int) speed));
+                        Node a = nodeMap.get(from);
+                        Node b = nodeMap.get(to);
+                        if(Math.abs(Math.sqrt(Math.pow((a.getY()-b.getY()), 2) + Math.pow((a.getX() - b.getX()), 2))) > 1) {
+                            edgeMap.put(id, new Edge(nodeMap.get(from), nodeMap.get(to), (int) speed));
+                            edgeMap.put(id + "#2", new Edge(nodeMap.get(to), nodeMap.get(from), (int) speed));
+                        }
                     }
                 }
 

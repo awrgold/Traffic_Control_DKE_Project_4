@@ -263,7 +263,7 @@ public class TrafficManager {
         List<Edge> edgeList = new ArrayList<Edge>(edgeMap.values());
 
 		Map map = new Map(nodeList,edgeList);
-        int carAmount = 10;
+        int carAmount = 1000;
         List cars = new ArrayList();
         for(int i = 0; i < carAmount; i++) {
             Node start = nodeList.get((int)(Math.floor(Math.random() * nodeList.size())));
