@@ -19,8 +19,8 @@ public class TrafficManager {
 	private final static int RIDICULOUS_SPEED = 1000;
 
 	// Temporary map bounds
-	public final static int MAP_X_DIM = 1000;
-	public final static int MAP_Y_DIM = 1000;
+	public final static int MAP_X_DIM = 10000000;
+	public final static int MAP_Y_DIM = 10000000;
 	public final static int GRID_FACTOR = 2;
 	public final static int vehicleCount = 1;
 	public final static int numUrbanCenters = 3;
@@ -251,25 +251,34 @@ public class TrafficManager {
 		return tm;
 	}
 
-	/*
-	I've commented this out because I run in a lot of issues, although the map can be created with my Node & Edge lists
+
+	//I've commented this out because I run in a lot of issues, although the map can be created with my Node & Edge lists
 	public static TrafficManager createTestFromFile() {
 		MapReader mr = new MapReader();
 		HashMap<String, Node> nodeMap = mr.readNodes();
 		HashMap<String, Edge> edgeMap = mr.readEdges(nodeMap);
+		mr.printAll(nodeMap,edgeMap);
 
         List<Node> nodeList = new ArrayList<Node>(nodeMap.values());
         List<Edge> edgeList = new ArrayList<Edge>(edgeMap.values());
 
 		Map map = new Map(nodeList,edgeList);
+		Car car1 = new Car(nodeList.get(0),nodeList.get(8),map);
+        //car1.setEdgePath(Arrays.asList(edgeList.get(0)));
+        car1.setDriverModel(new SimpleDriverModel(10));
+
+        Car car2 = new Car(nodeList.get(10),nodeList.get(64),map);
+
+        car2.setDriverModel(new SimpleDriverModel(10));
+
+		List cars = Arrays.asList();
 
 
-
-		//TrafficManager tm = new TrafficManager(map);
+		TrafficManager tm = new TrafficManager(map,cars);
 
 		return tm;
 	}
-	*/
+
 
 	public static TrafficManager createEnvironment() {
 
@@ -380,17 +389,21 @@ public class TrafficManager {
 	}
 
 	public static void main(String[] args) {
-		TrafficManager tm1 = createSimpleTestcase();
+		//TrafficManager tm1 = createSimpleTestcase();
 		
-		tm1.simulate(TIMESTEPS);
+		//tm1.simulate(TIMESTEPS);
 		
-		System.out.println("Simple test case simulation completed");
+		//System.out.println("Simple test case simulation completed");
 		
-		TrafficManager tm2 = createEnvironment();
+		//TrafficManager tm2 = createEnvironment();
 		
-		tm2.simulate(TIMESTEPS);
+		//tm2.simulate(TIMESTEPS);
 
-		System.out.println("Andrew-generated test case simulation completed");
+		//System.out.println("Andrew-generated test case simulation completed");
+
+		TrafficManager tm3 = createTestFromFile();
+
+		tm3.simulate(TIMESTEPS);
 		
 		int x =0;
 	}

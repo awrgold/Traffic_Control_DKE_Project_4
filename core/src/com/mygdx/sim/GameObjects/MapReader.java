@@ -11,14 +11,7 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class MapReader {
-    public static void main(String[] args){
-        MapReader instance = new MapReader();
 
-        HashMap<String,Node> nodeMap = instance.readNodes();
-        HashMap<String,Edge> edgeList = instance.readEdges(nodeMap);
-        instance.printAll(nodeMap,edgeList);
-
-    }
 
     public HashMap<String, Node> readNodes() {
         //Choosing the Node xml file
@@ -44,8 +37,8 @@ public class MapReader {
                     if(line.startsWith("    <node")) {
                         String[] properties = line.split("\"");
                         String id = properties[1];
-                        double x = Double.parseDouble(properties[3]);
-                        double y = Double.parseDouble(properties[5]);
+                        double x = Double.parseDouble(properties[3]) * 10;
+                        double y = Double.parseDouble(properties[5]) * 10;
                         String type = properties[7];
 
                         nodeMap.put(id,new Node(x,y));
@@ -88,6 +81,7 @@ public class MapReader {
                         double speed = Double.parseDouble(properties[13]);
 
                         edgeMap.put(id, new Edge(nodeMap.get(from),nodeMap.get(to), (int) speed));
+                        edgeMap.put(id + "#2", new Edge(nodeMap.get(to),nodeMap.get(from), (int) speed));
                     }
                 }
 
@@ -104,12 +98,14 @@ public class MapReader {
             System.out.println("Node " + counter + " is at X: " + n.getX() + " Y: " + n.getY());
             counter++;
         }
+        /*
         System.out.println("--------------------");
         counter = 0;
         for(Edge e : edgeMap.values()) {
             System.out.println("Edge " + counter + " goes from " + e.getFrom().toString() + " to " + e.getTo().toString());
             counter++;
         }
+        */
     }
 }
 

@@ -28,7 +28,7 @@ public class WorldCamera extends OrthographicCamera {
 	}
 
 	public void zoomIn() {
-		if (this.zoom < 10)
+		if (this.zoom < 50)
 			this.zoom += 0.1f;
 	}
 
