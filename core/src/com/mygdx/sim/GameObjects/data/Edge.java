@@ -27,13 +27,11 @@ public class Edge implements Comparable<Edge> {
         return from;
     }
 
-    public void setTo(Node n){
-        this.to = n;
-    }
-
     public Node getTo(){
         return to;
     }
+
+
 
     public void setSpeedLimit(int speedLimit){
         this.speedLimit = speedLimit;
