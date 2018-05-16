@@ -263,15 +263,19 @@ public class TrafficManager {
         List<Edge> edgeList = new ArrayList<Edge>(edgeMap.values());
 
 		Map map = new Map(nodeList,edgeList);
-		Car car1 = new Car(nodeList.get(0),nodeList.get(8),map);
-        //car1.setEdgePath(Arrays.asList(edgeList.get(0)));
-        car1.setDriverModel(new SimpleDriverModel(10));
+        int carAmount = 10;
+        List cars = new ArrayList();
+        for(int i = 0; i < carAmount; i++) {
+            Node start = nodeList.get((int)(Math.floor(Math.random() * nodeList.size())));
+            Node end = nodeList.get((int)(Math.floor(Math.random() * nodeList.size())));
+            if(start == end) { end = nodeList.get((int)(Math.floor(Math.random() * nodeList.size())));}
 
-        Car car2 = new Car(nodeList.get(10),nodeList.get(64),map);
+            Car car = new Car(start,end,map);
+            car.setDriverModel(new SimpleDriverModel(10));
+            cars.add(i,car);
+        }
 
-        car2.setDriverModel(new SimpleDriverModel(10));
 
-		List cars = Arrays.asList();
 
 
 		TrafficManager tm = new TrafficManager(map,cars);
