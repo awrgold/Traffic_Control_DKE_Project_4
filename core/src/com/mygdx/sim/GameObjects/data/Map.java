@@ -50,8 +50,6 @@ public class Map {
 
 	}
 
-
-
 	public ArrayList<Vehicle> getVehiclesAt(Edge edge, int timestep) {
 		return locationCache.get(edge).get(timestep);
 	}
@@ -64,6 +62,10 @@ public class Map {
 				history.add(new ArrayList<Vehicle>());
 		}
 	}
+	
+	public double euclideanDistance(Node a, Node b) {
+		return Math.abs(Math.sqrt(Math.pow((a.getY() - b.getY()), 2) + Math.pow((a.getX() - b.getX()), 2)));
+	}
 
 	public HashMap<Edge, ArrayList<ArrayList<Vehicle>>> getLocationCache() {
 		return locationCache;
@@ -75,6 +77,10 @@ public class Map {
 
 	public List<Edge> getEdges() {
 		return edges;
+	}
+	
+	public void addIntersection(IntersectionSingle intersection) {
+		intersections.add(intersection);
 	}
 
 	public List<IntersectionSingle> getIntersections() {

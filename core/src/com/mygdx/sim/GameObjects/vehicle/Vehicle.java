@@ -131,6 +131,7 @@ public abstract class Vehicle {
 		
 		sprite = Resources.world.vehicleSprites.get(spriteName);
 		sprite.setScale(0.5f);
+		sprite.setOrigin(sprite.getX() / 2, sprite.getY() / 2);
 	}
 	
 

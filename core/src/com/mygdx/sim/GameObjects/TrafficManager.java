@@ -354,7 +354,7 @@ public class TrafficManager {
 		// So now we have the nodes that need to be converted into intersections
 		// Lets do that:
 		for (Node node : nodesToIntersection) {
-			nodeToIntersection(node, hasBeenChecked, nodesToIntersection);
+			map.addIntersection(new IntersectionSingle(node, hasBeenChecked, map));
 		}
 		
 		System.out.println("Node Count: " + map.getNodes().size());
@@ -386,107 +386,6 @@ public class TrafficManager {
 	}
 
 	public static void nodeToIntersection(Node node, boolean[][] hasBeenChecked, ArrayList<Node> nodes) {
-
-		// Lets start with incoming neighbours
-		for (Node neighbourNode : node.getIncomingNeighbors()) {
-			
-			Node newNode1 = null;
-			Node newNode2 = null;
-			Node newNode3 = null;
-			Node newNode4 = null;
-
-			if (!hasBeenChecked[nodes.indexOf(neighbourNode)][nodes.indexOf(node)] && !hasBeenChecked[nodes.indexOf(node)][nodes.indexOf(neighbourNode)]) {
-				
-				// Node 1
-				double distanceX = neighbourNode.getX() - node.getX();
-				double distanceY = neighbourNode.getY() - node.getY();
-
-				int offset = (int) (euclideanDistance(neighbourNode, node) / 10);
-				int offsetX = 0;
-				int offsetY = 0;
-
-				if (distanceX != 0) {
-					offsetY = (distanceX > 0) ? offset : -offset;
-				}
-
-				if (distanceY != 0) {
-					offsetX = (distanceY > 0) ? -offset : offset;
-				}
-
-				map.getNodes().add((newNode1 = new Node(node.getX() + distanceX / 5 + offsetX, node.getY() + distanceY / 5 + offsetY)));
-
-				// Node 2
-				distanceX = node.getX() - neighbourNode.getX();
-				distanceY = node.getY() - neighbourNode.getY();
-
-				offsetX = 0;
-				offsetY = 0;
-
-				if (distanceX != 0) {
-					offsetY = (distanceX > 0) ? -offset : offset;
-				}
-
-				if (distanceY != 0) {
-					offsetX = (distanceY > 0) ? offset : -offset;
-				}
-
-				map.getNodes().add((newNode2 = new Node(neighbourNode.getX() + distanceX / 5 + offsetX, neighbourNode.getY() + distanceY / 5 + offsetY)));
-				
-				// Node 3
-				distanceX = neighbourNode.getX() - node.getX();
-				distanceY = neighbourNode.getY() - node.getY();
-
-				offset = (int) (euclideanDistance(neighbourNode, node) / 10);
-				offsetX = 0;
-				offsetY = 0;
-
-				if (distanceX != 0) {
-					offsetY = (distanceX > 0) ? -offset : offset;
-				}
-
-				if (distanceY != 0) {
-					offsetX = (distanceY > 0) ? offset : -offset;
-				}
-
-				map.getNodes().add((newNode3 = new Node(node.getX() + distanceX / 5 + offsetX, node.getY() + distanceY / 5 + offsetY)));
-				
-				// Node 4
-				distanceX = node.getX() - neighbourNode.getX();
-				distanceY = node.getY() - neighbourNode.getY();
-
-				offset = (int) (euclideanDistance(neighbourNode, node) / 10);
-				offsetX = 0;
-				offsetY = 0;
-
-				if (distanceX != 0) {
-					offsetY = (distanceX > 0) ? offset : -offset;
-				}
-
-				if (distanceY != 0) {
-					offsetX = (distanceY > 0) ? -offset : offset;
-				}
-
-				map.getNodes().add((newNode4 = new Node(neighbourNode.getX() + distanceX / 5 + offsetX, neighbourNode.getY() + distanceY / 5 + offsetY)));
-				
-				hasBeenChecked[nodes.indexOf(neighbourNode)][nodes.indexOf(node)] = true;
-				hasBeenChecked[nodes.indexOf(node)][nodes.indexOf(neighbourNode)] = true;
-			}
-			
-			if(newNode1 != null && newNode2 != null) {
-				map.getEdges().add(new Edge(newNode2, newNode1));
-				map.getEdges().add(new Edge(newNode3, newNode4));
-			}
-			
-			// Remove edges we don't 
-			ArrayList<Edge> edgesToRemove = new ArrayList<Edge>();
-			for(Edge edge : node.getInEdges()) {
-				if((edge.getFrom() == node && edge.getTo() == neighbourNode) || edge.getFrom().equals(neighbourNode) && edge.getTo().equals(node)) {
-					edgesToRemove.add(edge);
-				}
-			}
-			
-			map.getEdges().removeAll(edgesToRemove);
-		}
 	}
 
 	/**
