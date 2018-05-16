@@ -1,16 +1,14 @@
-package com.mygdx.sim.GameObjects.data;
+package com.mygdx.sim.GameObjects;
+
+import com.mygdx.sim.GameObjects.data.Edge;
+import com.mygdx.sim.GameObjects.data.Node;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 
 public class MapReader {
     public static void main(String[] args){
@@ -18,6 +16,7 @@ public class MapReader {
 
         HashMap<String,Node> nodeMap = instance.readNodes();
         HashMap<String,Edge> edgeList = instance.readEdges(nodeMap);
+        instance.printAll(nodeMap,edgeList);
 
     }
 
@@ -97,6 +96,20 @@ public class MapReader {
             }
         }
         return edgeMap;
+    }
+
+    public void printAll(HashMap<String,Node> nodeMap, HashMap<String,Edge> edgeMap) {
+        int counter = 0;
+        for(Node n : nodeMap.values()) {
+            System.out.println("Node " + counter + " is at X: " + n.getX() + " Y: " + n.getY());
+            counter++;
+        }
+        System.out.println("--------------------");
+        counter = 0;
+        for(Edge e : edgeMap.values()) {
+            System.out.println("Edge " + counter + " goes from " + e.getFrom().toString() + " to " + e.getTo().toString());
+            counter++;
+        }
     }
 }
 

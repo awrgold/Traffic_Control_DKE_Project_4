@@ -37,6 +37,7 @@ public class Edge implements Comparable<Edge> {
         this.speedLimit = speedLimit;
     }
 
+    public double getSpeedLimit(){
         return speedLimit;
     }
 
