@@ -262,6 +262,39 @@ public class TrafficManager {
 		return tm;
 	}
 
+
+	//I've commented this out because I run in a lot of issues, although the map can be created with my Node & Edge lists
+	public static TrafficManager createTestFromFile() {
+		MapReader mr = new MapReader();
+		HashMap<String, Node> nodeMap = mr.readNodes();
+		HashMap<String, Edge> edgeMap = mr.readEdges(nodeMap);
+		mr.printAll(nodeMap,edgeMap);
+
+        List<Node> nodeList = new ArrayList<Node>(nodeMap.values());
+        List<Edge> edgeList = new ArrayList<Edge>(edgeMap.values());
+
+		Map map = new Map(nodeList,edgeList);
+        int carAmount = 10;
+        List cars = new ArrayList();
+        for(int i = 0; i < carAmount; i++) {
+            Node start = nodeList.get((int)(Math.floor(Math.random() * nodeList.size())));
+            Node end = nodeList.get((int)(Math.floor(Math.random() * nodeList.size())));
+            if(start == end) { end = nodeList.get((int)(Math.floor(Math.random() * nodeList.size())));}
+
+            Car car = new Car(start,end,map);
+            car.setDriverModel(new SimpleDriverModel(10));
+            cars.add(i,car);
+        }
+
+
+
+
+		TrafficManager tm = new TrafficManager(map,cars);
+
+		return tm;
+	}
+
+
 	public static TrafficManager createEnvironment() {
 
 		List<Node> mapNodes = new ArrayList<Node>();
