@@ -287,12 +287,6 @@ public class TrafficManager {
 			for (int j = 0; j < mapNodes.size(); j++){
 				if ((euclideanDistance(mapNodes.get(i), mapNodes.get(j)) == (MAP_X_DIM/GRID_FACTOR) ||
 						euclideanDistance(mapNodes.get(i), mapNodes.get(j)) == (MAP_Y_DIM/GRID_FACTOR)) && i != j)  {
-
-					// This method doubles the edges for some reason, trying to figure out why.
-					// Need to find out if mapEdges contains an edge between two points already.
-					// Problem is, when doubling edges it makes an edge between node A and B, then again between
-					// ... nodes B and A, which is an identical edge but cannot be easily compared.
-
 					System.out.println("Adding Edge between: (" + mapNodes.get(i).getLocation().toString() + ", " + mapNodes.get(j).getLocation().toString() + ")");
 					mapEdges.add(new Edge(mapNodes.get(i), mapNodes.get(j)));
 					edgeCount++;
@@ -305,21 +299,20 @@ public class TrafficManager {
 		Map map = new Map(mapNodes, mapEdges);
 
 
-		for (int i = 0; i < vehicleCount; i++){
-			int x = (int)(Math.random()*mapNodes.size());
-			int y = (int)(Math.random()*mapNodes.size());
+		for (int i = 0; i < vehicleCount; i++) {
+			
+			int x = 0;
+			int y = 0;
+			while(x == y) {
+				x = (int)(Math.random() * mapNodes.size());
+				y = (int)(Math.random() * mapNodes.size());
+			}
 
-			if (mapNodes.get(y).isDestination()){
+			if (mapNodes.get(y).isDestination()) {
 				Car temp = new Car(mapNodes.get(x), mapNodes.get(y), map);
 				cars.add(temp);
 				temp.setDriverModel(new IntelligentDriverModel());
 			}
-
-			if (!mapNodes.get(y).isDestination()){
-				y = (int)(Math.random()*mapNodes.size());
-			}
-
-
 
 		}
 
