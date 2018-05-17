@@ -9,7 +9,6 @@ import java.util.List;
 import com.mygdx.sim.GameObjects.data.*;
 import com.mygdx.sim.GameObjects.driverModel.IntelligentDriverModel;
 import com.mygdx.sim.GameObjects.driverModel.SimpleDriverModel;
-import com.mygdx.sim.GameObjects.pathfinding.AStarPathfinder;
 import com.mygdx.sim.GameObjects.vehicle.Car;
 import com.mygdx.sim.GameObjects.vehicle.Vehicle;
 
@@ -222,7 +221,7 @@ public class TrafficManager {
 	public static double euclideanDistance(Node a, Node b){
 		return Math.abs(Math.sqrt(Math.pow((a.getY()-b.getY()), 2) + Math.pow((a.getX() - b.getX()), 2)));
 	}
-	
+	/*
 	public static TrafficManager createSimpleTestcase() {
 		Node node1 = new Node(0,0);
 		Node node2 = new Node(475,0);
@@ -250,7 +249,9 @@ public class TrafficManager {
 		int y= 0;
 		
 		return tm;
+
 	}
+	*/
 
 
 	//I've commented this out because I run in a lot of issues, although the map can be created with my Node & Edge lists
@@ -267,13 +268,9 @@ public class TrafficManager {
 
         List cars = new ArrayList();
         for(int i = 0; i < vehicleCount; i++) {
-
             Node start = nodeList.get((int)(Math.floor(Math.random() * nodeList.size())));
             Node end = nodeList.get((int)(Math.floor(Math.random() * nodeList.size())));
-
-            while(start == end) {
-            	end = nodeList.get((int)(Math.floor(Math.random() * nodeList.size())));
-            }
+            while(start == end) { end = nodeList.get((int)(Math.floor(Math.random() * nodeList.size())));}
 
             Car car = new Car(start,end,map);
 			while (car.getEdgePath() == null){

@@ -3,6 +3,7 @@ package com.mygdx.sim.UI.Input;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.sim.UI.Stages.SimulatorStage;
@@ -35,6 +36,12 @@ public class SimulatorInput extends InputAdapter {
 		// Mouse Variables
 		mousePos_screen = new Vector2();
 		scrollCenter = new Vector2();
+
+		// Bounds
+		Rectangle bounds = worldController.getBounds();
+
+		// Center Camera
+		//worldController.getWorldCamera().move(bounds.width / 4, bounds.height / 4);
 
 		this.update();
 	}

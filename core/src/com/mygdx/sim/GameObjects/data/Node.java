@@ -12,10 +12,16 @@ public class Node implements Comparable<Node> {
 	private double nodeDistanceWeightEstimate;
 	private int nodePriorityWeight;
 	private boolean isDestination;
+	private String type;
 
-	public Node(double xCoordinate, double yCoordinate) {
+	public Node(double xCoordinate, double yCoordinate, String type) {
 		location = new Coordinates(xCoordinate, yCoordinate);
+		this.type = type;
 	}
+    public Node(double xCoordinate, double yCoordinate) {
+        location = new Coordinates(xCoordinate, yCoordinate);
+
+    }
 
 	public Node(){}
 
@@ -135,4 +141,11 @@ public class Node implements Comparable<Node> {
 
 		return 0;
 	}
+
+    public String getType() {
+        return type;
+    }
+    public void setType(String type) {
+        this.type = type;
+    }
 }
