@@ -9,6 +9,7 @@ import java.util.List;
 import com.mygdx.sim.GameObjects.data.*;
 import com.mygdx.sim.GameObjects.driverModel.IntelligentDriverModel;
 import com.mygdx.sim.GameObjects.driverModel.SimpleDriverModel;
+import com.mygdx.sim.GameObjects.pathfinding.AStarPathfinder;
 import com.mygdx.sim.GameObjects.vehicle.Car;
 import com.mygdx.sim.GameObjects.vehicle.Vehicle;
 
@@ -22,7 +23,7 @@ public class TrafficManager {
 	public final static int MAP_X_DIM = 10000000;
 	public final static int MAP_Y_DIM = 10000000;
 	public final static int GRID_FACTOR = 2;
-	public final static int vehicleCount = 1;
+	public final static int vehicleCount = 100;
 	public final static int numUrbanCenters = 3;
 	public final static int uCenterWeight = 3;
 
@@ -263,14 +264,23 @@ public class TrafficManager {
         List<Edge> edgeList = new ArrayList<Edge>(edgeMap.values());
 
 		Map map = new Map(nodeList,edgeList);
-        int carAmount = 1000;
+
         List cars = new ArrayList();
-        for(int i = 0; i < carAmount; i++) {
+        for(int i = 0; i < vehicleCount; i++) {
+
             Node start = nodeList.get((int)(Math.floor(Math.random() * nodeList.size())));
             Node end = nodeList.get((int)(Math.floor(Math.random() * nodeList.size())));
-            if(start == end) { end = nodeList.get((int)(Math.floor(Math.random() * nodeList.size())));}
+
+            while(start == end) {
+            	end = nodeList.get((int)(Math.floor(Math.random() * nodeList.size())));
+            }
 
             Car car = new Car(start,end,map);
+			while (car.getEdgePath() == null){
+				start = nodeList.get((int)(Math.floor(Math.random() * nodeList.size())));
+				end = nodeList.get((int)(Math.floor(Math.random() * nodeList.size())));
+				car = new Car(start,end,map);
+			}
             car.setDriverModel(new SimpleDriverModel(10));
             cars.add(i,car);
         }

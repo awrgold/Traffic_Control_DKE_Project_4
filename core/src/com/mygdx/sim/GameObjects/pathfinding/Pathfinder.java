@@ -19,6 +19,13 @@ public abstract class Pathfinder {
 	 */
 	public abstract List<Edge> findPath(Vehicle vehicle, int timestep);
 
+//	public boolean canFindPath(Vehicle vehicle, int timestep){
+//		if (findPath(vehicle, timestep).size() > 0){
+//			return true;
+//		}
+//		return false;
+//	}
+
 	public Pathfinder(Map graph) {
 		this.graph = graph;
 	}
