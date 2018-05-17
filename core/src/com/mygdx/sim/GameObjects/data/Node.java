@@ -1,7 +1,5 @@
 package com.mygdx.sim.GameObjects.data;
 
-import com.mygdx.sim.GameObjects.Stoplight;
-
 import java.util.ArrayList;
 
 public class Node implements Comparable<Node> {
@@ -14,7 +12,6 @@ public class Node implements Comparable<Node> {
 	private double nodeDistanceWeightEstimate;
 	private int nodePriorityWeight;
 	private boolean isDestination;
-	private Stoplight light;
 
 	public Node(double xCoordinate, double yCoordinate) {
 		location = new Coordinates(xCoordinate, yCoordinate);
@@ -67,15 +64,6 @@ public class Node implements Comparable<Node> {
 	public int getNodePriorityWeight() {
 		return nodePriorityWeight;
 	}
-
-	public void setLight(Stoplight light){
-		this.light = light;
-	}
-
-	public Stoplight getLight(){
-		return light;
-	}
-
 
 	public void setNodePriorityWeight(int nodePriorityWeight) {
 		this.nodePriorityWeight = nodePriorityWeight;

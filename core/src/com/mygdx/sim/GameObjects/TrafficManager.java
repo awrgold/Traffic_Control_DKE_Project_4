@@ -33,7 +33,7 @@ public class TrafficManager {
 	public final static int MAP_X_DIM = 1000;
 	public final static int MAP_Y_DIM = 1000;
 	public final static int GRID_FACTOR = 2;
-	public final static int vehicleCount = 50;
+	public final static int vehicleCount = 1;
 	public final static int numUrbanCenters = 3;
 	public final static int uCenterWeight = 3;
 
@@ -274,8 +274,9 @@ public class TrafficManager {
         List<Edge> edgeList = new ArrayList<Edge>(edgeMap.values());
 
 		Map map = new Map(nodeList,edgeList);
+        int carAmount = 1000;
         List cars = new ArrayList();
-        for(int i = 0; i < vehicleCount; i++) {
+        for(int i = 0; i < carAmount; i++) {
             Node start = nodeList.get((int)(Math.floor(Math.random() * nodeList.size())));
             Node end = nodeList.get((int)(Math.floor(Math.random() * nodeList.size())));
             if(start == end) { end = nodeList.get((int)(Math.floor(Math.random() * nodeList.size())));}
