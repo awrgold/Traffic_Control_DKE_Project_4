@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.mygdx.sim.GameObjects.IntersectionSingle;
 import com.mygdx.sim.GameObjects.TrafficManager;
 import com.mygdx.sim.GameObjects.vehicle.Vehicle;
 
@@ -13,6 +14,7 @@ public class Map {
 	private List<Node> nodes = new ArrayList<Node>();
 	private List<Edge> edges = new ArrayList<Edge>();
 	private List<Node> destinations = new ArrayList<Node>();
+	private List<IntersectionSingle> intersections;
 
 	HashMap<Edge, ArrayList<ArrayList<Vehicle>>> locationCache;
 
@@ -44,6 +46,12 @@ public class Map {
 				history.add(new ArrayList<Vehicle>());
 		}
 	}
+
+	public List<IntersectionSingle> getIntersections(){
+		return this.intersections;
+	}
+
+
 
 	public HashMap<Edge, ArrayList<ArrayList<Vehicle>>> getLocationCache() {
 		return locationCache;
@@ -90,7 +98,12 @@ public class Map {
 		int x = 0;
 	}
 
-    public int getNodeIndex(Node toFind){
+	public static double euclideanDistance(Node a, Node b){
+		return Math.abs(Math.sqrt(Math.pow((a.getY()-b.getY()), 2) + Math.pow((a.getX() - b.getX()), 2)));
+	}
+
+
+	public int getNodeIndex(Node toFind){
         for (int i = 0; i < nodes.size(); i++){
             if (nodes.get(i).equals(toFind)) return i;
         }
