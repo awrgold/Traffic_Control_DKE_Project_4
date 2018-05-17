@@ -25,7 +25,6 @@ public class AStarPathfinder extends Pathfinder {
 
 	/**
 	 * Not documented yet.
-	 * @param map
 	 * @param start
 	 * @param goal
 	 * @return
@@ -75,7 +74,10 @@ public class AStarPathfinder extends Pathfinder {
 				}
 			}
 		}
-		
+		/*
+		List<Edge> emptyList = new ArrayList<Edge>();
+		return emptyList;
+		*/
 		throw new NullPointerException("No path found");
 	}
 	

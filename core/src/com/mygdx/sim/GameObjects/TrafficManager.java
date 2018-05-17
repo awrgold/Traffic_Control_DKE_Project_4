@@ -22,7 +22,7 @@ public class TrafficManager {
 	public final static int MAP_X_DIM = 10000000;
 	public final static int MAP_Y_DIM = 10000000;
 	public final static int GRID_FACTOR = 2;
-	public final static int vehicleCount = 1;
+	public final static int vehicleCount = 1000;
 	public final static int numUrbanCenters = 3;
 	public final static int uCenterWeight = 3;
 
@@ -221,8 +221,9 @@ public class TrafficManager {
 	public static double euclideanDistance(Node a, Node b){
 		return Math.abs(Math.sqrt(Math.pow((a.getY()-b.getY()), 2) + Math.pow((a.getX() - b.getX()), 2)));
 	}
-	
+	/*
 	public static TrafficManager createSimpleTestcase() {
+
 		Node node1 = new Node(0,0);
 		Node node2 = new Node(475,0);
 		Node node3 = new Node(475,1000);
@@ -249,7 +250,9 @@ public class TrafficManager {
 		int y= 0;
 		
 		return tm;
+
 	}
+	*/
 
 
 	//I've commented this out because I run in a lot of issues, although the map can be created with my Node & Edge lists
@@ -263,12 +266,12 @@ public class TrafficManager {
         List<Edge> edgeList = new ArrayList<Edge>(edgeMap.values());
 
 		Map map = new Map(nodeList,edgeList);
-        int carAmount = 1000;
+
         List cars = new ArrayList();
-        for(int i = 0; i < carAmount; i++) {
+        for(int i = 0; i < vehicleCount; i++) {
             Node start = nodeList.get((int)(Math.floor(Math.random() * nodeList.size())));
             Node end = nodeList.get((int)(Math.floor(Math.random() * nodeList.size())));
-            if(start == end) { end = nodeList.get((int)(Math.floor(Math.random() * nodeList.size())));}
+            while(start == end) { end = nodeList.get((int)(Math.floor(Math.random() * nodeList.size())));}
 
             Car car = new Car(start,end,map);
             car.setDriverModel(new SimpleDriverModel(10));

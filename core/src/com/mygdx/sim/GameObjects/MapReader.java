@@ -1,5 +1,6 @@
 package com.mygdx.sim.GameObjects;
 
+import com.badlogic.gdx.Gdx;
 import com.mygdx.sim.GameObjects.data.Edge;
 import com.mygdx.sim.GameObjects.data.Node;
 
@@ -19,7 +20,7 @@ public class MapReader {
         HashMap<String, Node> nodeMap = new HashMap<String, Node>();
 
         String xmlFile = null;
-        JFileChooser chooser = new JFileChooser();
+        JFileChooser chooser = new JFileChooser(Gdx.files.getLocalStoragePath());
         FileNameExtensionFilter filter = new FileNameExtensionFilter(
                 "Node XML file", "xml");
         chooser.setFileFilter(filter);
@@ -41,7 +42,7 @@ public class MapReader {
                         double y = Double.parseDouble(properties[5]) * 10;
                         String type = properties[7];
 
-                        nodeMap.put(id,new Node(x,y));
+                        nodeMap.put(id,new Node(x,y,type));
                     }
                 }
 
@@ -56,7 +57,7 @@ public class MapReader {
         HashMap<String,Edge> edgeMap = new HashMap<String, Edge>();
 
         String xmlFile = null;
-        JFileChooser chooser = new JFileChooser();
+        JFileChooser chooser = new JFileChooser(Gdx.files.getLocalStoragePath());
         FileNameExtensionFilter filter = new FileNameExtensionFilter(
                 "Edge XML file", "xml");
         chooser.setFileFilter(filter);
@@ -78,6 +79,7 @@ public class MapReader {
                         String to = properties[5];
                         //int priority = Integer.parseInt(properties[7]);
                         //String type = properties[9];
+                        int laneNum = Integer.parseInt(properties[11]);
                         double speed = 30;
                         //if(properties.length >= 13) {
                             //speed = Double.parseDouble(properties[13]);
@@ -86,8 +88,8 @@ public class MapReader {
                         Node a = nodeMap.get(from);
                         Node b = nodeMap.get(to);
                         if(Math.abs(Math.sqrt(Math.pow((a.getY()-b.getY()), 2) + Math.pow((a.getX() - b.getX()), 2))) > 1) {
-                            edgeMap.put(id, new Edge(nodeMap.get(from), nodeMap.get(to), (int) speed));
-                            edgeMap.put(id + "#2", new Edge(nodeMap.get(to), nodeMap.get(from), (int) speed));
+                            edgeMap.put(id, new Edge(nodeMap.get(from), nodeMap.get(to), (int) speed, laneNum));
+                            edgeMap.put(id + "#2", new Edge(nodeMap.get(to), nodeMap.get(from), (int) speed, laneNum));
                         }
                     }
                 }
