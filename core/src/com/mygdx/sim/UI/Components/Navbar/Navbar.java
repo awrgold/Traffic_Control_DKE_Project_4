@@ -1,16 +1,22 @@
 package com.mygdx.sim.UI.Components.Navbar;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Align;
 import com.mygdx.sim.UI.Components.DefaultButton;
 import com.mygdx.sim.UI.Components.DefaultScrollPane;
 import com.mygdx.sim.UI.Components.DefaultTextField;
 import com.mygdx.sim.World.WorldController;
+import com.mygdx.sim.World.WorldState;
 
 public class Navbar extends Table {
+	
+	private WorldController worldController;
 
 	// Navbar Actors
 	private DefaultButton rewindButton;
@@ -22,15 +28,45 @@ public class Navbar extends Table {
 	private Label tickLabel;
 	private DefaultTextField tickTextField;
 
-	public Navbar(Skin skin, WorldController worldController) {
+	public Navbar(Skin skin, final WorldController worldController) {
+		
+		// World Controller
+		this.worldController = worldController;
 		
 		Table navTable = new Table();
 		navTable.align(Align.left);
 		
+		// Rewind Button
 		rewindButton = new DefaultButton("Rewind", skin, "default");
-		playButton = new DefaultButton("Play", skin, "default");
-		forwardButton = new DefaultButton("Forward", skin, "default");
+		rewindButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				worldController.setWorldState(WorldState.REWINDING);
+			}
+		});
 		
+		// Play Button
+		playButton = new DefaultButton("Play", skin, "default");
+		playButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				if(worldController.getWorldState() != WorldState.PAUSED) {
+					worldController.setWorldState(WorldState.PAUSED);
+				} else {
+					worldController.setWorldState(worldController.getPreviousWorldState());
+				}
+			}
+		});
+		
+		// Forward Button
+		forwardButton = new DefaultButton("Forward", skin, "default");
+		forwardButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				worldController.setWorldState(WorldState.RUNNING);
+			}
+		});
+
 		tickLabel = new Label("Tick: 0", skin);
 		
 		tickTextField = new DefaultTextField("", skin);
@@ -49,5 +85,10 @@ public class Navbar extends Table {
 	public void resize(int width, int height) {
 		this.setSize(width, height / 10);
 		this.setPosition(0, height - this.getHeight());
+	}
+	
+	public void update() {
+		tickLabel.setText("Tick: " + worldController.timeStep);
+		playButton.setText(worldController.getWorldState() == WorldState.PAUSED ? "Play" : "Pause");
 	}
 }

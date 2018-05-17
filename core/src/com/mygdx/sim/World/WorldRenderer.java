@@ -23,13 +23,7 @@ public class WorldRenderer {
 
 	// Render Objects
 	private ShapeRenderer shapeRenderer;
-	private Rectangle scissor;
-
-	// Paused
-	private boolean paused = false;
-
-	// Time Step
-	private int timeStep = 1;
+	//private Rectangle scissor;
 
 	// Simulation Speed
 	private float simulationSpeed = 0.1f;
@@ -45,7 +39,7 @@ public class WorldRenderer {
 
 		// Render Objects
 		shapeRenderer = new ShapeRenderer();
-		scissor = new Rectangle();
+		//scissor = new Rectangle();
 
 		// Get Vehicle History
 		vehicleHistory = worldController.getVehicleHistory();
@@ -53,12 +47,22 @@ public class WorldRenderer {
 
 	public void render(SpriteBatch spriteBatch) {
 
-		if (!paused) {
+		WorldState worldState;
+		if ((worldState = worldController.getWorldState()) != WorldState.PAUSED) {
 			timer += Gdx.graphics.getDeltaTime();
 			if (timer >= simulationSpeed) {
-				// Increase Time Step
-				if (timeStep + 1 < vehicleHistory.size())
-					timeStep++;
+				if(worldState == WorldState.RUNNING)
+				{
+					// Increase Time Step
+					if (worldController.timeStep + 1 < vehicleHistory.size()) {
+						worldController.timeStep++;
+					}
+				} else if(worldState == WorldState.REWINDING) {
+					// Decrease Time Step
+					if (worldController.timeStep - 1 > 0) {
+						worldController.timeStep--;
+					}
+				}
 
 				// Reset Timer
 				timer = 0f;
@@ -77,7 +81,7 @@ public class WorldRenderer {
 
 		this.drawMapRoads(spriteBatch);
 		this.drawMapNodes(spriteBatch);
-		this.drawMapVehicles(spriteBatch, timeStep);
+		this.drawMapVehicles(spriteBatch, worldController.timeStep);
 
 		// Draw Outline
 		// this.drawMapOutline();
