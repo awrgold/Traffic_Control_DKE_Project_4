@@ -91,9 +91,6 @@ public class MapReader {
 						// speed = Double.parseDouble(properties[13]);
 						// }
 
-						edgeMap.put(id, new Edge(nodeMap.get(from), nodeMap.get(to), (int) speed, laneNum));
-
-
                         Node a = nodeMap.get(from);
                         Node b = nodeMap.get(to);
 
