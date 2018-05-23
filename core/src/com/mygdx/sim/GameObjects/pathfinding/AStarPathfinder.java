@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Random;
 import java.util.Stack;
 
 import com.mygdx.sim.GameObjects.data.Edge;
@@ -29,9 +30,13 @@ public class AStarPathfinder extends Pathfinder {
 	 * @param goal
 	 * @return
 	 */
-	public List<Edge> searchPath(List<Node> nodes, Node start, Node goal) {
+	public List<Edge> searchPath(List<Node> nodes, Vehicle vehicle, boolean findDifferentPathOnFail) {
 		
-		// Initialize priority queue
+		// Start/Goal Nodes
+		Node start = vehicle.getStartNode();
+		Node goal = vehicle.getGoalNode();
+		
+		// Initialise priority queue
 		PriorityQueue<Node> priorityQueue = new PriorityQueue<Node>();
 
 		// Set all other weights to infinity
@@ -75,7 +80,14 @@ public class AStarPathfinder extends Pathfinder {
 			}
 		}
 		
-		throw new NullPointerException("No path found");
+		if(!findDifferentPathOnFail) {
+			throw new NullPointerException("No path found");
+		}
+		
+		vehicle.setStartNode(nodes.get(new Random().nextInt(nodes.size())));
+		vehicle.setGoalNode(nodes.get(new Random().nextInt(nodes.size())));
+		
+		return searchPath(nodes, vehicle, findDifferentPathOnFail);
 	}
 	
 	public List<Edge> createPath(Node node) {
@@ -233,10 +245,8 @@ public class AStarPathfinder extends Pathfinder {
 	}
 
 	// Return the path
-	public List<Edge> findPath(Vehicle vehicle, int timestep) {
-
-		System.out.println("Path size for: " + vehicle.toString() + " = " + searchPath(graph.getNodes(), vehicle.getStartNode(), vehicle.getGoalNode()).size());
-		return searchPath(graph.getNodes(), vehicle.getStartNode(), vehicle.getGoalNode());
+	public List<Edge> findPath(Vehicle vehicle, int timestep, boolean findDifferentPathOnFail) {
+		return searchPath(graph.getNodes(), vehicle, findDifferentPathOnFail);
 	}
 
 

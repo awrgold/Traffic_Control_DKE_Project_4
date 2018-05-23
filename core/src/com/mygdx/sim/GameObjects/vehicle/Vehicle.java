@@ -19,17 +19,18 @@ public abstract class Vehicle {
 	
 	private static int lastGivenId = 0;
 	
+	private boolean findDifferentPathOnFail = true;
+	
 	private int id;
 	
 	/**
 	 * The node this vehicle starts its trip at.
 	 */
-	final Node startNode;
-	
+	private Node startNode;
 	/**
 	 * The node this vehicle wants to reach.
 	 */
-	final Node goalNode;
+	private Node goalNode;
 	
 	/**
 	 * The maximum speed that this vehicle can achieve, ever.
@@ -171,7 +172,7 @@ public abstract class Vehicle {
 	 * @param timestep - the edges that have already been traveled at that timestep may not be changed by the pathfinder
 	 */
 	public void computePath(int timestep) {
-		this.edgePath = pathfinder.findPath(this,timestep);
+		this.edgePath = pathfinder.findPath(this, timestep, findDifferentPathOnFail);
 	}
 	
 	/**
@@ -335,9 +336,17 @@ public abstract class Vehicle {
 	public Node getStartNode(){
 		return startNode;
 	}
+	
+	public void setStartNode(Node startNode){
+		this.startNode = startNode;
+	}
 
 	public Node getGoalNode(){
 		return goalNode;
+	}
+	
+	public void setGoalNode(Node goalNode){
+		this.goalNode = goalNode;
 	}
 	
 	public int hashCode() {

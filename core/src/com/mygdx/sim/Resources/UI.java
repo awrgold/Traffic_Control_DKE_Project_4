@@ -24,6 +24,7 @@ public class UI {
 	// Misc
 	public Sprite allScroll_icon;
 	public Sprite node_icon;
+	public Sprite node_intersection_icon;
 	
 	// Audio
 	public Sound sound_click;
@@ -62,6 +63,7 @@ public class UI {
 	private void initMisc() {
 		allScroll_icon = atlas.createSprite("all-scroll");
 		node_icon = atlas.createSprite("node");
+		node_intersection_icon = atlas.createSprite("node-intersection");
 	}
 
 	public void dispose() {
