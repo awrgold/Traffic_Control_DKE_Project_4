@@ -8,7 +8,7 @@ public class Edge implements Comparable<Edge> {
     private Node to;
     private int speedLimit;
     private double lengthScore;
-    private int numLanes;
+    private int lanes;
 
     public Edge(Node from, Node to){
         this(from,to,50);
@@ -23,7 +23,7 @@ public class Edge implements Comparable<Edge> {
         
         this.speedLimit = speedLimit;
     }
-    public Edge(Node from, Node to, int speedLimit, int numLanes){
+    public Edge(Node from, Node to, int speedLimit, int lanes){
         this.from = from;
         from.addOutEdge(this);
 
@@ -31,7 +31,7 @@ public class Edge implements Comparable<Edge> {
         to.addInEdge(this);
 
         this.speedLimit = speedLimit;
-        this.numLanes = numLanes;
+        this.lanes = lanes;
     }
 
     public Node getFrom(){
@@ -50,6 +50,14 @@ public class Edge implements Comparable<Edge> {
 
     public double getSpeedLimit(){
         return speedLimit;
+    }
+    
+    public int getLanes() {
+    	return lanes;
+    }
+    
+    public void setLanes(int numLanes) {
+    	this.lanes = numLanes;
     }
 
     /**
