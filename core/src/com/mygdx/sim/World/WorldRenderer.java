@@ -102,7 +102,7 @@ public class WorldRenderer {
 
 		// Iterate through all nodes
 		for (Node node : worldController.getNodes()) {
-			spriteBatch.draw(Resources.ui.allScroll_icon, (float) (node.getX()), (float) (node.getY()));
+			spriteBatch.draw(Resources.ui.node_icon, (float) (node.getX()), (float) (node.getY()));
 		}
 	}
 

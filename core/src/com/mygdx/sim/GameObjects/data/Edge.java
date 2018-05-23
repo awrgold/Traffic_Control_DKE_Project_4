@@ -1,7 +1,5 @@
 package com.mygdx.sim.GameObjects.data;
 
-import java.util.Comparator;
-
 public class Edge implements Comparable<Edge> {
 
     private Node from;
@@ -42,8 +40,6 @@ public class Edge implements Comparable<Edge> {
         return to;
     }
 
-
-
     public void setSpeedLimit(int speedLimit){
         this.speedLimit = speedLimit;
     }
@@ -56,8 +52,8 @@ public class Edge implements Comparable<Edge> {
     	return lanes;
     }
     
-    public void setLanes(int numLanes) {
-    	this.lanes = numLanes;
+    public void setLanes(int lanes) {
+    	this.lanes = lanes;
     }
 
     /**

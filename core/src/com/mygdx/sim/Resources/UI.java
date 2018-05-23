@@ -21,8 +21,9 @@ public class UI {
 	public Sprite menu_icon_editor;
 	public Sprite menu_icon_settings;
 	
-	// Cursors
+	// Misc
 	public Sprite allScroll_icon;
+	public Sprite node_icon;
 	
 	// Audio
 	public Sound sound_click;
@@ -32,7 +33,7 @@ public class UI {
 		// Create Atlas
 		atlas = new TextureAtlas(Gdx.files.internal("resources/skins/ui.atlas"));
 
-		// Initialize Components
+		// Initialise Components
 		this.initSkin();
 		this.initMenuUI();
 		this.initSounds();
@@ -60,6 +61,7 @@ public class UI {
 	
 	private void initMisc() {
 		allScroll_icon = atlas.createSprite("all-scroll");
+		node_icon = atlas.createSprite("node");
 	}
 
 	public void dispose() {

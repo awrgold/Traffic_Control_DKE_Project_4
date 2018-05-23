@@ -3,9 +3,6 @@ package com.mygdx.sim.Resources;
 import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
@@ -18,7 +15,7 @@ public class World {
 
 	public World() {
 
-		// Initialize Vehicle Sprites
+		// Initialise Vehicle Sprites
 		this.initVehicleSprites();
 	}
 
