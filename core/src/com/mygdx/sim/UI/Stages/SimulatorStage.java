@@ -40,6 +40,9 @@ public class SimulatorStage extends Stage {
 		this.getBatch().end();
 
 		super.draw();
+		
+		// NavBar
+		navbar.update();
 	}
 
 	public void resize(int width, int height) {

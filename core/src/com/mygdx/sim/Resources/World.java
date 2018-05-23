@@ -16,16 +16,10 @@ public class World {
 	public TextureAtlas vehicleSpritesAtlas;
 	public HashMap<String, Sprite> vehicleSprites;
 
-	// Road Textures
-	public HashMap<String, Texture> roadTextures;
-
 	public World() {
 
 		// Initialize Vehicle Sprites
 		this.initVehicleSprites();
-
-		// Initialize Road Textures
-		this.initRoadTextures();
 	}
 
 	private void initVehicleSprites() {
@@ -41,23 +35,6 @@ public class World {
 			// Map Name to Sprite in HashMap
 			vehicleSprites.put(atlasRegion.name, vehicleSpritesAtlas.createSprite(atlasRegion.name));
 		}
-	}
-
-	private void initRoadTextures() {
-
-		// Create HashMap
-		roadTextures = new HashMap<String, Texture>();
-
-		// Create Texture
-		Texture texture = new Texture(Gdx.files.internal("resources/roads/road_1.png"));
-
-		// Set Filter to Nearest Neighbor
-		texture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
-
-		// Make texture wrap around texture region
-		texture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
-
-		roadTextures.put("road", texture);
 	}
 
 	public void dispose() {

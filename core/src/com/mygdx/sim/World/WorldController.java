@@ -20,6 +20,13 @@ public class WorldController {
 
 	// Map Objects
 	private List<Vehicle> vehicles;
+	
+	// World State
+	private WorldState worldState;
+	private WorldState previousWorldState;
+	
+	// TimeStep
+	public int timeStep;
 
 	// Camera
 	private WorldCamera worldCamera;
@@ -31,6 +38,13 @@ public class WorldController {
 	private TrafficManager trafficManager;
 
 	public WorldController() {
+		
+		// World State
+		worldState = WorldState.PAUSED;
+		previousWorldState = WorldState.RUNNING;
+		
+		// TimeStep
+		timeStep = 1;
 
 		// Create Map Object Lists
 		vehicles = new ArrayList<Vehicle>();
@@ -51,8 +65,7 @@ public class WorldController {
 		worldGenerator = new WorldGenerator(this);
 
 		// Start Simulation
-		trafficManager.simulate(TrafficManager.TIMESTEPS);
-
+		trafficManager.simulate(trafficManager.TIMESTEPS);
 	}
 
 	public void update() {
@@ -97,5 +110,20 @@ public class WorldController {
 
 	public List<Road> getRoads() {
 		return worldGenerator.getRoads();
+	}
+	
+	public WorldState getWorldState() {
+		return worldState;
+	}
+	
+	public void setWorldState(WorldState worldState) {
+		if(this.worldState != worldState) {
+			previousWorldState = this.worldState;
+			this.worldState = worldState;
+		}
+	}
+	
+	public WorldState getPreviousWorldState() {
+		return previousWorldState;
 	}
 }
