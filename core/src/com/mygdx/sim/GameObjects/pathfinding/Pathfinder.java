@@ -17,7 +17,7 @@ public abstract class Pathfinder {
 	 * @param timestep - timestep before which we are not allowed to change the path
 	 * @return new path
 	 */
-	public abstract List<Edge> findPath(Vehicle vehicle, int timestep);
+	public abstract List<Edge> findPath(Vehicle vehicle, int timestep, boolean findDifferentPathOnFail);
 
 //	public boolean canFindPath(Vehicle vehicle, int timestep){
 //		if (findPath(vehicle, timestep).size() > 0){
