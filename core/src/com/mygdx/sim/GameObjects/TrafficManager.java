@@ -1,12 +1,10 @@
 package com.mygdx.sim.GameObjects;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import com.mygdx.sim.GameObjects.data.*;
+import com.mygdx.sim.GameObjects.data.Map;
 import com.mygdx.sim.GameObjects.driverModel.IntelligentDriverModel;
 import com.mygdx.sim.GameObjects.driverModel.SimpleDriverModel;
 import com.mygdx.sim.GameObjects.vehicle.Car;
@@ -23,7 +21,7 @@ public class TrafficManager {
 	public final static int MAP_Y_DIM = 10000000;
 	public final static int GRID_FACTOR = 2;
 	public final static int vehicleCount = 750;
-	public final static int numUrbanCenters = 3;
+	public final static int numUrbanCenters = 9;
 	public final static int uCenterWeight = 3;
 
 
@@ -230,12 +228,25 @@ public class TrafficManager {
 		mr.printAll(nodeMap,edgeMap);
 
         List<Node> nodeList = new ArrayList<Node>(nodeMap.values());
+        // Sort the nodeList in descending order based on priority
+        Collections.sort(nodeList, new SortNode());
         List<Edge> edgeList = new ArrayList<Edge>(edgeMap.values());
 
 		Map map = new Map(nodeList,edgeList);
 
+		// Make nodes that have multiple edges connecting to them destinations
+		for (Node n : nodeList){
+			if (n.getOutEdges().size() > 4){
+				n.isDestination();
+			}
+		}
+
         List cars = new ArrayList();
         for(int i = 0; i < vehicleCount; i++) {
+
+        	// TODO: Make priorities based on neighborhood
+			createNeighborhoods(nodeList, numUrbanCenters);
+
             Node start = nodeList.get((int)(Math.floor(Math.random() * nodeList.size())));
             Node end = nodeList.get((int)(Math.floor(Math.random() * nodeList.size())));
             while(start == end) { end = nodeList.get((int)(Math.floor(Math.random() * nodeList.size())));}
@@ -344,7 +355,7 @@ public class TrafficManager {
 		if (centers == 0) return;
 		for (Node n : nodes){
 			if (n.isDestination() && Math.random() < .1 && centers > 0){
-				n.setNodePriorityWeight(uCenterWeight);
+//				n.setNodePriorityWeight(uCenterWeight);
 				for (Node i : n.getOutgoingNeighbors()){
 					i.setNodePriorityWeight(n.getNodePriorityWeight()-1);
 				}
@@ -355,8 +366,16 @@ public class TrafficManager {
 			}
 		}
 
+	}
 
+	public Node returnNodeOnPriority(List<Node> nodeList){
+		Node n = new Node();
+		int cntr = -1;
+		for (int i = 0; i < nodeList.size(); i++) {
+			if (nodeList.get(i).getNodePriorityWeight() > cntr) cntr = nodeList.get(i).getNodePriorityWeight();
 
+		}
+		return n;
 	}
 
 	

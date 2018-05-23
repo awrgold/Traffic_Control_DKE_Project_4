@@ -42,7 +42,9 @@ public class MapReader {
                         double y = Double.parseDouble(properties[5]) * 10;
                         String type = properties[7];
 
-                        nodeMap.put(id,new Node(x,y,type));
+                        Node n = new Node(x, y, type);
+
+                        nodeMap.put(id, n);
                     }
                 }
 
@@ -77,6 +79,8 @@ public class MapReader {
                         String id = properties[1];
                         String from = properties[3];
                         String to = properties[5];
+
+
                         //int priority = Integer.parseInt(properties[7]);
                         //String type = properties[9];
                         int laneNum = Integer.parseInt(properties[11]);
@@ -87,8 +91,21 @@ public class MapReader {
 
                         Node a = nodeMap.get(from);
                         Node b = nodeMap.get(to);
+
+
+
                         if(Math.abs(Math.sqrt(Math.pow((a.getY()-b.getY()), 2) + Math.pow((a.getX() - b.getX()), 2))) > 1) {
-                            edgeMap.put(id, new Edge(nodeMap.get(from), nodeMap.get(to), (int) speed, laneNum));
+
+                            /**
+                             * This doubles the edges because of the edge going "from" to "to" and not vice versa, leading to issues;
+                             */
+                            Edge e = new Edge(nodeMap.get(from), nodeMap.get(to), (int) speed, laneNum);
+                            edgeMap.put(id, e);
+                            nodeMap.get(from).addOutEdge(e);
+                            nodeMap.get(to).addInEdge(e);
+                            // increment node's Edge counter here
+                            nodeMap.get(from).setNodePriorityWeight(nodeMap.get(from).getNodePriorityWeight()+2);
+                            nodeMap.get(to).setNodePriorityWeight(nodeMap.get(to).getNodePriorityWeight()+2);
                             edgeMap.put(id + "#2", new Edge(nodeMap.get(to), nodeMap.get(from), (int) speed, laneNum));
                         }
                     }
@@ -98,6 +115,7 @@ public class MapReader {
                 e.printStackTrace();
             }
         }
+
         return edgeMap;
     }
 

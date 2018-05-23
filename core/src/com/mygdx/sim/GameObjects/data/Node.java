@@ -10,7 +10,7 @@ public class Node implements Comparable<Node> {
 	private Coordinates location;
 	private double nodeDistanceWeight;
 	private double nodeDistanceWeightEstimate;
-	private int nodePriorityWeight;
+	private int nodePriorityWeight = 0;
 	private boolean isDestination;
 	private String type;
 
@@ -134,11 +134,10 @@ public class Node implements Comparable<Node> {
 
 
 	public int compareTo(Node node) {
-		if (this.nodeDistanceWeightEstimate < node.getNodeDistanceEstimate())
+		if (this.nodePriorityWeight < node.getNodePriorityWeight())
 			return -1;
-		if (this.nodeDistanceWeightEstimate > node.getNodeDistanceEstimate())
+		if (this.nodePriorityWeight > node.getNodePriorityWeight())
 			return 1;
-
 		return 0;
 	}
 
