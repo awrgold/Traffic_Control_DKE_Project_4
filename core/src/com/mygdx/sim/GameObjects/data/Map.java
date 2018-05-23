@@ -24,14 +24,17 @@ public class Map {
 	public Map(List<Node> nodes, List<Edge> edges) {
 		this.nodes = nodes;
 		this.edges = edges;
+		
+		setIntersections();
 
 		// Temporary hardcoded map bound until we have a save and load feature
 		this.reset(TrafficManager.MAP_X_DIM, TrafficManager.MAP_Y_DIM);
 
 		locationCache = new HashMap<Edge, ArrayList<ArrayList<Vehicle>>>();
 
-		for (Edge edge : edges)
+		for (Edge edge : edges) {
 			locationCache.put(edge, new ArrayList<ArrayList<Vehicle>>());
+		}
 	}
 
 	public ArrayList<Vehicle> getVehiclesAt(Edge edge, int timestep) {
@@ -44,6 +47,14 @@ public class Map {
 
 			while (history.size() <= timestep)
 				history.add(new ArrayList<Vehicle>());
+		}
+	}
+	
+	public void setIntersections() {
+		for(Node node : nodes) {
+			if(node.getOutgoingNeighbors().size() >= 3) {
+				node.setIntersection(true);
+			}
 		}
 	}
 

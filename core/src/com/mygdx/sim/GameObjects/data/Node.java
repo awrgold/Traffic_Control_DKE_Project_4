@@ -13,6 +13,7 @@ public class Node implements Comparable<Node> {
 	private int nodePriorityWeight;
 	private boolean isDestination;
 	private String type;
+	private boolean isIntersection = false;
 
 	public Node(double xCoordinate, double yCoordinate, String type) {
 		location = new Coordinates(xCoordinate, yCoordinate);
@@ -145,7 +146,16 @@ public class Node implements Comparable<Node> {
     public String getType() {
         return type;
     }
+    
     public void setType(String type) {
         this.type = type;
+    }
+
+    public boolean isIntersection() {
+        return isIntersection;
+    }
+    
+    public void setIntersection(boolean isIntersection) {
+        this.isIntersection = isIntersection;
     }
 }

@@ -102,7 +102,11 @@ public class WorldRenderer {
 
 		// Iterate through all nodes
 		for (Node node : worldController.getNodes()) {
-			spriteBatch.draw(Resources.ui.node_icon, (float) (node.getX()), (float) (node.getY()));
+			if(node.isIntersection()) {
+				spriteBatch.draw(Resources.ui.node_intersection_icon, (float) (node.getX()), (float) (node.getY()));
+			} else {
+				spriteBatch.draw(Resources.ui.node_icon, (float) (node.getX()), (float) (node.getY()));
+			}
 		}
 	}
 
