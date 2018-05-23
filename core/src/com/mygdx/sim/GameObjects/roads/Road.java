@@ -22,7 +22,7 @@ public class Road {
 
 	public Road(Edge edge) {
 		
-		texture = new Texture(Gdx.files.internal("resources/roads/road_lane_" + edge.getLanes() +".png"));
+		texture = new Texture(Gdx.files.internal("resources/roads/road_lane_" + edge.getNumLanes() +".png"));
 		texture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 		texture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
 		

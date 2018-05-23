@@ -22,7 +22,7 @@ public class TrafficManager {
 	public final static int MAP_X_DIM = 10000000;
 	public final static int MAP_Y_DIM = 10000000;
 	public final static int GRID_FACTOR = 2;
-	public final static int vehicleCount = 100;
+	public final static int vehicleCount = 750;
 	public final static int numUrbanCenters = 3;
 	public final static int uCenterWeight = 3;
 
@@ -221,40 +221,8 @@ public class TrafficManager {
 	public static double euclideanDistance(Node a, Node b){
 		return Math.abs(Math.sqrt(Math.pow((a.getY()-b.getY()), 2) + Math.pow((a.getX() - b.getX()), 2)));
 	}
-	/*
-	public static TrafficManager createSimpleTestcase() {
-		Node node1 = new Node(0,0);
-		Node node2 = new Node(475,0);
-		Node node3 = new Node(475,1000);
-		Edge edge1 = new Edge(node1,node2);
-		Edge edge2 = new Edge(node2,node3);
-		
-		Map map = new Map(Arrays.asList(node1,node2,node3),Arrays.asList(edge1,edge2));
-		
-		Car car1 = new Car(node2,node3,map);
-		car1.setEdgePath(Arrays.asList(edge2));
-		car1.setDriverModel(new SimpleDriverModel(10));
-		
-		Car car2 = new Car(node2,node3,map);
-		car2.setEdgePath(Arrays.asList(edge2));
-		car2.setDriverModel(new IntelligentDriverModel());
-		
-		Car car3 = new Car(node1,node3,map);
-		car3.setEdgePath(Arrays.asList(edge1,edge2));
-		car3.setDriverModel(new IntelligentDriverModel());
-		
-		List cars = Arrays.asList(car1,car2,car3);
-		
-		TrafficManager tm = new TrafficManager(map,cars);
-		int y= 0;
-		
-		return tm;
-
-	}
-	*/
 
 
-	//I've commented this out because I run in a lot of issues, although the map can be created with my Node & Edge lists
 	public static TrafficManager createTestFromFile() {
 		MapReader mr = new MapReader();
 		HashMap<String, Node> nodeMap = mr.readNodes();
@@ -281,9 +249,6 @@ public class TrafficManager {
             car.setDriverModel(new SimpleDriverModel(10));
             cars.add(i,car);
         }
-
-
-
 
 		TrafficManager tm = new TrafficManager(map,cars);
 
