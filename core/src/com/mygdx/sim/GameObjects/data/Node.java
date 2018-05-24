@@ -1,6 +1,10 @@
 package com.mygdx.sim.GameObjects.data;
 
+import com.mygdx.sim.GameObjects.Stoplight;
+import javafx.scene.paint.Stop;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class Node implements Comparable<Node> {
 
@@ -15,6 +19,7 @@ public class Node implements Comparable<Node> {
 	private String type;
 	private boolean isIntersection = false;
 	private boolean hasCarAlready = false;
+	private List<Stoplight> lights;
 
 	public Node(double xCoordinate, double yCoordinate, String type) {
 		location = new Coordinates(xCoordinate, yCoordinate);
@@ -22,8 +27,19 @@ public class Node implements Comparable<Node> {
 	}
     public Node(double xCoordinate, double yCoordinate) {
         location = new Coordinates(xCoordinate, yCoordinate);
-
     }
+
+    public void setLights(List<Stoplight> lights){
+		this.lights = lights;
+	}
+
+	public void addLight(Stoplight light){
+    	lights.add(light);
+	}
+
+	public List<Stoplight> getLights(){
+    	return lights;
+	}
 
 	public Node(){}
 

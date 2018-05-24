@@ -26,7 +26,7 @@ public class TrafficManager {
 
 	private Map map;
 	private List<Vehicle> vehicles;
-	private static List<Node> intersections;
+	private static List<Node> intersections = new ArrayList<Node>();
 	
 	private int lastComputedTimestep = 0;
 	
@@ -35,10 +35,6 @@ public class TrafficManager {
 	public TrafficManager(Map map, List<Vehicle> vehicles) {
 		this.map = map;
 		this.vehicles = vehicles;
-
-		for (Node n : map.getNodes()){
-			if (n.isIntersection()) intersections.add(n);
-		}
 		
 		ensureCapacity(lastComputedTimestep);
 		
@@ -125,6 +121,7 @@ public class TrafficManager {
 			}
 		}
 	}
+
 	
 	/**
 	 * Ensures that this TrafficManager's history has enough space for the given number
@@ -239,12 +236,14 @@ public class TrafficManager {
 
 		List<Node> destinations = new ArrayList<Node>();
 
+
 		// Make nodes that have multiple edges connecting to them destinations
 		for (Node n : nodeList){
 			if (n.getOutEdges().size() > 4){
 				n.isDestination();
 				destinations.add(n);
 			}
+			if (n.isIntersection()) intersections.add(n);
 		}
 
 

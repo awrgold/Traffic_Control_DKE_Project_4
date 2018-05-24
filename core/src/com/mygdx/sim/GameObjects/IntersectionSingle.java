@@ -17,7 +17,8 @@ public class IntersectionSingle {
     private ArrayList<Stoplight> stoplights;
 
     public void constructIntersection(Node centerNode, boolean hasBeenChecked[][], Map map) {
-        List<IntersectionSingle> intersections = map.getIntersections();
+
+        List<IntersectionSingle> intersections = map.getIntersectionObjects();
 
         IntersectionSingle intersectionOne = null;
         IntersectionSingle intersectionTwo = null;
@@ -188,7 +189,7 @@ public class IntersectionSingle {
         outerNodes.get(1).addOutEdge(new Edge(outerNodes.get(1), innerNodes.get(0)));
         ArrayList<Node> lane1 = new ArrayList<Node>();
         lane1.add(outerNodes.get(1));
-        Stoplight stop1 = new Stoplight(lane1, outerNodes.get(0).getLocation());
+        Stoplight stop1 = new Stoplight(outerNodes.get(0).getLocation(), lane1);
         addLight(stop1);
 
         outerNodes.get(2).addInEdge(new Edge(innerNodes.get(1), outerNodes.get(2)));
@@ -198,7 +199,7 @@ public class IntersectionSingle {
         outerNodes.get(3).addOutEdge(new Edge(outerNodes.get(3), innerNodes.get(1)));
         ArrayList<Node> lane2 = new ArrayList<Node>();
         lane2.add(outerNodes.get(3));
-        Stoplight stop2 = new Stoplight(lane2, outerNodes.get(3).getLocation());
+        Stoplight stop2 = new Stoplight(outerNodes.get(3).getLocation(), lane2);
         addLight(stop2);
 
         outerNodes.get(4).addInEdge(new Edge(innerNodes.get(2), outerNodes.get(4)));
@@ -208,7 +209,7 @@ public class IntersectionSingle {
         outerNodes.get(5).addOutEdge(new Edge(outerNodes.get(5), innerNodes.get(2)));
         ArrayList<Node> lane3 = new ArrayList<Node>();
         lane3.add(outerNodes.get(0));
-        Stoplight stop3 = new Stoplight(lane3, outerNodes.get(5).getLocation());
+        Stoplight stop3 = new Stoplight(outerNodes.get(5).getLocation(), lane3);
         addLight(stop3);
 
         outerNodes.get(6).addInEdge(new Edge(innerNodes.get(3), outerNodes.get(6)));
@@ -218,7 +219,7 @@ public class IntersectionSingle {
         outerNodes.get(7).addOutEdge(new Edge(outerNodes.get(7), innerNodes.get(3)));
         ArrayList<Node> lane4 = new ArrayList<Node>();
         lane4.add(outerNodes.get(0));
-        Stoplight stop4 = new Stoplight(lane4, outerNodes.get(7).getLocation());
+        Stoplight stop4 = new Stoplight(outerNodes.get(7).getLocation(), lane4);
         addLight(stop4);
 
         innerNodes.get(0).addInEdge(new Edge(outerNodes.get(1), innerNodes.get(0)));

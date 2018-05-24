@@ -2,18 +2,22 @@ package com.mygdx.sim.GameObjects;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.mygdx.sim.GameObjects.data.Coordinates;
+import com.mygdx.sim.GameObjects.data.Edge;
 import com.mygdx.sim.GameObjects.data.Node;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Stoplight {
 
     private int timer;
     private Sprite sprite;
     private Color color;
-    private ArrayList<Node> lanes;
+    private List<Edge> lanes;
+    private ArrayList<Node> nodeLanes;
     private Stoplight linked;
     private Coordinates location;
+    private Node parent;
     private int timestepsRemainingUntilChange;
         /**
          * The stoplight is an array of Enumerable Colors, where position N (# of lanes) is the left-most lane, and position 0 is the right most lane.
@@ -21,14 +25,19 @@ public class Stoplight {
          * @param coords: the location of the stoplight in 2D Euclidean space
          */
 
-    public Stoplight(ArrayList<Node> lanes, Coordinates coords){
-            this.lanes = lanes;
-            this.location = coords;
-        }
+    public Stoplight(List<Edge> lanes, Coordinates coords){
+        this.lanes = lanes;
+        this.location = coords;
+    }
+
+    public Stoplight(Coordinates coords, ArrayList<Node> nodeLanes){
+        this.nodeLanes = nodeLanes;
+        this.location = coords;
+    }
 
     public Stoplight(){}
 
-    public void addLane(int index, Node toAdd){
+    public void addLanes(int index, Edge toAdd){
         if (index >= 0){
             lanes.add(index, toAdd);
         }
@@ -37,9 +46,23 @@ public class Stoplight {
         }
     }
 
-    public ArrayList<Node> getLanes(){
+    public void setParent(Node parent){
+        this.parent = parent;
+    }
+
+    public Node getParent(){
+        return parent;
+    }
+
+    public void addLanes(List<Edge> toAdd){
+        lanes.addAll(toAdd);
+    }
+
+    public List<Edge> getLanes(){
         return lanes;
     }
+
+    public ArrayList<Node> getNodeLanes(){ return nodeLanes; }
 
 //    public Node getLane(Node n){
 //        for (Node m : getLanes()){
@@ -78,7 +101,6 @@ public class Stoplight {
     public int getNumLanes() {
         return lanes.size();
     }
-
 
     public void setSprite(Sprite sprite) {
         this.sprite = sprite;

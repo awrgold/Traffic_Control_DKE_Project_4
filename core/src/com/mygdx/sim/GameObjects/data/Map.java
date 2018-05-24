@@ -6,7 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.mygdx.sim.GameObjects.Intersection;
 import com.mygdx.sim.GameObjects.IntersectionSingle;
+import com.mygdx.sim.GameObjects.Stoplight;
 import com.mygdx.sim.GameObjects.TrafficManager;
 import com.mygdx.sim.GameObjects.vehicle.Vehicle;
 
@@ -14,7 +16,9 @@ public class Map {
 	private List<Node> nodes = new ArrayList<Node>();
 	private List<Edge> edges = new ArrayList<Edge>();
 	private List<Node> destinations = new ArrayList<Node>();
-	private List<IntersectionSingle> intersections;
+	private List<Node> intersections = new ArrayList<Node>();
+	private List<IntersectionSingle> intersectionObjects;
+	private boolean DEBUG = true;
 
 	HashMap<Edge, ArrayList<ArrayList<Vehicle>>> locationCache;
 
@@ -53,16 +57,34 @@ public class Map {
 	public void setIntersections() {
 		for(Node node : nodes) {
 			if(node.getOutgoingNeighbors().size() >= 3) {
+
 				node.setIntersection(true);
+
+				/*
+				for (Edge e : node.getInEdges()){
+					List<Edge> lanes = new ArrayList<Edge>();
+					for (int i = 0; i < node.getInEdges().size(); i++) {
+						while (e.getFrom().equals(node.getInEdges().get(i).getFrom())){
+							lanes.add(e);
+						}
+					}
+					node.addLight(new Stoplight(lanes, node.getLocation()));
+					if(DEBUG){
+						System.out.println("Stoplight " + node.getType() + " - added at: " + node.getLocation() + " with " + lanes.size() + " edges.");
+					}
+				}
+				*/
 			}
 		}
 	}
 
-	public List<IntersectionSingle> getIntersections(){
+	public List<Node> getIntersections(){
 		return this.intersections;
 	}
 
-
+	public List<IntersectionSingle> getIntersectionObjects(){
+		return this.intersectionObjects;
+	}
 
 	public HashMap<Edge, ArrayList<ArrayList<Vehicle>>> getLocationCache() {
 		return locationCache;
