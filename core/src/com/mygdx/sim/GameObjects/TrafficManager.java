@@ -1,5 +1,4 @@
 package com.mygdx.sim.GameObjects;
-
 import java.lang.reflect.Array;
 import java.util.*;
 
@@ -22,11 +21,12 @@ public class TrafficManager {
 	public final static int GRID_FACTOR = 2;
 	public final static int vehicleCount = 750;
 	public final static int numUrbanCenters = 9;
-	public final static int uCenterWeight = 3;
+	public final static double lambda = 1.5;
 
 
 	private Map map;
 	private List<Vehicle> vehicles;
+	private static List<Node> intersections;
 	
 	private int lastComputedTimestep = 0;
 	
@@ -35,6 +35,10 @@ public class TrafficManager {
 	public TrafficManager(Map map, List<Vehicle> vehicles) {
 		this.map = map;
 		this.vehicles = vehicles;
+
+		for (Node n : map.getNodes()){
+			if (n.isIntersection()) intersections.add(n);
+		}
 		
 		ensureCapacity(lastComputedTimestep);
 		
@@ -220,7 +224,6 @@ public class TrafficManager {
 		return Math.abs(Math.sqrt(Math.pow((a.getY()-b.getY()), 2) + Math.pow((a.getX() - b.getX()), 2)));
 	}
 
-
 	public static TrafficManager createTestFromFile() {
 		MapReader mr = new MapReader();
 		HashMap<String, Node> nodeMap = mr.readNodes();
@@ -234,27 +237,40 @@ public class TrafficManager {
 
 		Map map = new Map(nodeList,edgeList);
 
+		List<Node> destinations = new ArrayList<Node>();
+
 		// Make nodes that have multiple edges connecting to them destinations
 		for (Node n : nodeList){
 			if (n.getOutEdges().size() > 4){
 				n.isDestination();
+				destinations.add(n);
 			}
 		}
+
+
 
         List cars = new ArrayList();
         for(int i = 0; i < vehicleCount; i++) {
 
         	// TODO: Make priorities based on neighborhood
-			createNeighborhoods(nodeList, numUrbanCenters);
+//			createNeighborhoods(nodeList, numUrbanCenters);
 
-            Node start = nodeList.get((int)(Math.floor(Math.random() * nodeList.size())));
-            Node end = nodeList.get((int)(Math.floor(Math.random() * nodeList.size())));
-            while(start == end) { end = nodeList.get((int)(Math.floor(Math.random() * nodeList.size())));}
+			// This utilizes an exponential distribution prioritizing nodes at the start of the list
+			// Nodes at the start of the list are higher priority than those at the end
+			Random r = new Random();
+            Node start = destinations.get((int)(Math.floor(r.nextDouble() * destinations.size())));
+            start.setHasCarAlready();
+			Node end = destinations.get((int)(Math.floor(r.nextDouble() * destinations.size())));
+            while(start == end) { end = destinations.get((int)(Math.floor(r.nextDouble() * destinations.size())));}
+            while(start.hasCarAlready()) {start = destinations.get((int)(Math.floor(r.nextDouble() * destinations.size())));}
+
 
             Car car = new Car(start,end,map);
 			while (car.getEdgePath() == null){
-				start = nodeList.get((int)(Math.floor(Math.random() * nodeList.size())));
-				end = nodeList.get((int)(Math.floor(Math.random() * nodeList.size())));
+				start = destinations.get((int)(Math.floor(r.nextDouble() * nodeList.size())));
+				start.setHasCarAlready();
+				while(start.hasCarAlready()) {start = destinations.get((int)(Math.floor(r.nextDouble() * destinations.size())));}
+				end = destinations.get((int)(Math.floor(r.nextDouble() * destinations.size())));
 				car = new Car(start,end,map);
 			}
             car.setDriverModel(new SimpleDriverModel(10));
@@ -264,6 +280,15 @@ public class TrafficManager {
 		TrafficManager tm = new TrafficManager(map,cars);
 
 		return tm;
+	}
+
+	public static double drawRandomExponential(double mean) {
+		// draw a [0,1] uniform distributed number
+		double u = Math.random();
+		// Convert it into a exponentially distributed random variate with given mean
+		double res = (1 + (-mean * Math.log(u)));
+		//System.out.println(res);
+		return res;
 	}
 
 
@@ -366,16 +391,6 @@ public class TrafficManager {
 			}
 		}
 
-	}
-
-	public Node returnNodeOnPriority(List<Node> nodeList){
-		Node n = new Node();
-		int cntr = -1;
-		for (int i = 0; i < nodeList.size(); i++) {
-			if (nodeList.get(i).getNodePriorityWeight() > cntr) cntr = nodeList.get(i).getNodePriorityWeight();
-
-		}
-		return n;
 	}
 
 	

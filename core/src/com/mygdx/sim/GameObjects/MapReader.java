@@ -94,10 +94,6 @@ public class MapReader {
                         Node a = nodeMap.get(from);
                         Node b = nodeMap.get(to);
 
-
-                        /**
-                         * This doubles the edges because of the edge going "from" to "to" and not vice versa, leading to issues;
-                         */
                         Edge e = new Edge(nodeMap.get(from), nodeMap.get(to), (int) speed, laneNum);
                         edgeMap.put(id, e);
                         nodeMap.get(from).addOutEdge(e);

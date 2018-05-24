@@ -14,6 +14,7 @@ public class Node implements Comparable<Node> {
 	private boolean isDestination;
 	private String type;
 	private boolean isIntersection = false;
+	private boolean hasCarAlready = false;
 
 	public Node(double xCoordinate, double yCoordinate, String type) {
 		location = new Coordinates(xCoordinate, yCoordinate);
@@ -64,6 +65,14 @@ public class Node implements Comparable<Node> {
 
 	public String toString() {
 		return "[Node@" + location + "]";
+	}
+
+	public boolean hasCarAlready(){
+		return hasCarAlready;
+	}
+
+	public void setHasCarAlready(){
+		if (!hasCarAlready) hasCarAlready = true;
 	}
 
 	public void setPreviousNode(Node previousNode) {
