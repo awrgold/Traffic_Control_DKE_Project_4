@@ -11,10 +11,11 @@ import com.mygdx.sim.Resources.Resources;
 
 public class Car extends Vehicle {
 	private final static String SPRITE_NAME = "car1_red";
-	private final static int MAX_SPEED = 150;
+	private static int MAX_SPEED = 150;
 
 	public Car(Node startNode, Node goalNode, Map graph) {
 		this(startNode, goalNode, MAX_SPEED, graph);
+
 	}
 
 	public Car(Node startNode, Node goalNode, int maxSpeed, Map graph) {
@@ -29,5 +30,9 @@ public class Car extends Vehicle {
 		List<String> vehicleSpriteNames = new ArrayList<String>(Resources.world.vehicleSprites.keySet());
 		
 		return vehicleSpriteNames.get((new Random()).nextInt(vehicleSpriteNames.size()));
+	}
+
+	public int getMaxSpeed(){
+		return MAX_SPEED;
 	}
 }

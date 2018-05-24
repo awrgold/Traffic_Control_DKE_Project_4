@@ -19,17 +19,19 @@ public class TrafficManager {
 	public final static int MAP_X_DIM = 10000000;
 	public final static int MAP_Y_DIM = 10000000;
 	public final static int GRID_FACTOR = 2;
-	public final static int vehicleCount = 750;
+	public final static int vehicleCount = 1000;
 	public final static int numUrbanCenters = 9;
-	public final static float lambda = 1;
+	public final static double lambda = 1.0;
 
 
 	private Map map;
 	private List<Vehicle> vehicles;
 	private static List<Node> intersections = new ArrayList<Node>();
-	
+
 	private int lastComputedTimestep = 0;
-	
+	private static double aggressionRandomizer;
+
+
 	private ArrayList<HashMap<Vehicle,Coordinates>> history = new ArrayList<HashMap<Vehicle,Coordinates>>();
 	
 	public TrafficManager(Map map, List<Vehicle> vehicles) {
@@ -111,7 +113,13 @@ public class TrafficManager {
 				// vehicle.computePath(lastComputedTimestep);
 			}
 
-			// Increment the timestep
+			// Increment the timestep for lights
+			for (Node n : map.getIntersections()){
+				for (int i = 0; i < n.getLights().size(); i++){
+					n.getLights().get(i).incrementTimeStep();
+				}
+			}
+
 			lastComputedTimestep++;
 			
 			// Have the vehicles update their locations for the next timestep			
@@ -236,17 +244,19 @@ public class TrafficManager {
 
 		List<Node> destinations = new ArrayList<Node>();
 
-
-		// Make nodes that have multiple edges connecting to them destinations
-		for (Node n : nodeList){
-			if (n.getOutEdges().size() > 4){
-				n.isDestination();
-				destinations.add(n);
-			}
-			if (n.isIntersection()) intersections.add(n);
-		}
-
-
+//		// Make nodes that have multiple edges connecting to them destinations
+//		int minLanes = Integer.MAX_VALUE;
+//		for (Node n : nodeList){
+//			for (Edge e : n.getInEdges()){
+//				if (e.getNumLanes() < minLanes){
+//					minLanes = e.getNumLanes();
+//				}
+//			}
+//			if (minLanes >= 2){
+//				n.makeDestination();
+//				destinations.add(n);
+//			}
+//		}
 
         List cars = new ArrayList();
         for(int i = 0; i < vehicleCount; i++) {
@@ -257,19 +267,19 @@ public class TrafficManager {
 			// This utilizes an exponential distribution prioritizing nodes at the start of the list
 			// Nodes at the start of the list are higher priority than those at the end
 			Random r = new Random();
-            Node start = destinations.get((int)(Math.floor(r.nextDouble() * destinations.size())));
+            Node start = nodeList.get((int)(Math.floor(r.nextDouble() * nodeList.size())));
             start.setHasCarAlready();
-			Node end = destinations.get((int)(Math.floor(r.nextDouble() * destinations.size())));
-            while(start == end) { end = destinations.get((int)(Math.floor(r.nextDouble() * destinations.size())));}
-            while(start.hasCarAlready()) {start = destinations.get((int)(Math.floor(r.nextDouble() * destinations.size())));}
+			Node end = nodeList.get((int)(Math.floor(r.nextDouble() * nodeList.size())));
+            while(start == end) { end = nodeList.get((int)(Math.floor(r.nextDouble() * nodeList.size())));}
+            while(start.hasCarAlready()) {start = nodeList.get((int)(Math.floor(r.nextDouble() * nodeList.size())));}
 
 
-            Car car = new Car(start,end,map);
+            Car car = new Car(start,end, map);
 			while (car.getEdgePath() == null){
-				start = destinations.get((int)(Math.floor(r.nextDouble() * nodeList.size())));
+				start = nodeList.get((int)(Math.floor(r.nextDouble() * nodeList.size())));
 				start.setHasCarAlready();
-				while(start.hasCarAlready()) {start = destinations.get((int)(Math.floor(r.nextDouble() * destinations.size())));}
-				end = destinations.get((int)(Math.floor(r.nextDouble() * destinations.size())));
+				while(start.hasCarAlready()) {start = nodeList.get((int)(Math.floor(r.nextDouble() * nodeList.size())));}
+				end = nodeList.get((int)(Math.floor(r.nextDouble() * nodeList.size())));
 				car = new Car(start,end,map);
 			}
             car.setDriverModel(new SimpleDriverModel(10));

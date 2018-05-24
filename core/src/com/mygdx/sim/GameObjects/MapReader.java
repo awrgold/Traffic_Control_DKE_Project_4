@@ -68,7 +68,6 @@ public class MapReader {
 			documentBuilder = documentBuilderFactory.newDocumentBuilder();
 			Document document = documentBuilder.parse(chooseFile());
 
-
 			NodeList xmlElements = document.getElementsByTagName("edge");
 			for(int i = 0; i < xmlElements.getLength(); i++) {
 				org.w3c.dom.Node xmlElement = xmlElements.item(i);
@@ -85,9 +84,21 @@ public class MapReader {
 				Edge edge = new Edge(fromNode, toNode, (int)edgeSpeed, edgeLanes);
                 fromNode.addOutEdge(edge);
                 toNode.addInEdge(edge);
+
+
                 // Increment node's Edge counter here
-                fromNode.setNodePriorityWeight(fromNode.getNodePriorityWeight() + 2);
-                toNode.setNodePriorityWeight(toNode.getNodePriorityWeight() + 2);
+                int numFromLanes = 0;
+                for (Edge e : fromNode.getOutEdges()){
+                    numFromLanes += e.getNumLanes();
+                }
+                int numToLanes = 0;
+                for (Edge e : toNode.getInEdges()){
+                    numToLanes += e.getNumLanes();
+                }
+
+                fromNode.setNodePriorityWeight(numFromLanes);
+                toNode.setNodePriorityWeight(numToLanes);
+
                 // edgeMap.put(id + "#2", new Edge(nodeMap.get(to), nodeMap.get(from), (int) speed, laneNum));
 
                 edgeMap.put(edgeID, edge);

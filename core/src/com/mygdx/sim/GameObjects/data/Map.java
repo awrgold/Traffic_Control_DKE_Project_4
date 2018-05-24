@@ -28,8 +28,10 @@ public class Map {
 	public Map(List<Node> nodes, List<Edge> edges) {
 		this.nodes = nodes;
 		this.edges = edges;
-		
+
+
 		setIntersections();
+
 
 		// Temporary hardcoded map bound until we have a save and load feature
 		this.reset(TrafficManager.MAP_X_DIM, TrafficManager.MAP_Y_DIM);
@@ -53,34 +55,47 @@ public class Map {
 				history.add(new ArrayList<Vehicle>());
 		}
 	}
-	
+
+
 	public void setIntersections() {
 		for(Node node : nodes) {
-			// If a node has 3 or more edges connected to it, we consider it large enough to deserve an intersection
-			if(node.getOutgoingNeighbors().size() >= 3) {
-				node.setIntersection(true);
+			int minLanes = Integer.MAX_VALUE;
+			for (Edge e : node.getInEdges()) {
+				if (e.getNumLanes() < minLanes) {
+					minLanes = e.getNumLanes();
+				}
+			}
 
-				// Here, we place stoplights for each "row" of lanes on the node. The node contains multiple stoplights (current build)
-				for (Edge e : node.getInEdges()){
-					List<Edge> lanes = new ArrayList<Edge>();
-					// Going through the list of lanes attached to the node,
-					for (int i = 0; i < node.getInEdges().size(); i++) {
-						// ... check if the lanes are adjacent (i.e. they have the same "from" node)
-						if (e.getFrom().equals(node.getInEdges().get(i).getFrom())){
-							// if that edge isn't already in the list of lanes, add it
-							if (!lanes.contains(e)) lanes.add(e);
-						}
-					}
-					// Add a light to this node.
-					node.addLight(new Stoplight(lanes, node.getLocation()));
-					if(DEBUG){
-						System.out.println("Stoplight " + node.getType() + " - added at: " + node.getLocation() + " with " + lanes.size() + " edges.");
+
+			// If a node has 3 or more edges connected to it, we consider it large enough to deserve an intersection
+			if(node.getOutgoingNeighbors().size() >= 3 && minLanes >= 3) {
+				node.setIntersection(true);
+				intersections.add(node);
+			}
+		}
+
+		for (Node m : intersections){
+
+			// Here, we place stoplights for each "row" of lanes on the node. The node contains multiple stoplights (current build)
+			for (Edge e : m.getInEdges()){
+				List<Edge> lanes = new ArrayList<Edge>();
+				// Going through the list of lanes attached to the node,
+				for (int i = 0; i < m.getInEdges().size(); i++) {
+					// ... check if the lanes are adjacent (i.e. they have the same "from" node)
+					if (e.getFrom().equals(m.getInEdges().get(i).getFrom())){
+						// if that edge isn't already in the list of lanes, add it
+						if (!lanes.contains(e)) lanes.add(e);
 					}
 				}
-
+				// Add a light to this node.
+				m.addLight(new Stoplight(lanes, m.getLocation()));
+				if(DEBUG){
+					System.out.println("Stoplight added at: " + m.getLocation() + " with " + e.getNumLanes() + " lanes.");
+				}
 			}
 		}
 	}
+
 
 	public List<Node> getIntersections(){
 		return this.intersections;
@@ -119,7 +134,8 @@ public class Map {
 	public String toString() {
 		return "[Map]";
 	}
-	
+
+	/*
 	public static void main(String[] args) {
 		Node node1 = new Node(0,0);
 		Node node2 = new Node(0,10);
@@ -134,6 +150,7 @@ public class Map {
 		
 		int x = 0;
 	}
+	*/
 
 	public static double euclideanDistance(Node a, Node b){
 		return Math.abs(Math.sqrt(Math.pow((a.getY()-b.getY()), 2) + Math.pow((a.getX() - b.getX()), 2)));

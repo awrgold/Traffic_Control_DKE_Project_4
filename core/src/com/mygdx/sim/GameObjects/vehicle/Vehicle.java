@@ -35,7 +35,7 @@ public abstract class Vehicle {
 	/**
 	 * The maximum speed that this vehicle can achieve, ever.
 	 */
-	final int maxSpeed;
+	private int maxSpeed;
 	
 	/**
 	 * The edges that this vehicle is supposed to travel from its start point
@@ -146,6 +146,7 @@ public abstract class Vehicle {
 		
 		// Set maximum speed
 		this.maxSpeed = maxSpeed;
+		setAggression();
 		
 		pathfinder = new AStarPathfinder(graph);
 		
@@ -358,5 +359,18 @@ public abstract class Vehicle {
 		Vehicle v = (Vehicle) o;
 		
 		return (v.id == this.id);
+	}
+
+	public void setAggression(){
+		maxSpeed = (int)(maxSpeed * drawRandomExponential(-0.1));
+	}
+
+	public static double drawRandomExponential(double mean) {
+		// draw a [0,1] uniform distributed number
+		double u = Math.random();
+		// Convert it into a exponentially distributed random variate with given mean
+		double res = (1 + (-mean)*(Math.log(u)));
+		//System.out.println(res);
+		return res;
 	}
 }

@@ -19,6 +19,9 @@ public class Stoplight {
     private Coordinates location;
     private Node parent;
     private int timestepsRemainingUntilChange;
+    private int greenTimer = 30;
+    private int yellowTimer = 10;
+    private int currentTimeStep;
         /**
          * The stoplight is an array of Enumerable Colors, where position N (# of lanes) is the left-most lane, and position 0 is the right most lane.
          * @param lanes: the number of lanes on the current road
@@ -28,6 +31,7 @@ public class Stoplight {
     public Stoplight(List<Edge> lanes, Coordinates coords){
         this.lanes = lanes;
         this.location = coords;
+        this.color = Color.GREEN;
     }
 
     public Stoplight(Coordinates coords, ArrayList<Node> nodeLanes){
@@ -44,6 +48,11 @@ public class Stoplight {
         else{
             lanes.add(toAdd);
         }
+    }
+
+    public void incrementTimeStep(){
+        currentTimeStep++;
+        updateTimeStepsRemainingUntilChange();
     }
 
     public void setParent(Node parent){
@@ -82,11 +91,14 @@ public class Stoplight {
     }
 
     public void updateTimeStepsRemainingUntilChange(){
-        if(timestepsRemainingUntilChange > 0){
+        if(this.getColor().equals(Color.GREEN) && timestepsRemainingUntilChange > 0){
             timestepsRemainingUntilChange--;
         }
         if(timestepsRemainingUntilChange == 0){
             switchLight();
+            // TODO: Change sprite so we can see the lights switching
+            if (this.getColor().equals(Color.YELLOW)) timestepsRemainingUntilChange = yellowTimer;
+            if (this.getColor().equals(Color.GREEN)) timestepsRemainingUntilChange = greenTimer;
         }
     }
 
