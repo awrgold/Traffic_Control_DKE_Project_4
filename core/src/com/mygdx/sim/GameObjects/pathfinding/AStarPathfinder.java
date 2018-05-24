@@ -83,9 +83,16 @@ public class AStarPathfinder extends Pathfinder {
 		if(!findDifferentPathOnFail) {
 			throw new NullPointerException("No path found");
 		}
+		start = nodes.get(new Random().nextInt(nodes.size()));
+		goal = nodes.get(new Random().nextInt(nodes.size()));
 		
-		vehicle.setStartNode(nodes.get(new Random().nextInt(nodes.size())));
-		vehicle.setGoalNode(nodes.get(new Random().nextInt(nodes.size())));
+		while(start.equals(goal)) {
+			start = nodes.get(new Random().nextInt(nodes.size()));
+			goal = nodes.get(new Random().nextInt(nodes.size()));
+		}
+		
+		vehicle.setStartNode(start);
+		vehicle.setGoalNode(goal);
 		
 		return searchPath(nodes, vehicle, findDifferentPathOnFail);
 	}
