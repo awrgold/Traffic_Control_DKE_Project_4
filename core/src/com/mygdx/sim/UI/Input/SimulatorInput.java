@@ -41,7 +41,7 @@ public class SimulatorInput extends InputAdapter {
 		Rectangle bounds = worldController.getBounds();
 
 		// Center Camera
-		//worldController.getWorldCamera().move(bounds.width / 4, bounds.height / 4);
+		worldController.getWorldCamera().zoom = 10;
 
 		this.update();
 	}
