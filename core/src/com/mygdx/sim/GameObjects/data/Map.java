@@ -56,24 +56,28 @@ public class Map {
 	
 	public void setIntersections() {
 		for(Node node : nodes) {
+			// If a node has 3 or more edges connected to it, we consider it large enough to deserve an intersection
 			if(node.getOutgoingNeighbors().size() >= 3) {
-
 				node.setIntersection(true);
 
-				/*
+				// Here, we place stoplights for each "row" of lanes on the node. The node contains multiple stoplights (current build)
 				for (Edge e : node.getInEdges()){
 					List<Edge> lanes = new ArrayList<Edge>();
+					// Going through the list of lanes attached to the node,
 					for (int i = 0; i < node.getInEdges().size(); i++) {
-						while (e.getFrom().equals(node.getInEdges().get(i).getFrom())){
-							lanes.add(e);
+						// ... check if the lanes are adjacent (i.e. they have the same "from" node)
+						if (e.getFrom().equals(node.getInEdges().get(i).getFrom())){
+							// if that edge isn't already in the list of lanes, add it
+							if (!lanes.contains(e)) lanes.add(e);
 						}
 					}
+					// Add a light to this node.
 					node.addLight(new Stoplight(lanes, node.getLocation()));
 					if(DEBUG){
 						System.out.println("Stoplight " + node.getType() + " - added at: " + node.getLocation() + " with " + lanes.size() + " edges.");
 					}
 				}
-				*/
+
 			}
 		}
 	}

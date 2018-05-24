@@ -21,7 +21,7 @@ public class TrafficManager {
 	public final static int GRID_FACTOR = 2;
 	public final static int vehicleCount = 750;
 	public final static int numUrbanCenters = 9;
-	public final static double lambda = 1.5;
+	public final static float lambda = 1;
 
 
 	private Map map;

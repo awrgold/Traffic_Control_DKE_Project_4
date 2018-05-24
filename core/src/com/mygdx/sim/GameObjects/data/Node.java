@@ -34,7 +34,13 @@ public class Node implements Comparable<Node> {
 	}
 
 	public void addLight(Stoplight light){
-    	lights.add(light);
+    	if (lights != null){
+			lights.add(light);
+		}else{
+    		lights = new ArrayList<Stoplight>();
+    		lights.add(light);
+		}
+
 	}
 
 	public List<Stoplight> getLights(){
