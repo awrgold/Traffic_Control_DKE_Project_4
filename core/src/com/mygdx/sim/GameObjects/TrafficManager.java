@@ -1,16 +1,12 @@
 package com.mygdx.sim.GameObjects;
 
-import java.lang.reflect.Array;
-import java.util.*;
-
-import com.mygdx.sim.GameObjects.data.*;
-import com.mygdx.sim.GameObjects.data.Map;
-
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import com.mygdx.sim.GameObjects.data.Coordinates;
 import com.mygdx.sim.GameObjects.data.DistanceAndSpeed;
@@ -18,6 +14,7 @@ import com.mygdx.sim.GameObjects.data.DistanceAndVehicle;
 import com.mygdx.sim.GameObjects.data.Edge;
 import com.mygdx.sim.GameObjects.data.Map;
 import com.mygdx.sim.GameObjects.data.Node;
+import com.mygdx.sim.GameObjects.data.SortNode;
 import com.mygdx.sim.GameObjects.data.Util;
 import com.mygdx.sim.GameObjects.driverModel.IntelligentDriverModel;
 import com.mygdx.sim.GameObjects.driverModel.SimpleDriverModel;
@@ -105,15 +102,21 @@ public class TrafficManager {
 
 		// Ensure the map's location cache has enough memory capacity
 		map.ensureCapacity(finalTimeStep);
+		System.out.println("map");
 		
 		// Ensure the TrafficManager's car-location history has enough memory capacity
 		this.ensureCapacity(finalTimeStep);
+		System.out.println("tm");
 		
 		// Ensure all Vehicles have enough memory capacity 
 		for (Vehicle vehicle : vehicles)
 			vehicle.ensureCapacity(finalTimeStep);
+		System.out.println("vehicles");
 		
 		while(lastComputedTimestep < finalTimeStep) {
+			if(lastComputedTimestep%100 == 0)
+				System.out.println(lastComputedTimestep);
+			
 			for(Vehicle vehicle : vehicles)
 				map.getLocationCache().get(vehicle.getEdgeAt(lastComputedTimestep)).get(lastComputedTimestep).add(vehicle);
 				
@@ -445,8 +448,8 @@ public class TrafficManager {
 	public String toString() {
 		return "[TrafficManager]";
 	}
-
-	public static void main(String[] args) {
+	
+	public static TrafficManager testcase1() {
 		Node node1 = new Node(0,0);
 		Node node2 = new Node(475,0);
 		Node node3 = new Node(475,1000);
@@ -469,7 +472,40 @@ public class TrafficManager {
 		
 		List cars = Arrays.asList(car1,car2,car3);
 		
-		TrafficManager tm = new TrafficManager(map,cars);
+		return new TrafficManager(map,cars);
+	}
+	
+	public static TrafficManager testcaseBig() {
+		int nodeN = 100;
+		int carsN = 100;
+		ArrayList<Node> nodes = new ArrayList<Node>();
+		ArrayList<Edge> edges = new ArrayList<Edge>();
+		ArrayList<Vehicle> cars = new ArrayList<Vehicle>();
+		
+		for(int i = 0; i < nodeN; i++)
+			nodes.add(new Node(0,i*100));
+		
+		for(int i = 0; i < nodeN-1; i++)
+			edges.add(new Edge(nodes.get(i),nodes.get(i+1)));
+		
+		Map map = new Map(nodes,edges);
+		
+		for(int i = 0; i < carsN; i++) {
+			Car car = new Car(nodes.get(0),nodes.get(nodeN-1),map);
+			car.setDriverModel(new SimpleDriverModel());
+			
+			car.setEdgePath(edges);
+			
+			cars.add(car);			
+		}
+		
+		return new TrafficManager(map,cars);
+	}
+
+	public static void main(String[] args) {
+		TrafficManager tm = testcaseBig();
+		
+		System.out.println("Created test case");
 		
 		tm.simulate(getMaximumTimesteps());
 		
