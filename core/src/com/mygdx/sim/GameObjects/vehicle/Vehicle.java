@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygdx.sim.GameObjects.TrafficManager;
 import com.mygdx.sim.GameObjects.data.Coordinates;
 import com.mygdx.sim.GameObjects.data.Edge;
 import com.mygdx.sim.GameObjects.data.Map;
@@ -26,16 +27,26 @@ public abstract class Vehicle {
 	/**
 	 * The node this vehicle starts its trip at.
 	 */
-	private Node startNode;
+	final Node startNode;
+	
 	/**
 	 * The node this vehicle wants to reach.
 	 */
-	private Node goalNode;
+	final Node goalNode;
 	
 	/**
 	 * The maximum speed that this vehicle can achieve, ever.
 	 */
-	private int maxSpeed;
+	final int maxSpeed;
+	
+	/**
+	 * The physical length of the vehicle in meters.
+	 */
+	private double length = 4;
+	
+	public double getLength() {
+		return length;
+	}
 	
 	/**
 	 * The edges that this vehicle is supposed to travel from its start point
@@ -176,6 +187,22 @@ public abstract class Vehicle {
 		this.edgePath = pathfinder.findPath(this, timestep, findDifferentPathOnFail);
 	}
 	
+	public void accelerate(int timestep, double acceleration) {
+		if(computedSpeeds.get(timestep)) {
+			System.out.println("You're trying to set a speed that has already been set. You're doing something wrong.");
+			return;
+		}
+		
+		double previousSpeed = 0;
+		if(timestep!=0) 
+			previousSpeed = speeds.get(timestep-1);
+		
+		double newSpeed = previousSpeed + acceleration * TrafficManager.TIMESTEPS_PER_SECOND;
+		
+		speeds.set(timestep, newSpeed);
+		computedSpeeds.set(timestep, true);
+	}
+	
 	/**
 	 * Applies the previous speed of this car to the previous location to compute the new location.
 	 * @param timestep - the timestep up to which we are moving.
@@ -193,7 +220,7 @@ public abstract class Vehicle {
 		}
 		
 		// Get the speed we are moving at
-		double speed = speeds.get(timestep-1);
+		double speed = speeds.get(timestep-1)/TrafficManager.TIMESTEPS_PER_SECOND;
 		
 		// Get the index of the edge we are currently on
 		int edgeIdx = edgeIndices.get(timestep-1);
@@ -278,15 +305,15 @@ public abstract class Vehicle {
 	 * @param timestep - the timestep for which we're setting the speed
 	 * @param speed - the speed at that timestep
 	 */
-	public void setSpeed(int timestep, double speed) {
-		if(computedSpeeds.get(timestep)) {
-			System.out.println("You're trying to set a speed that has already been set. You're doing something wrong.");
-			return;
-		}
-		
-		speeds.set(timestep, speed);
-		computedSpeeds.set(timestep, true);
-	}
+//	public void setSpeed(int timestep, double speed) {
+//		if(computedSpeeds.get(timestep)) {
+//			System.out.println("You're trying to set a speed that has already been set. You're doing something wrong.");
+//			return;
+//		}
+//		
+//		speeds.set(timestep, speed);
+//		computedSpeeds.set(timestep, true);
+//	}
 	
 	/**
 	 * Initializes the history-keeping ArrayLists to hold at least one element.
@@ -361,6 +388,7 @@ public abstract class Vehicle {
 		return (v.id == this.id);
 	}
 
+
 	public void setAggression(){
 		maxSpeed = (int)(maxSpeed * drawRandomExponential(-0.1));
 	}
@@ -372,5 +400,9 @@ public abstract class Vehicle {
 		double res = (1 + (-mean)*(Math.log(u)));
 		//System.out.println(res);
 		return res;
+		}
+
+	public boolean isMoving() {
+		return moving;
 	}
 }

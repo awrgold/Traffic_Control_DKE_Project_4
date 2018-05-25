@@ -1,9 +1,24 @@
 package com.mygdx.sim.GameObjects;
+
 import java.lang.reflect.Array;
 import java.util.*;
 
 import com.mygdx.sim.GameObjects.data.*;
 import com.mygdx.sim.GameObjects.data.Map;
+
+import java.sql.Time;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+
+import com.mygdx.sim.GameObjects.data.Coordinates;
+import com.mygdx.sim.GameObjects.data.DistanceAndSpeed;
+import com.mygdx.sim.GameObjects.data.DistanceAndVehicle;
+import com.mygdx.sim.GameObjects.data.Edge;
+import com.mygdx.sim.GameObjects.data.Map;
+import com.mygdx.sim.GameObjects.data.Node;
+import com.mygdx.sim.GameObjects.data.Util;
 import com.mygdx.sim.GameObjects.driverModel.IntelligentDriverModel;
 import com.mygdx.sim.GameObjects.driverModel.SimpleDriverModel;
 import com.mygdx.sim.GameObjects.vehicle.Car;
@@ -11,13 +26,18 @@ import com.mygdx.sim.GameObjects.vehicle.Vehicle;
 
 public class TrafficManager {
 	
-	public final static int TIMESTEPS = 1000;
+	// Duration of the simulation (hours, minutes, seconds)
+	public final static Time DURATION = new Time(8,0,0);
+	
+	// Sampling frequency. Larger number means higher fidelity of the model, but also more computation
+	public final static int TIMESTEPS_PER_SECOND = 2;
+	
 	private final static int VIEW_DISTANCE = 500;
 	private final static int RIDICULOUS_SPEED = 1000;
 
 	// Temporary map bounds
-	public final static int MAP_X_DIM = 10000000;
-	public final static int MAP_Y_DIM = 10000000;
+	public final static int MAP_X_DIM = 1000;
+	public final static int MAP_Y_DIM = 1000;
 	public final static int GRID_FACTOR = 2;
 	public final static int vehicleCount = 1000;
 	public final static int numUrbanCenters = 9;
@@ -97,13 +117,13 @@ public class TrafficManager {
 			for(Vehicle vehicle : vehicles)
 				map.getLocationCache().get(vehicle.getEdgeAt(lastComputedTimestep)).get(lastComputedTimestep).add(vehicle);
 				
-			// Set speeds for the current timestep
+			// Set accelerations for the current timestep
 			for (Vehicle vehicle : vehicles) {
-				// Use the driver model the vehicle uses to determine the vehicle's new speed
-				double newSpeed = vehicle.getDriverModel().determineNewSpeed(this,vehicle,lastComputedTimestep);
+				// Use the driver model the vehicle uses to determine the vehicle's acceleration
+				double acceleration = vehicle.getDriverModel().determineAcceleration(this,vehicle,lastComputedTimestep);
 				
-				// Set the new speed
-				vehicle.setSpeed(lastComputedTimestep, newSpeed);
+				// Set the acceleration
+				vehicle.accelerate(lastComputedTimestep, acceleration);
 
 				/*
 				 * Ask our pathfinding algorithm for a path - It can still return
@@ -173,7 +193,7 @@ public class TrafficManager {
 		ArrayList<DistanceAndVehicle> candidates = new ArrayList<DistanceAndVehicle>();
 		for (Vehicle vehicle2 : vehiclesOnCurrentEdge) {
 			double distance = distanceUntilNow + vehicle2.getTraveledDistance(timestep);
-			if(distance - Util.DELTA_EPSILON > 0)
+			if(distance - Util.DELTA_EPSILON > 0 && vehicle2.isMoving())
 				candidates.add(new DistanceAndVehicle(distance,vehicle2));			
 		}
 		
@@ -326,12 +346,6 @@ public class TrafficManager {
 			for (int j = 0; j < mapNodes.size(); j++){
 				if ((euclideanDistance(mapNodes.get(i), mapNodes.get(j)) == (MAP_X_DIM/GRID_FACTOR) ||
 						euclideanDistance(mapNodes.get(i), mapNodes.get(j)) == (MAP_Y_DIM/GRID_FACTOR)) && i != j)  {
-
-					// This method doubles the edges for some reason, trying to figure out why.
-					// Need to find out if mapEdges contains an edge between two points already.
-					// Problem is, when doubling edges it makes an edge between node A and B, then again between
-					// ... nodes B and A, which is an identical edge but cannot be easily compared.
-
 					System.out.println("Adding Edge between: (" + mapNodes.get(i).getLocation().toString() + ", " + mapNodes.get(j).getLocation().toString() + ")");
 					mapEdges.add(new Edge(mapNodes.get(i), mapNodes.get(j)));
 					edgeCount++;
@@ -344,21 +358,20 @@ public class TrafficManager {
 		Map map = new Map(mapNodes, mapEdges);
 
 
-		for (int i = 0; i < vehicleCount; i++){
-			int x = (int)(Math.random()*mapNodes.size());
-			int y = (int)(Math.random()*mapNodes.size());
+		for (int i = 0; i < vehicleCount; i++) {
+			
+			int x = 0;
+			int y = 0;
+			while(x == y) {
+				x = (int)(Math.random() * mapNodes.size());
+				y = (int)(Math.random() * mapNodes.size());
+			}
 
-			if (mapNodes.get(y).isDestination()){
+			if (mapNodes.get(y).isDestination()) {
 				Car temp = new Car(mapNodes.get(x), mapNodes.get(y), map);
 				cars.add(temp);
 				temp.setDriverModel(new IntelligentDriverModel());
 			}
-
-			if (!mapNodes.get(y).isDestination()){
-				y = (int)(Math.random()*mapNodes.size());
-			}
-
-
 
 		}
 
@@ -403,28 +416,66 @@ public class TrafficManager {
 	}
 
 	
+	public static double getDurationOfTimestepInSeconds() {
+		return 1./TIMESTEPS_PER_SECOND;
+	}
+	
+	public static int getMaximumTimesteps() {
+		return TIMESTEPS_PER_SECOND*(DURATION.getSeconds() + 60 * (DURATION.getMinutes() + 60 * DURATION.getHours()));
+	}
+	
+	public static Time getTimeAtTimestep(int timestep) {
+		int totalSeconds = timestep/TIMESTEPS_PER_SECOND;
+		
+		int seconds = totalSeconds % 60;
+		
+		totalSeconds -= seconds;		
+		totalSeconds /= 60;
+		
+		int minutes = totalSeconds % 60;
+		
+		totalSeconds -= minutes;
+		totalSeconds /= 60;
+		
+		int hours = totalSeconds;
+		
+		return new Time(hours,minutes,seconds);
+	}
+
 	public String toString() {
 		return "[TrafficManager]";
 	}
 
 	public static void main(String[] args) {
-		//TrafficManager tm1 = createSimpleTestcase();
+		Node node1 = new Node(0,0);
+		Node node2 = new Node(475,0);
+		Node node3 = new Node(475,1000);
+		Edge edge1 = new Edge(node1,node2);
+		Edge edge2 = new Edge(node2,node3);
 		
-		//tm1.simulate(TIMESTEPS);
+		Map map = new Map(Arrays.asList(node1,node2,node3),Arrays.asList(edge1,edge2));
 		
-		//System.out.println("Simple test case simulation completed");
+		Car car1 = new Car(node2,node3,map);
+		car1.setEdgePath(Arrays.asList(edge2));
+		car1.setDriverModel(new SimpleDriverModel(10));
 		
-		//TrafficManager tm2 = createEnvironment();
+		Car car2 = new Car(node2,node3,map);
+		car2.setEdgePath(Arrays.asList(edge2));
+		car2.setDriverModel(new IntelligentDriverModel());
 		
-		//tm2.simulate(TIMESTEPS);
-
-		//System.out.println("Andrew-generated test case simulation completed");
-
-		TrafficManager tm3 = createTestFromFile();
-
-		tm3.simulate(TIMESTEPS);
+		Car car3 = new Car(node1,node3,map);
+		car3.setEdgePath(Arrays.asList(edge1,edge2));
+		car3.setDriverModel(new IntelligentDriverModel());
 		
-		int x =0;
+		List cars = Arrays.asList(car1,car2,car3);
+		
+		TrafficManager tm = new TrafficManager(map,cars);
+		
+		tm.simulate(getMaximumTimesteps());
+		
+		System.out.println("Done with " + tm.lastComputedTimestep + " timesteps.");
+		
+		System.out.println(getTimeAtTimestep(tm.lastComputedTimestep));
+		
 	}
-
 }

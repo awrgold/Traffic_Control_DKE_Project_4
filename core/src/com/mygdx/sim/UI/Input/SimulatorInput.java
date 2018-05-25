@@ -36,12 +36,12 @@ public class SimulatorInput extends InputAdapter {
 		// Mouse Variables
 		mousePos_screen = new Vector2();
 		scrollCenter = new Vector2();
-
+		
 		// Bounds
 		Rectangle bounds = worldController.getBounds();
-
+		
 		// Center Camera
-		worldController.getWorldCamera().zoom = 10;
+		worldController.getWorldCamera().move(bounds.width / 4, bounds.height / 4);
 
 		this.update();
 	}

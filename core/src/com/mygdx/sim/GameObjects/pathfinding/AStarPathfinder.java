@@ -1,6 +1,9 @@
 package com.mygdx.sim.GameObjects.pathfinding;
 
 import static java.lang.Double.MAX_VALUE;
+
+import java.util.ArrayList;
+import java.util.List;
 import static java.lang.Double.MIN_VALUE;
 
 import java.util.ArrayList;
