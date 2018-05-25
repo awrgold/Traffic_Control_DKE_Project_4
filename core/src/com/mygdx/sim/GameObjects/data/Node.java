@@ -1,10 +1,9 @@
 package com.mygdx.sim.GameObjects.data;
 
-import com.mygdx.sim.GameObjects.Stoplight;
-import javafx.scene.paint.Stop;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.mygdx.sim.GameObjects.Stoplight;
 
 public class Node implements Comparable<Node> {
 
