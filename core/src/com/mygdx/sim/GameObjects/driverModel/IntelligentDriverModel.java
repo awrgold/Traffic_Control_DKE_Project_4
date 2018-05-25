@@ -50,7 +50,7 @@ public class IntelligentDriverModel implements DriverModel{
 		
 		double acceleration = maximumAcceleration * (1 - freeRoadTerm - interactionTerm);
 		
-		return Math.max(acceleration, 0);
+		return acceleration;
 	}
 	
 
