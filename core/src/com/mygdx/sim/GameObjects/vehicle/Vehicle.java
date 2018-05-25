@@ -27,17 +27,17 @@ public abstract class Vehicle {
 	/**
 	 * The node this vehicle starts its trip at.
 	 */
-	final Node startNode;
+	Node startNode;
 	
 	/**
 	 * The node this vehicle wants to reach.
 	 */
-	final Node goalNode;
+	Node goalNode;
 	
 	/**
 	 * The maximum speed that this vehicle can achieve, ever.
 	 */
-	final int maxSpeed;
+	int maxSpeed;
 	
 	/**
 	 * The physical length of the vehicle in meters.
