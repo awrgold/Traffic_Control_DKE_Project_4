@@ -24,7 +24,7 @@ import com.mygdx.sim.GameObjects.vehicle.Vehicle;
 public class TrafficManager {
 	
 	// Duration of the simulation (hours, minutes, seconds)
-	public final static Time DURATION = new Time(8,0,0);
+	public final static Time DURATION = new Time(2,0,0);
 	
 	// Sampling frequency. Larger number means higher fidelity of the model, but also more computation
 	public final static int TIMESTEPS_PER_SECOND = 2;
@@ -475,9 +475,7 @@ public class TrafficManager {
 		return new TrafficManager(map,cars);
 	}
 	
-	public static TrafficManager testcaseBig() {
-		int nodeN = 100;
-		int carsN = 100;
+	public static TrafficManager testcaseBig(int nodeN, int carsN) {
 		ArrayList<Node> nodes = new ArrayList<Node>();
 		ArrayList<Edge> edges = new ArrayList<Edge>();
 		ArrayList<Vehicle> cars = new ArrayList<Vehicle>();
@@ -503,7 +501,7 @@ public class TrafficManager {
 	}
 
 	public static void main(String[] args) {
-		TrafficManager tm = testcaseBig();
+		TrafficManager tm = testcaseBig(1000,1000);
 		
 		System.out.println("Created test case");
 		

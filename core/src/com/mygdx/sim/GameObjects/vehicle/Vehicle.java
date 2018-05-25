@@ -140,8 +140,8 @@ public abstract class Vehicle {
 	private void setSprite(String spriteName) {
 		this.spriteName = spriteName;
 		
-		sprite = Resources.world.vehicleSprites.get(spriteName);
-		sprite.setScale(0.5f);
+//		sprite = Resources.world.vehicleSprites.get(spriteName);
+//		sprite.setScale(0.5f);
 	}
 	
 
