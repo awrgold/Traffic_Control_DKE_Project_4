@@ -43,8 +43,8 @@ public class MapReaderOld {
 					if (line.startsWith("    <node")) {
 						String[] properties = line.split("\"");
 						String id = properties[1];
-						double x = Double.parseDouble(properties[3]) * 10;
-						double y = Double.parseDouble(properties[5]) * 10;
+						float x = Float.parseFloat(properties[3]) * 10;
+						float y = Float.parseFloat(properties[5]) * 10;
 						String type = properties[7];
 
                         Node n = new Node(x, y, type);

@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-import com.mygdx.sim.GameObjects.data.Coordinates;
 import com.mygdx.sim.GameObjects.data.DistanceAndSpeed;
 import com.mygdx.sim.GameObjects.data.DistanceAndVehicle;
 import com.mygdx.sim.GameObjects.data.Edge;
@@ -96,6 +95,8 @@ public class TrafficManager {
 	 *            - timestep until which we are running the sim
 	 */
 	public void simulate(int finalTimeStep) {
+		
+		finalTimeStep++;
 
 		// Ensure the map's location cache has enough memory capacity
 		map.ensureCapacity(finalTimeStep);
@@ -106,7 +107,7 @@ public class TrafficManager {
 			vehicle.ensureCapacity(finalTimeStep);
 		System.out.println("vehicles");
 		
-		while(lastComputedTimestep < finalTimeStep) {
+		while(lastComputedTimestep < finalTimeStep-1) {
 			if(lastComputedTimestep%100 == 0)
 				System.out.println(lastComputedTimestep);
 			
@@ -481,7 +482,7 @@ public class TrafficManager {
 	}
 
 	public static void main(String[] args) {
-		TrafficManager tm = testcase1();
+		TrafficManager tm = testcaseBig(1000,1000);
 		
 		System.out.println("Created test case");
 		
@@ -489,7 +490,6 @@ public class TrafficManager {
 		
 		System.out.println("Done with " + tm.lastComputedTimestep + " timesteps.");
 		
-		System.out.println(getTimeAtTimestep(tm.lastComputedTimestep));
-		
+		System.out.println(getTimeAtTimestep(tm.lastComputedTimestep));		
 	}
 }

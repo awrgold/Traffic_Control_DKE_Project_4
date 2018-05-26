@@ -82,7 +82,7 @@ public abstract class Vehicle implements TrafficObject {
 	 * If we do edgesToTravel.get(edgeIndices.get(t)), we should get
 	 * the edge where this vehicle is located at timestep t.
 	 */
-	ArrayList<Integer> edgeIndices = new ArrayList<Integer>();
+	int[] edgeIndices = new int[0];
 	
 	/**
 	 * Stores for each timestep, the distance that this vehicle has traveled
@@ -157,19 +157,23 @@ public abstract class Vehicle implements TrafficObject {
 		
 		float[] newSpeeds = new float[capacity];
 		float[] newDistances = new float[capacity];
+		int[] newEdgeIndices = new int[capacity];
 		
 		for(int i = 0; i < currentCapacity; i++) {
 			newSpeeds[i] = speeds[i];
 			newDistances[i] = distancesTraveledOnEdge[i];
+			newEdgeIndices[i] = edgeIndices[i];
 		}
 		
 		for(int i = currentCapacity; i < capacity; i++) {
 			newSpeeds[i] = -1;
 			newDistances[i] = -1;
+			newEdgeIndices[i] = -1;
 		}
 		
 		speeds = newSpeeds;
 		distancesTraveledOnEdge = newDistances;
+		edgeIndices = newEdgeIndices;
 	}
 	
 
@@ -177,7 +181,7 @@ public abstract class Vehicle implements TrafficObject {
 
 		setSprite(spriteName);
 		
-		ensureCapacity();
+		initialize();		
 		
 		this.id = lastGivenId++;
 
@@ -196,9 +200,17 @@ public abstract class Vehicle implements TrafficObject {
 		// Find path
 		computePath(0);
 		
-		initialize();
+//		initialize();
 	}
 	
+	private void initialize() {
+		ensureCapacity();
+		
+		speeds[0] = 0;
+		edgeIndices[0] = 0;
+		distancesTraveledOnEdge[0] = 0;
+	}
+
 	public String toString() {
 		return ("[Vehicle " + id + "]");
 	}
@@ -227,11 +239,11 @@ public abstract class Vehicle implements TrafficObject {
 		
 		double previousSpeed = 0;
 		if(timestep!=0) 
-			previousSpeed = speeds.get(timestep-1);
+			previousSpeed = speeds[timestep-1];
 		
 		double newSpeed = Math.max(previousSpeed + acceleration / TrafficManager.TIMESTEPS_PER_SECOND,0);
 		
-		speeds.set(timestep, newSpeed);
+		speeds[timestep] = ((float) newSpeed);
 //		computedSpeeds.set(timestep, true);
 	}
 	
@@ -255,7 +267,7 @@ public abstract class Vehicle implements TrafficObject {
 		float speed = speeds[timestep-1]/TrafficManager.TIMESTEPS_PER_SECOND;
 		
 		// Get the index of the edge we are currently on
-		int edgeIdx = edgeIndices.get(timestep-1);
+		int edgeIdx = edgeIndices[timestep-1];
 		
 		// Get the distance we have traveled on the current edge
 		float distanceTraveledOnEdge = distancesTraveledOnEdge[timestep-1];
@@ -267,7 +279,7 @@ public abstract class Vehicle implements TrafficObject {
 			distanceTraveledOnEdge += speed;
 			
 			// Get the length of the current edge
-			double currentEdgeLength = getEdgeAt(timestep-1).getLength();
+			float currentEdgeLength = getEdgeAt(timestep-1).getLength();
 			
 			// Check if we have reached the end of the edge we were on in the last timestep. 
 			// If yes, we need to move to the next edge.		
@@ -295,7 +307,7 @@ public abstract class Vehicle implements TrafficObject {
 		}
 		
 		// Set the edge index and traveled distance 
-		edgeIndices.set(timestep, edgeIdx);
+		edgeIndices[timestep] = edgeIdx;
 		distancesTraveledOnEdge[timestep] = distanceTraveledOnEdge;
 		
 		// Indicate that the location for this timestep has been computed
@@ -308,7 +320,7 @@ public abstract class Vehicle implements TrafficObject {
 	 * @return the Edge that this vehicle is located on at the given timestep
 	 */
 	public Edge getEdgeAt(int timestep) {
-		return edgePath.get(edgeIndices.get(timestep));
+		return edgePath.get(edgeIndices[timestep]);
 	}
 	
 	/**
@@ -351,24 +363,24 @@ public abstract class Vehicle implements TrafficObject {
 	 * Initializes the history-keeping ArrayLists to hold at least one element.
 	 * Things break otherwise
 	 */
-	private void initialize() {
-		if(edgeIndices.size() == 0) {
-			addZeros();
-//			computedLocations.set(0, true);
-		} else
-			System.out.println("You're trying to initialize a vehicle that has already been initialized. You're doing something wrong.");		
-	}
-	
-	/**
-	 * Utility method used by ensureCapacity to increase the capacity of all ArrayLists.
-	 */
-	private void addZeros() {
-		edgeIndices.add(0);
-//		distancesTraveledOnEdge.add(0.);
-//		speeds.add(0.);
+//	private void initialize() {
+//		if(edgeIndices.size() == 0) {
+//			addZeros();
+////			computedLocations.set(0, true);
+//		} else
+//			System.out.println("You're trying to initialize a vehicle that has already been initialized. You're doing something wrong.");		
+//	}
+//	
+//	/**
+//	 * Utility method used by ensureCapacity to increase the capacity of all ArrayLists.
+//	 */
+//	private void addZeros() {
+//		edgeIndices.add(0);
+////		distancesTraveledOnEdge.add(0.);
+////		speeds.add(0.);
 //		computedLocations.add(false);
 //		computedSpeeds.add(false);
-	}
+//	}
 	
 	/**
 	 * Ensures that the history-keeping variables of this Vehicle have sufficient capacity

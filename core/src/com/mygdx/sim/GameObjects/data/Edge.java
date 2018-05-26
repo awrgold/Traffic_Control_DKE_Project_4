@@ -1,8 +1,5 @@
 package com.mygdx.sim.GameObjects.data;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-
 public class Edge implements Comparable<Edge> {
 
     private Node from;
@@ -88,9 +85,9 @@ public class Edge implements Comparable<Edge> {
      * Returns the length of the road section that this edge represents.
      * @return double
      */
-    public double getLength(){
+    public float getLength(){
     	Coordinates md = getManhattanDistanceTraveled();
-    	return Math.sqrt(Math.pow(md.getX(),2)+Math.pow(md.getY(),2));
+    	return ((float) Math.sqrt(Math.pow(md.getX(),2)+Math.pow(md.getY(),2)));
     }
 
     public void setLengthScore(double newScore){
@@ -104,8 +101,8 @@ public class Edge implements Comparable<Edge> {
      * @param traveledDistance - distance that you have traveled on the edge
      * @return (x,y) Coordinates
      */
-    public Coordinates getLocationIfTraveledDistance(double traveledDistance) {
-    	double fraction = traveledDistance/getLength();
+    public Coordinates getLocationIfTraveledDistance(float traveledDistance) {
+    	float fraction = traveledDistance/getLength();
     	return getLocationIfTraveledFraction(fraction);
     }
     
@@ -116,10 +113,10 @@ public class Edge implements Comparable<Edge> {
      * @param traveledFraction - fraction of the edge's total length that you have traveled
      * @return (x,y) Coordinates
      */
-    public Coordinates getLocationIfTraveledFraction(double traveledFraction) {
+    public Coordinates getLocationIfTraveledFraction(float traveledFraction) {
     	Coordinates change = getCoordinateChange();
-    	double startX = from.getX();
-    	double startY = from.getY();
+    	float startX = (float) from.getX();
+    	float startY = (float) from.getY();
     	return new Coordinates(startX + change.getX()*traveledFraction, 
     			startY + change.getY()*traveledFraction);
     }
