@@ -29,9 +29,6 @@ public class WorldRenderer {
 	private float simulationSpeed = 0.1f;
 	private float timer = 0;
 
-	// Vehicle History
-	public ArrayList<HashMap<Vehicle, Coordinates>> vehicleHistory;
-
 	public WorldRenderer(WorldController worldController) {
 
 		// World Controller
@@ -40,9 +37,6 @@ public class WorldRenderer {
 		// Render Objects
 		shapeRenderer = new ShapeRenderer();
 		//scissor = new Rectangle();
-
-		// Get Vehicle History
-		vehicleHistory = worldController.getVehicleHistory();
 	}
 
 	public void render(SpriteBatch spriteBatch) {
@@ -54,7 +48,7 @@ public class WorldRenderer {
 				if(worldState == WorldState.RUNNING)
 				{
 					// Increase Time Step
-					if (worldController.timeStep + 1 < vehicleHistory.size()) {
+					if (worldController.timeStep + 1 < worldController.timeStepMax) {
 						worldController.timeStep++;
 					}
 				} else if(worldState == WorldState.REWINDING) {
@@ -121,8 +115,8 @@ public class WorldRenderer {
 	private void drawMapVehicles(SpriteBatch spriteBatch, int timeStep) {
 		// Iterate through all vehicles
 		for (Vehicle vehicle : worldController.getVehicles()) {
-			Coordinates previousCoord = vehicleHistory.get(timeStep - 1).get(vehicle);
-			Coordinates nextCoord = vehicleHistory.get(timeStep).get(vehicle);
+			Coordinates previousCoord = worldController.getVehicleState(worldController.timeStep - 1).get(vehicle);
+			Coordinates nextCoord = worldController.getVehicleState(worldController.timeStep - 1).get(vehicle);
 
 			float x = (float) (previousCoord.getX() - nextCoord.getX());
 			float y = (float) (previousCoord.getY() - nextCoord.getY());

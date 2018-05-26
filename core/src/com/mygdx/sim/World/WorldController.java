@@ -25,8 +25,11 @@ public class WorldController {
 	private WorldState worldState;
 	private WorldState previousWorldState;
 	
-	// TimeStep
+	// Current TimeStep
 	public int timeStep;
+	
+	// Max TimeStep
+	public int timeStepMax;
 
 	// Camera
 	private WorldCamera worldCamera;
@@ -65,7 +68,7 @@ public class WorldController {
 		worldGenerator = new WorldGenerator(this);
 
 		// Start Simulation
-		trafficManager.simulate(trafficManager.getMaximumTimesteps());
+		trafficManager.simulate(timeStepMax = trafficManager.getMaximumTimesteps());
 	}
 
 	public void update() {
@@ -104,8 +107,8 @@ public class WorldController {
 		return vehicles;
 	}
 
-	public ArrayList<HashMap<Vehicle, Coordinates>> getVehicleHistory() {
-		return null;
+	public HashMap<Vehicle, Coordinates> getVehicleState(int timestep) {
+		return trafficManager.getState(timestep);
 	}
 
 	public List<Road> getRoads() {
