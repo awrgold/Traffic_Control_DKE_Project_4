@@ -20,11 +20,11 @@ public class Node implements Comparable<Node> {
 	private boolean hasCarAlready = false;
 	private List<Stoplight> lights;
 
-	public Node(double xCoordinate, double yCoordinate, String type) {
+	public Node(float xCoordinate, float yCoordinate, String type) {
 		location = new Coordinates(xCoordinate, yCoordinate);
 		this.type = type;
 	}
-    public Node(double xCoordinate, double yCoordinate) {
+    public Node(float xCoordinate, float yCoordinate) {
         location = new Coordinates(xCoordinate, yCoordinate);
     }
 
@@ -60,11 +60,11 @@ public class Node implements Comparable<Node> {
 		this.location = coords;
 	}
 
-	public double getX() {
+	public float getX() {
 		return location.getX();
 	}
 
-	public double getY() {
+	public float getY() {
 		return location.getY();
 	}
 

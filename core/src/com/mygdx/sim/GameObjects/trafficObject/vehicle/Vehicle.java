@@ -91,12 +91,12 @@ public abstract class Vehicle implements TrafficObject {
 	 * If we have a 10-long edge, and we're moving at 3 per second:
 	 * 0 3 6 9 2 5 8 ...
 	 */
-	ArrayList<Double> distancesTraveledOnEdge = new ArrayList<Double>();
+	float[] distancesTraveledOnEdge = new float[0];
 	
 	/**
 	 * Stores for each timestep, the speed that this vehicle was traveling at.
 	 */
-	ArrayList<Double> speeds = new ArrayList<Double>();
+	float[] speeds = new float[0];
 	
 	/**
 	 * Stores the algorithm that this vehicle uses for navigation/pathfinding.
@@ -148,10 +148,36 @@ public abstract class Vehicle implements TrafficObject {
 //		sprite.setScale(0.5f);
 	}
 	
+	public void ensureCapacity() {
+		ensureCapacity(speeds.length + 1440);
+	}
+	
+	public void ensureCapacity(int capacity) {
+		int currentCapacity = speeds.length;
+		
+		float[] newSpeeds = new float[capacity];
+		float[] newDistances = new float[capacity];
+		
+		for(int i = 0; i < currentCapacity; i++) {
+			newSpeeds[i] = speeds[i];
+			newDistances[i] = distancesTraveledOnEdge[i];
+		}
+		
+		for(int i = currentCapacity; i < capacity; i++) {
+			newSpeeds[i] = -1;
+			newDistances[i] = -1;
+		}
+		
+		speeds = newSpeeds;
+		distancesTraveledOnEdge = newDistances;
+	}
+	
 
 	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Map graph, int startTimestep) {
 
 		setSprite(spriteName);
+		
+		ensureCapacity();
 		
 		this.id = lastGivenId++;
 
@@ -226,13 +252,13 @@ public abstract class Vehicle implements TrafficObject {
 //		}
 		
 		// Get the speed we are moving at
-		double speed = speeds.get(timestep-1)/TrafficManager.TIMESTEPS_PER_SECOND;
+		float speed = speeds[timestep-1]/TrafficManager.TIMESTEPS_PER_SECOND;
 		
 		// Get the index of the edge we are currently on
 		int edgeIdx = edgeIndices.get(timestep-1);
 		
 		// Get the distance we have traveled on the current edge
-		double distanceTraveledOnEdge = distancesTraveledOnEdge.get(timestep-1);
+		float distanceTraveledOnEdge = distancesTraveledOnEdge[timestep-1];
 		
 		// Check if the vehicle is still allowed to move.
 		if(isMoving(timestep)) {
@@ -270,7 +296,7 @@ public abstract class Vehicle implements TrafficObject {
 		
 		// Set the edge index and traveled distance 
 		edgeIndices.set(timestep, edgeIdx);
-		distancesTraveledOnEdge.set(timestep, distanceTraveledOnEdge);
+		distancesTraveledOnEdge[timestep] = distanceTraveledOnEdge;
 		
 		// Indicate that the location for this timestep has been computed
 //		computedLocations.set(timestep, true);
@@ -292,7 +318,7 @@ public abstract class Vehicle implements TrafficObject {
 	 */
 	public Coordinates getLocationCoordinates(int timestep) {	
 		Edge edge = getEdgeAt(timestep);
-		double distance = distancesTraveledOnEdge.get(timestep);
+		float distance = distancesTraveledOnEdge[timestep];
 		return edge.getLocationIfTraveledDistance(distance);
 	}
 
@@ -338,8 +364,8 @@ public abstract class Vehicle implements TrafficObject {
 	 */
 	private void addZeros() {
 		edgeIndices.add(0);
-		distancesTraveledOnEdge.add(0.);
-		speeds.add(0.);
+//		distancesTraveledOnEdge.add(0.);
+//		speeds.add(0.);
 //		computedLocations.add(false);
 //		computedSpeeds.add(false);
 	}
@@ -349,22 +375,22 @@ public abstract class Vehicle implements TrafficObject {
 	 * for the given number of timesteps
 	 * @param timestep - number of timesteps we need to be able to keep history of
 	 */
-	public void ensureCapacity(int timestep) {
-		while(edgeIndices.size() <= timestep) {
-			addZeros();
-		}
-	}
+//	public void ensureCapacity(int timestep) {
+//		while(edgeIndices.size() <= timestep) {
+//			addZeros();
+//		}
+//	}
 
-	public double getTraveledDistance(int timestep) {
-		return distancesTraveledOnEdge.get(timestep);
+	public float getTraveledDistance(int timestep) {
+		return distancesTraveledOnEdge[timestep];
 	}
 	
 	public List<Edge> getEdgePath() {
 		return edgePath;
 	}
 	
-	public double getSpeedAt(int timestep){
-		return speeds.get(timestep);
+	public float getSpeedAt(int timestep){
+		return speeds[timestep];
 	}
 
 	public Node getStartNode(){
