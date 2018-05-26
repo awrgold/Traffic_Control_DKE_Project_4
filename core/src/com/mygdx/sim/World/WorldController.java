@@ -105,7 +105,7 @@ public class WorldController {
 	}
 
 	public ArrayList<HashMap<Vehicle, Coordinates>> getVehicleHistory() {
-		return trafficManager.getHistory();
+		return null;
 	}
 
 	public List<Road> getRoads() {

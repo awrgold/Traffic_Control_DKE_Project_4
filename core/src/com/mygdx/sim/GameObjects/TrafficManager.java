@@ -24,7 +24,7 @@ import com.mygdx.sim.GameObjects.vehicle.Vehicle;
 public class TrafficManager {
 	
 	// Duration of the simulation (hours, minutes, seconds)
-	public final static Time DURATION = new Time(2,0,0);
+	public final static Time DURATION = new Time(1,0,0);
 	
 	// Sampling frequency. Larger number means higher fidelity of the model, but also more computation
 	public final static int TIMESTEPS_PER_SECOND = 2;
@@ -47,18 +47,12 @@ public class TrafficManager {
 
 	private int lastComputedTimestep = 0;
 	private static double aggressionRandomizer;
-
-
-	private ArrayList<HashMap<Vehicle,Coordinates>> history = new ArrayList<HashMap<Vehicle,Coordinates>>();
 	
 	public TrafficManager(Map map, List<Vehicle> vehicles) {
 		this.map = map;
 		this.vehicles = vehicles;
 		
-		ensureCapacity(lastComputedTimestep);
-		
 		for(Vehicle vehicle : vehicles) {
-			history.get(lastComputedTimestep).put(vehicle, vehicle.getLocationCoordinates(lastComputedTimestep));
 			
 			// Validation of the path	
 			List<Edge> edgePath = vehicle.getEdgePath();
@@ -83,13 +77,12 @@ public class TrafficManager {
 	 * @return a HashMap that maps Vehicles to their Coordinates
 	 */
 	public HashMap<Vehicle,Coordinates> getState(int timestep){
-		if(timestep >= history.size()) simulate(timestep);
+		HashMap<Vehicle,Coordinates> state = new HashMap<Vehicle,Coordinates>();
 		
-		return history.get(timestep);
-	}
-	
-	public ArrayList<HashMap<Vehicle,Coordinates>> getHistory(){
-		return history;
+		for (Vehicle vehicle : vehicles)
+			state.put(vehicle,vehicle.getLocationCoordinates(timestep));
+		
+		return state;
 	}
 	
 	/**
@@ -103,10 +96,6 @@ public class TrafficManager {
 		// Ensure the map's location cache has enough memory capacity
 		map.ensureCapacity(finalTimeStep);
 		System.out.println("map");
-		
-		// Ensure the TrafficManager's car-location history has enough memory capacity
-		this.ensureCapacity(finalTimeStep);
-		System.out.println("tm");
 		
 		// Ensure all Vehicles have enough memory capacity 
 		for (Vehicle vehicle : vehicles)
@@ -146,22 +135,9 @@ public class TrafficManager {
 			lastComputedTimestep++;
 			
 			// Have the vehicles update their locations for the next timestep			
-			for (Vehicle vehicle : vehicles) {
+			for (Vehicle vehicle : vehicles)
 				vehicle.move(lastComputedTimestep);
-				history.get(lastComputedTimestep).put(vehicle, vehicle.getLocationCoordinates(lastComputedTimestep));
-			}
 		}
-	}
-
-	
-	/**
-	 * Ensures that this TrafficManager's history has enough space for the given number
-	 * of timesteps
-	 * @param timestep - number of timesteps we need to be able to save history for
-	 */
-	private void ensureCapacity(int timestep) {
-		while(history.size() <= timestep)
-			history.add(new HashMap<Vehicle,Coordinates>());
 	}
 
 	/**
