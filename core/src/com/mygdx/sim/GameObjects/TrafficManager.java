@@ -76,9 +76,9 @@ public class TrafficManager {
 	}
 	
 	/**
-	 * Gets the locations of all vehicles at the given timestep.
-	 * @param timestep - timestep for which you need the locations
-	 * @return a HashMap that maps Vehicles to their Coordinates
+	 * Gets the state (location+visibility) of all traffic objects at the given timestep.
+	 * @param timestep - timestep for which you need the state
+	 * @return a HashMap that maps TrafficObjects to their State
 	 */
 	public HashMap<TrafficObject,TrafficObjectState> getState(int timestep){
 		HashMap<TrafficObject,TrafficObjectState> state = new HashMap<TrafficObject,TrafficObjectState>();
