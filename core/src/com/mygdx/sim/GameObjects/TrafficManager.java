@@ -475,9 +475,7 @@ public class TrafficManager {
 		return new TrafficManager(map,cars);
 	}
 	
-	public static TrafficManager testcaseBig() {
-		int nodeN = 100;
-		int carsN = 100;
+	public static TrafficManager testcaseBig(int nodeN, int carsN) {
 		ArrayList<Node> nodes = new ArrayList<Node>();
 		ArrayList<Edge> edges = new ArrayList<Edge>();
 		ArrayList<Vehicle> cars = new ArrayList<Vehicle>();
@@ -503,7 +501,7 @@ public class TrafficManager {
 	}
 
 	public static void main(String[] args) {
-		TrafficManager tm = testcaseBig();
+		TrafficManager tm = testcaseBig(100,100);
 		
 		System.out.println("Created test case");
 		
