@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.mygdx.sim.GameObjects.data.Edge;
 import com.mygdx.sim.GameObjects.data.Map;
-import com.mygdx.sim.GameObjects.vehicle.Vehicle;
+import com.mygdx.sim.GameObjects.trafficObject.vehicle.Vehicle;
 
 public abstract class Pathfinder {
 	public Map graph;

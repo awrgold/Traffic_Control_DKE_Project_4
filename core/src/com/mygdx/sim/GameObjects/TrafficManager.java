@@ -18,8 +18,10 @@ import com.mygdx.sim.GameObjects.data.SortNode;
 import com.mygdx.sim.GameObjects.data.Util;
 import com.mygdx.sim.GameObjects.driverModel.IntelligentDriverModel;
 import com.mygdx.sim.GameObjects.driverModel.SimpleDriverModel;
-import com.mygdx.sim.GameObjects.vehicle.Car;
-import com.mygdx.sim.GameObjects.vehicle.Vehicle;
+import com.mygdx.sim.GameObjects.trafficObject.TrafficObject;
+import com.mygdx.sim.GameObjects.trafficObject.TrafficObjectState;
+import com.mygdx.sim.GameObjects.trafficObject.vehicle.Car;
+import com.mygdx.sim.GameObjects.trafficObject.vehicle.Vehicle;
 
 public class TrafficManager {
 	
@@ -40,8 +42,8 @@ public class TrafficManager {
 	public final static int numUrbanCenters = 9;
 	public final static double lambda = 1.0;
 
-
 	private Map map;
+	private List<TrafficObject> trafficObjects;
 	private List<Vehicle> vehicles;
 	private static List<Node> intersections = new ArrayList<Node>();
 
@@ -51,6 +53,8 @@ public class TrafficManager {
 	public TrafficManager(Map map, List<Vehicle> vehicles) {
 		this.map = map;
 		this.vehicles = vehicles;
+		
+		this.trafficObjects = new ArrayList<TrafficObject>(vehicles);		
 		
 		for(Vehicle vehicle : vehicles) {
 			
@@ -76,11 +80,11 @@ public class TrafficManager {
 	 * @param timestep - timestep for which you need the locations
 	 * @return a HashMap that maps Vehicles to their Coordinates
 	 */
-	public HashMap<Vehicle,Coordinates> getState(int timestep){
-		HashMap<Vehicle,Coordinates> state = new HashMap<Vehicle,Coordinates>();
+	public HashMap<TrafficObject,TrafficObjectState> getState(int timestep){
+		HashMap<TrafficObject,TrafficObjectState> state = new HashMap<TrafficObject,TrafficObjectState>();
 		
-		for (Vehicle vehicle : vehicles)
-			state.put(vehicle,vehicle.getLocationCoordinates(timestep));
+		for (TrafficObject to : trafficObjects)
+			state.put(to,to.getState(timestep));
 		
 		return state;
 	}
@@ -172,7 +176,7 @@ public class TrafficManager {
 		ArrayList<DistanceAndVehicle> candidates = new ArrayList<DistanceAndVehicle>();
 		for (Vehicle vehicle2 : vehiclesOnCurrentEdge) {
 			double distance = distanceUntilNow + vehicle2.getTraveledDistance(timestep);
-			if(distance - Util.DELTA_EPSILON > 0 && vehicle2.isMoving())
+			if(distance - Util.DELTA_EPSILON > 0 && vehicle2.isVisibleToDrivers(timestep))
 				candidates.add(new DistanceAndVehicle(distance,vehicle2));			
 		}
 		
@@ -273,13 +277,13 @@ public class TrafficManager {
             while(start.hasCarAlready()) {start = nodeList.get((int)(Math.floor(r.nextDouble() * nodeList.size())));}
 
 
-            Car car = new Car(start,end, map);
+            Car car = new Car(start,end, map,0);
 			while (car.getEdgePath() == null){
 				start = nodeList.get((int)(Math.floor(r.nextDouble() * nodeList.size())));
 				start.setHasCarAlready();
 				while(start.hasCarAlready()) {start = nodeList.get((int)(Math.floor(r.nextDouble() * nodeList.size())));}
 				end = nodeList.get((int)(Math.floor(r.nextDouble() * nodeList.size())));
-				car = new Car(start,end,map);
+				car = new Car(start,end,map,0);
 			}
             car.setDriverModel(new SimpleDriverModel(10));
             cars.add(i,car);
@@ -347,7 +351,7 @@ public class TrafficManager {
 			}
 
 			if (mapNodes.get(y).isDestination()) {
-				Car temp = new Car(mapNodes.get(x), mapNodes.get(y), map);
+				Car temp = new Car(mapNodes.get(x), mapNodes.get(y), map,0);
 				cars.add(temp);
 				temp.setDriverModel(new IntelligentDriverModel());
 			}
@@ -434,15 +438,15 @@ public class TrafficManager {
 		
 		Map map = new Map(Arrays.asList(node1,node2,node3),Arrays.asList(edge1,edge2));
 		
-		Car car1 = new Car(node2,node3,map);
+		Car car1 = new Car(node2,node3,map,0);
 		car1.setEdgePath(Arrays.asList(edge2));
 		car1.setDriverModel(new SimpleDriverModel(10));
 		
-		Car car2 = new Car(node2,node3,map);
+		Car car2 = new Car(node2,node3,map,0);
 		car2.setEdgePath(Arrays.asList(edge2));
 		car2.setDriverModel(new IntelligentDriverModel());
 		
-		Car car3 = new Car(node1,node3,map);
+		Car car3 = new Car(node1,node3,map,0);
 		car3.setEdgePath(Arrays.asList(edge1,edge2));
 		car3.setDriverModel(new IntelligentDriverModel());
 		
@@ -465,7 +469,7 @@ public class TrafficManager {
 		Map map = new Map(nodes,edges);
 		
 		for(int i = 0; i < carsN; i++) {
-			Car car = new Car(nodes.get(0),nodes.get(nodeN-1),map);
+			Car car = new Car(nodes.get(0),nodes.get(nodeN-1),map,0);
 			car.setDriverModel(new SimpleDriverModel());
 			
 			car.setEdgePath(edges);
@@ -477,7 +481,7 @@ public class TrafficManager {
 	}
 
 	public static void main(String[] args) {
-		TrafficManager tm = testcaseBig(1000,1000);
+		TrafficManager tm = testcase1();
 		
 		System.out.println("Created test case");
 		

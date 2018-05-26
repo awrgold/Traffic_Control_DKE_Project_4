@@ -10,7 +10,7 @@ import com.mygdx.sim.GameObjects.Intersection;
 import com.mygdx.sim.GameObjects.IntersectionSingle;
 import com.mygdx.sim.GameObjects.Stoplight;
 import com.mygdx.sim.GameObjects.TrafficManager;
-import com.mygdx.sim.GameObjects.vehicle.Vehicle;
+import com.mygdx.sim.GameObjects.trafficObject.vehicle.Vehicle;
 
 public class Map {
 	private List<Node> nodes = new ArrayList<Node>();

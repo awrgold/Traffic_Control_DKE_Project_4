@@ -1,4 +1,4 @@
-package com.mygdx.sim.GameObjects.vehicle;
+package com.mygdx.sim.GameObjects.trafficObject.vehicle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,9 +14,10 @@ import com.mygdx.sim.GameObjects.driverModel.DriverModel;
 import com.mygdx.sim.GameObjects.driverModel.SimpleDriverModel;
 import com.mygdx.sim.GameObjects.pathfinding.AStarPathfinder;
 import com.mygdx.sim.GameObjects.pathfinding.Pathfinder;
-import com.mygdx.sim.Resources.Resources;
+import com.mygdx.sim.GameObjects.trafficObject.TrafficObject;
+import com.mygdx.sim.GameObjects.trafficObject.TrafficObjectState;
 
-public abstract class Vehicle {
+public abstract class Vehicle implements TrafficObject {
 	
 	private static int lastGivenId = 0;
 	
@@ -25,14 +26,16 @@ public abstract class Vehicle {
 	private int id;
 	
 	/**
-	 * The node this vehicle starts its trip at.
+	 * The node this vehicle starts its trip at and the node it wants to reach.
 	 */
 	Node startNode;
+	Node goalNode;
 	
 	/**
-	 * The node this vehicle wants to reach.
+	 * The timesteps when this vehicle begins and ends its journey.
 	 */
-	Node goalNode;
+	final int startTimestep;
+	int endTimestep = Integer.MAX_VALUE;
 	
 	/**
 	 * The maximum speed that this vehicle can achieve, ever.
@@ -44,9 +47,21 @@ public abstract class Vehicle {
 	 */
 	private double length = 4;
 	
-	public double getLength() {
-		return length;
+	public double getLength() {	return length; }
+	
+	public TrafficObjectState getState(int timestep) {
+		Coordinates location = this.getLocationCoordinates(timestep);
+		boolean vizualize = this.isVisibleInVisualization(timestep);
+		boolean visibleToDrivers = this.isVisibleToDrivers(timestep);
+		
+		return new TrafficObjectState(location,vizualize,visibleToDrivers);
 	}
+	
+	public boolean isVisibleToDrivers(int timestep) { return timestep >= startTimestep && timestep <= endTimestep; }
+
+	public boolean isVisibleInVisualization(int timestep) {	return timestep >= startTimestep && timestep <= endTimestep; }
+	
+	public boolean isMoving(int timestep) { return timestep >= startTimestep && timestep <= endTimestep; }
 	
 	/**
 	 * The edges that this vehicle is supposed to travel from its start point
@@ -59,13 +74,6 @@ public abstract class Vehicle {
 	public void setEdgePath(List<Edge> edgePath) {
 		this.edgePath = edgePath;
 	}
-	
-	
-	/**
-	 * True means the car is allowed to move, false means it is not.
-	 * False if it has reached its destination.
-	 */
-	private boolean moving = true;
 	
 	/**
 	 * Stores for each timestep, the index in edgesToTravel of the edge
@@ -145,7 +153,7 @@ public abstract class Vehicle {
 	}
 	
 
-	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Map graph) {
+	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Map graph, int startTimestep) {
 
 		setSprite(spriteName);
 		
@@ -161,6 +169,8 @@ public abstract class Vehicle {
 		
 		pathfinder = new AStarPathfinder(graph);
 		
+		this.startTimestep = startTimestep;
+		
 		// Find path
 		computePath(0);
 		
@@ -171,8 +181,8 @@ public abstract class Vehicle {
 		return ("[Vehicle " + id + "]");
 	}
 	
-	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Map graph, Pathfinder pathfinder) {
-		this(startNode,goalNode,maxSpeed,spriteName,graph);
+	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Map graph, Pathfinder pathfinder, int startTimestep) {
+		this(startNode,goalNode,maxSpeed,spriteName,graph,startTimestep);
 		this.pathfinder = pathfinder;
 	}
 
@@ -197,7 +207,7 @@ public abstract class Vehicle {
 		if(timestep!=0) 
 			previousSpeed = speeds.get(timestep-1);
 		
-		double newSpeed = previousSpeed + acceleration * TrafficManager.TIMESTEPS_PER_SECOND;
+		double newSpeed = Math.max(previousSpeed + acceleration / TrafficManager.TIMESTEPS_PER_SECOND,0);
 		
 		speeds.set(timestep, newSpeed);
 		computedSpeeds.set(timestep, true);
@@ -229,7 +239,7 @@ public abstract class Vehicle {
 		double distanceTraveledOnEdge = distancesTraveledOnEdge.get(timestep-1);
 		
 		// Check if the vehicle is still allowed to move.
-		if(moving) {
+		if(isMoving(timestep)) {
 			// Add the speed we are currently moving at to our old location in order to determine
 			// our new location
 			distanceTraveledOnEdge += speed;
@@ -245,7 +255,7 @@ public abstract class Vehicle {
 				if(edgeIdx == edgePath.size()-1) {
 					
 					// Disallow the car from moving further
-					moving = false;
+					endTimestep = timestep;
 					
 					// Set the distance traveled on the edge to the length on the edge
 					// to indicate that we are at its end
@@ -401,8 +411,4 @@ public abstract class Vehicle {
 		//System.out.println(res);
 		return res;
 		}
-
-	public boolean isMoving() {
-		return moving;
-	}
 }
