@@ -45,9 +45,9 @@ public abstract class Vehicle implements TrafficObject {
 	/**
 	 * The physical length of the vehicle in meters.
 	 */
-	private double length = 4;
+	private float length = 4;
 	
-	public double getLength() {	return length; }
+	public float getLength() {	return length; }
 	
 	public TrafficObjectState getState(int timestep) {
 		Coordinates location = this.getLocationCoordinates(timestep);
