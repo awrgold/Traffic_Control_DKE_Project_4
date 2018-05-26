@@ -7,12 +7,10 @@ import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mygdx.sim.GameObjects.data.Edge;
-import com.mygdx.sim.Resources.Resources;
 
 public class Road {
 
 	// Sprite Parameters
-	private String textureName;
 	private float length;
 	private float angle;
 	private float posX;
@@ -22,11 +20,12 @@ public class Road {
 	private Texture texture;
 	private TextureRegion textureRegion;
 
-	public Road(Edge edge, String textureName) {
-
-		this.textureName = textureName;
-		setSprite(textureName);
-
+	public Road(Edge edge) {
+		
+		texture = new Texture(Gdx.files.internal("resources/roads/road_lane_" + edge.getNumLanes() +".png"));
+		texture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+		texture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
+		
 		length = (float) edge.getLength() + texture.getWidth();
 		
 		int x = (int) (edge.getTo().getX() - edge.getFrom().getX());
@@ -37,18 +36,7 @@ public class Road {
 		posX = (float) edge.getFrom().getX() - texture.getWidth() / 2;
 		posY = (float) edge.getFrom().getY() - texture.getHeight() / 2;
 
-		texture = new Texture(Gdx.files.internal("resources/roads/road_1.png"));
-		texture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
-		texture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
-
-		textureRegion = new TextureRegion(texture, 0, 0, texture.getWidth() * (int) (length / texture.getWidth()),
-				texture.getHeight());
-	}
-
-	public void setSprite(String textureName) {
-		this.textureName = textureName;
-
-		texture = Resources.world.roadTextures.get(textureName);
+		textureRegion = new TextureRegion(texture, 0, 0, texture.getWidth() * (int) (length / texture.getWidth()), texture.getHeight());
 	}
 
 	public void draw(SpriteBatch spriteBatch) {

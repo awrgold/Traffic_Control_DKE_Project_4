@@ -24,7 +24,7 @@ public class WorldGenerator {
 
 	public void generateRoads(List<Edge> edges) {
 		for (Edge edge : edges) {
-			roads.add(new Road(edge, "road"));
+			roads.add(new Road(edge));
 		}
 	}
 

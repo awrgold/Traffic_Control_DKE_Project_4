@@ -1,118 +1,144 @@
 package com.mygdx.sim.GameObjects;
 
+import java.io.IOException;
+import java.util.HashMap;
+
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import com.badlogic.gdx.Gdx;
 import com.mygdx.sim.GameObjects.data.Edge;
 import com.mygdx.sim.GameObjects.data.Node;
 
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.Scanner;
-
 public class MapReader {
 
+	private static final int MAPMULTIPLIER = 10;
 
-    public HashMap<String, Node> readNodes() {
-        //Choosing the Node xml file
+	public HashMap<String, Node> readNodes() {
 
-        HashMap<String, Node> nodeMap = new HashMap<String, Node>();
+		HashMap<String, Node> nodeMap = new HashMap<String, Node>();
 
-        String xmlFile = null;
-        JFileChooser chooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                "Node XML file", "xml");
-        chooser.setFileFilter(filter);
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder documentBuilder;
 
-        int returnVal = chooser.showOpenDialog(null);
-        if(returnVal == JFileChooser.APPROVE_OPTION) {
-            xmlFile = chooser.getSelectedFile().getAbsolutePath();
-            System.out.println("Reading file : " + xmlFile);
+		try {
+			documentBuilder = documentBuilderFactory.newDocumentBuilder();
+			Document document = documentBuilder.parse(chooseFile());
 
-            try {
-                Scanner sc = new Scanner(new File(xmlFile));
 
-                while(sc.hasNextLine()) {
-                    String line = sc.nextLine();
-                    if(line.startsWith("    <node")) {
-                        String[] properties = line.split("\"");
-                        String id = properties[1];
-                        double x = Double.parseDouble(properties[3]) * 10;
-                        double y = Double.parseDouble(properties[5]) * 10;
-                        String type = properties[7];
+			NodeList xmlElements = document.getElementsByTagName("node");
+			for(int i = 0; i < xmlElements.getLength(); i++) {
+				org.w3c.dom.Node xmlElement = xmlElements.item(i);
 
-                        nodeMap.put(id,new Node(x,y));
-                    }
+				String nodeID = xmlElement.getAttributes().getNamedItem("id").getTextContent();
+				double nodeX = Double.parseDouble(xmlElement.getAttributes().getNamedItem("x").getTextContent()) * MAPMULTIPLIER;
+				double nodeY = Double.parseDouble(xmlElement.getAttributes().getNamedItem("y").getTextContent()) * MAPMULTIPLIER;
+				String nodeType = xmlElement.getAttributes().getNamedItem("type").getTextContent();
+
+				 Node node = new Node(nodeX, nodeY, nodeType);
+				 nodeMap.put(nodeID, node);
+			}
+
+		} catch (ParserConfigurationException e1) {
+			e1.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return nodeMap;
+	}
+
+	public HashMap<String, Edge> readEdges(HashMap<String, Node> nodeMap) {
+
+		HashMap<String, Edge> edgeMap = new HashMap<String, Edge>();
+
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder documentBuilder;
+
+		try {
+			documentBuilder = documentBuilderFactory.newDocumentBuilder();
+			Document document = documentBuilder.parse(chooseFile());
+
+			NodeList xmlElements = document.getElementsByTagName("edge");
+			for(int i = 0; i < xmlElements.getLength(); i++) {
+				org.w3c.dom.Node xmlElement = xmlElements.item(i);
+
+				String edgeID = xmlElement.getAttributes().getNamedItem("id").getTextContent();
+				String edgeFrom = xmlElement.getAttributes().getNamedItem("from").getTextContent();
+				String edgeTo = xmlElement.getAttributes().getNamedItem("to").getTextContent();
+				int edgeLanes = Integer.parseInt(xmlElement.getAttributes().getNamedItem("numLanes").getTextContent());
+				double edgeSpeed = Double.parseDouble(xmlElement.getAttributes().getNamedItem("speed").getTextContent());
+
+				Node fromNode = nodeMap.get(edgeFrom);
+				Node toNode = nodeMap.get(edgeTo);
+
+				Edge edge = new Edge(fromNode, toNode, (int)edgeSpeed, edgeLanes);
+                fromNode.addOutEdge(edge);
+                toNode.addInEdge(edge);
+
+
+                // Increment node's Edge counter here
+                int numFromLanes = 0;
+                for (Edge e : fromNode.getOutEdges()){
+                    numFromLanes += e.getNumLanes();
+                }
+                int numToLanes = 0;
+                for (Edge e : toNode.getInEdges()){
+                    numToLanes += e.getNumLanes();
                 }
 
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-        return nodeMap;
-    }
+                fromNode.setNodePriorityWeight(numFromLanes);
+                toNode.setNodePriorityWeight(numToLanes);
 
-    public HashMap<String,Edge> readEdges(HashMap<String, Node> nodeMap) {
-        HashMap<String,Edge> edgeMap = new HashMap<String, Edge>();
+                // edgeMap.put(id + "#2", new Edge(nodeMap.get(to), nodeMap.get(from), (int) speed, laneNum));
 
-        String xmlFile = null;
-        JFileChooser chooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                "Edge XML file", "xml");
-        chooser.setFileFilter(filter);
+                edgeMap.put(edgeID, edge);
+			}
 
-        int returnVal = chooser.showOpenDialog(null);
-        if(returnVal == JFileChooser.APPROVE_OPTION) {
-            xmlFile = chooser.getSelectedFile().getAbsolutePath();
-            System.out.println("Reading file : " + xmlFile);
+		} catch (ParserConfigurationException e1) {
+			e1.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-            try {
-                Scanner sc = new Scanner(new File(xmlFile));
+		return edgeMap;
+	}
 
-                while(sc.hasNextLine()) {
-                    String line = sc.nextLine();
-                    if(line.startsWith("    <edge")) {
-                        String[] properties = line.split("\"");
-                        String id = properties[1];
-                        String from = properties[3];
-                        String to = properties[5];
-                        //int priority = Integer.parseInt(properties[7]);
-                        //String type = properties[9];
-                        double speed = 30;
-                        //if(properties.length >= 13) {
-                            //speed = Double.parseDouble(properties[13]);
-                        //}
+	public String chooseFile() {
+		JFileChooser chooser = new JFileChooser(Gdx.files.getLocalStoragePath());
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Node XML file", "xml");
+		chooser.setFileFilter(filter);
 
-                        Node a = nodeMap.get(from);
-                        Node b = nodeMap.get(to);
-                        if(Math.abs(Math.sqrt(Math.pow((a.getY()-b.getY()), 2) + Math.pow((a.getX() - b.getX()), 2))) > 1) {
-                            edgeMap.put(id, new Edge(nodeMap.get(from), nodeMap.get(to), (int) speed));
-                            edgeMap.put(id + "#2", new Edge(nodeMap.get(to), nodeMap.get(from), (int) speed));
-                        }
-                    }
-                }
+		int returnVal = chooser.showOpenDialog(null);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			return chooser.getSelectedFile().getAbsolutePath();
+		} else {
+			return null;
+		}
+	}
 
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-        return edgeMap;
-    }
+	public void printAll(HashMap<String, Node> nodeMap, HashMap<String, Edge> edgeMap) {
+		int counter = 0;
+		for (Node n : nodeMap.values()) {
+			System.out.println("Node " + counter + " is at X: " + n.getX() + " Y: " + n.getY());
+			counter++;
+		}
 
-    public void printAll(HashMap<String,Node> nodeMap, HashMap<String,Edge> edgeMap) {
-        int counter = 0;
-        for(Node n : nodeMap.values()) {
-            System.out.println("Node " + counter + " is at X: " + n.getX() + " Y: " + n.getY());
-            counter++;
-        }
-        /*
-        System.out.println("--------------------");
-        counter = 0;
-        for(Edge e : edgeMap.values()) {
-            System.out.println("Edge " + counter + " goes from " + e.getFrom().toString() + " to " + e.getTo().toString());
-            counter++;
-        }
-        */
-    }
+		counter = 0;
+		for (Edge edge : edgeMap.values()) {
+			System.out.println("Edge " + counter + " is from: " + edge.getFrom() + " to: " + edge.getTo());
+			counter++;
+		}
+	}
 }
-

@@ -20,22 +20,24 @@ public abstract class Vehicle {
 	
 	private static int lastGivenId = 0;
 	
+	private boolean findDifferentPathOnFail = true;
+	
 	private int id;
 	
 	/**
 	 * The node this vehicle starts its trip at.
 	 */
-	final Node startNode;
+	Node startNode;
 	
 	/**
 	 * The node this vehicle wants to reach.
 	 */
-	final Node goalNode;
+	Node goalNode;
 	
 	/**
 	 * The maximum speed that this vehicle can achieve, ever.
 	 */
-	final int maxSpeed;
+	int maxSpeed;
 	
 	/**
 	 * The physical length of the vehicle in meters.
@@ -155,6 +157,7 @@ public abstract class Vehicle {
 		
 		// Set maximum speed
 		this.maxSpeed = maxSpeed;
+		setAggression();
 		
 		pathfinder = new AStarPathfinder(graph);
 		
@@ -181,7 +184,7 @@ public abstract class Vehicle {
 	 * @param timestep - the edges that have already been traveled at that timestep may not be changed by the pathfinder
 	 */
 	public void computePath(int timestep) {
-		this.edgePath = pathfinder.findPath(this,timestep);
+		this.edgePath = pathfinder.findPath(this, timestep, findDifferentPathOnFail);
 	}
 	
 	public void accelerate(int timestep, double acceleration) {
@@ -361,9 +364,17 @@ public abstract class Vehicle {
 	public Node getStartNode(){
 		return startNode;
 	}
+	
+	public void setStartNode(Node startNode){
+		this.startNode = startNode;
+	}
 
 	public Node getGoalNode(){
 		return goalNode;
+	}
+	
+	public void setGoalNode(Node goalNode){
+		this.goalNode = goalNode;
 	}
 	
 	public int hashCode() {
@@ -376,6 +387,20 @@ public abstract class Vehicle {
 		
 		return (v.id == this.id);
 	}
+
+
+	public void setAggression(){
+		maxSpeed = (int)(maxSpeed * drawRandomExponential(-0.1));
+	}
+
+	public static double drawRandomExponential(double mean) {
+		// draw a [0,1] uniform distributed number
+		double u = Math.random();
+		// Convert it into a exponentially distributed random variate with given mean
+		double res = (1 + (-mean)*(Math.log(u)));
+		//System.out.println(res);
+		return res;
+		}
 
 	public boolean isMoving() {
 		return moving;

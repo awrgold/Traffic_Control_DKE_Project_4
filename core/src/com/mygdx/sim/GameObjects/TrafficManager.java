@@ -3,8 +3,10 @@ package com.mygdx.sim.GameObjects;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import com.mygdx.sim.GameObjects.data.Coordinates;
 import com.mygdx.sim.GameObjects.data.DistanceAndSpeed;
@@ -12,6 +14,7 @@ import com.mygdx.sim.GameObjects.data.DistanceAndVehicle;
 import com.mygdx.sim.GameObjects.data.Edge;
 import com.mygdx.sim.GameObjects.data.Map;
 import com.mygdx.sim.GameObjects.data.Node;
+import com.mygdx.sim.GameObjects.data.SortNode;
 import com.mygdx.sim.GameObjects.data.Util;
 import com.mygdx.sim.GameObjects.driverModel.IntelligentDriverModel;
 import com.mygdx.sim.GameObjects.driverModel.SimpleDriverModel;
@@ -33,16 +36,19 @@ public class TrafficManager {
 	public final static int MAP_X_DIM = 1000;
 	public final static int MAP_Y_DIM = 1000;
 	public final static int GRID_FACTOR = 2;
-	public final static int vehicleCount = 1;
-	public final static int numUrbanCenters = 3;
-	public final static int uCenterWeight = 3;
+	public final static int vehicleCount = 1000;
+	public final static int numUrbanCenters = 9;
+	public final static double lambda = 1.0;
 
 
 	private Map map;
 	private List<Vehicle> vehicles;
-	
+	private static List<Node> intersections = new ArrayList<Node>();
+
 	private int lastComputedTimestep = 0;
-	
+	private static double aggressionRandomizer;
+
+
 	private ArrayList<HashMap<Vehicle,Coordinates>> history = new ArrayList<HashMap<Vehicle,Coordinates>>();
 	
 	public TrafficManager(Map map, List<Vehicle> vehicles) {
@@ -96,15 +102,21 @@ public class TrafficManager {
 
 		// Ensure the map's location cache has enough memory capacity
 		map.ensureCapacity(finalTimeStep);
+		System.out.println("map");
 		
 		// Ensure the TrafficManager's car-location history has enough memory capacity
 		this.ensureCapacity(finalTimeStep);
+		System.out.println("tm");
 		
 		// Ensure all Vehicles have enough memory capacity 
 		for (Vehicle vehicle : vehicles)
 			vehicle.ensureCapacity(finalTimeStep);
+		System.out.println("vehicles");
 		
 		while(lastComputedTimestep < finalTimeStep) {
+			if(lastComputedTimestep%100 == 0)
+				System.out.println(lastComputedTimestep);
+			
 			for(Vehicle vehicle : vehicles)
 				map.getLocationCache().get(vehicle.getEdgeAt(lastComputedTimestep)).get(lastComputedTimestep).add(vehicle);
 				
@@ -124,7 +136,13 @@ public class TrafficManager {
 				// vehicle.computePath(lastComputedTimestep);
 			}
 
-			// Increment the timestep
+			// Increment the timestep for lights
+			for (Node n : map.getIntersections()){
+				for (int i = 0; i < n.getLights().size(); i++){
+					n.getLights().get(i).incrementTimeStep();
+				}
+			}
+
 			lastComputedTimestep++;
 			
 			// Have the vehicles update their locations for the next timestep			
@@ -134,6 +152,7 @@ public class TrafficManager {
 			}
 		}
 	}
+
 	
 	/**
 	 * Ensures that this TrafficManager's history has enough space for the given number
@@ -232,38 +251,7 @@ public class TrafficManager {
 	public static double euclideanDistance(Node a, Node b){
 		return Math.abs(Math.sqrt(Math.pow((a.getY()-b.getY()), 2) + Math.pow((a.getX() - b.getX()), 2)));
 	}
-	
-	public static TrafficManager createSimpleTestcase() {
-		Node node1 = new Node(0,0);
-		Node node2 = new Node(475,0);
-		Node node3 = new Node(475,1000);
-		Edge edge1 = new Edge(node1,node2);
-		Edge edge2 = new Edge(node2,node3);
-		
-		Map map = new Map(Arrays.asList(node1,node2,node3),Arrays.asList(edge1,edge2));
-		
-		Car car1 = new Car(node2,node3,map);
-		car1.setEdgePath(Arrays.asList(edge2));
-		car1.setDriverModel(new SimpleDriverModel(10));
-		
-		Car car2 = new Car(node2,node3,map);
-		car2.setEdgePath(Arrays.asList(edge2));
-		car2.setDriverModel(new IntelligentDriverModel());
-		
-		Car car3 = new Car(node1,node3,map);
-		car3.setEdgePath(Arrays.asList(edge1,edge2));
-		car3.setDriverModel(new IntelligentDriverModel());
-		
-		List cars = Arrays.asList(car1,car2,car3);
-		
-		TrafficManager tm = new TrafficManager(map,cars);
-		int y= 0;
-		
-		return tm;
-	}
 
-
-	//I've commented this out because I run in a lot of issues, although the map can be created with my Node & Edge lists
 	public static TrafficManager createTestFromFile() {
 		MapReader mr = new MapReader();
 		HashMap<String, Node> nodeMap = mr.readNodes();
@@ -271,27 +259,68 @@ public class TrafficManager {
 		mr.printAll(nodeMap,edgeMap);
 
         List<Node> nodeList = new ArrayList<Node>(nodeMap.values());
+        // Sort the nodeList in descending order based on priority
+        Collections.sort(nodeList, new SortNode());
         List<Edge> edgeList = new ArrayList<Edge>(edgeMap.values());
 
 		Map map = new Map(nodeList,edgeList);
-        int carAmount = 1000;
-        List cars = new ArrayList();
-        for(int i = 0; i < carAmount; i++) {
-            Node start = nodeList.get((int)(Math.floor(Math.random() * nodeList.size())));
-            Node end = nodeList.get((int)(Math.floor(Math.random() * nodeList.size())));
-            if(start == end) { end = nodeList.get((int)(Math.floor(Math.random() * nodeList.size())));}
 
-            Car car = new Car(start,end,map);
+		List<Node> destinations = new ArrayList<Node>();
+
+//		// Make nodes that have multiple edges connecting to them destinations
+//		int minLanes = Integer.MAX_VALUE;
+//		for (Node n : nodeList){
+//			for (Edge e : n.getInEdges()){
+//				if (e.getNumLanes() < minLanes){
+//					minLanes = e.getNumLanes();
+//				}
+//			}
+//			if (minLanes >= 2){
+//				n.makeDestination();
+//				destinations.add(n);
+//			}
+//		}
+
+        List cars = new ArrayList();
+        for(int i = 0; i < vehicleCount; i++) {
+
+        	// TODO: Make priorities based on neighborhood
+//			createNeighborhoods(nodeList, numUrbanCenters);
+
+			// This utilizes an exponential distribution prioritizing nodes at the start of the list
+			// Nodes at the start of the list are higher priority than those at the end
+			Random r = new Random();
+            Node start = nodeList.get((int)(Math.floor(r.nextDouble() * nodeList.size())));
+            start.setHasCarAlready();
+			Node end = nodeList.get((int)(Math.floor(r.nextDouble() * nodeList.size())));
+            while(start == end) { end = nodeList.get((int)(Math.floor(r.nextDouble() * nodeList.size())));}
+            while(start.hasCarAlready()) {start = nodeList.get((int)(Math.floor(r.nextDouble() * nodeList.size())));}
+
+
+            Car car = new Car(start,end, map);
+			while (car.getEdgePath() == null){
+				start = nodeList.get((int)(Math.floor(r.nextDouble() * nodeList.size())));
+				start.setHasCarAlready();
+				while(start.hasCarAlready()) {start = nodeList.get((int)(Math.floor(r.nextDouble() * nodeList.size())));}
+				end = nodeList.get((int)(Math.floor(r.nextDouble() * nodeList.size())));
+				car = new Car(start,end,map);
+			}
             car.setDriverModel(new SimpleDriverModel(10));
             cars.add(i,car);
         }
 
-
-
-
 		TrafficManager tm = new TrafficManager(map,cars);
 
 		return tm;
+	}
+
+	public static double drawRandomExponential(double mean) {
+		// draw a [0,1] uniform distributed number
+		double u = Math.random();
+		// Convert it into a exponentially distributed random variate with given mean
+		double res = (1 + (-mean * Math.log(u)));
+		//System.out.println(res);
+		return res;
 	}
 
 
@@ -376,7 +405,7 @@ public class TrafficManager {
 		if (centers == 0) return;
 		for (Node n : nodes){
 			if (n.isDestination() && Math.random() < .1 && centers > 0){
-				n.setNodePriorityWeight(uCenterWeight);
+//				n.setNodePriorityWeight(uCenterWeight);
 				for (Node i : n.getOutgoingNeighbors()){
 					i.setNodePriorityWeight(n.getNodePriorityWeight()-1);
 				}
@@ -386,8 +415,6 @@ public class TrafficManager {
 				centers--;
 			}
 		}
-
-
 
 	}
 
@@ -421,8 +448,8 @@ public class TrafficManager {
 	public String toString() {
 		return "[TrafficManager]";
 	}
-
-	public static void main(String[] args) {
+	
+	public static TrafficManager testcase1() {
 		Node node1 = new Node(0,0);
 		Node node2 = new Node(475,0);
 		Node node3 = new Node(475,1000);
@@ -445,7 +472,40 @@ public class TrafficManager {
 		
 		List cars = Arrays.asList(car1,car2,car3);
 		
-		TrafficManager tm = new TrafficManager(map,cars);
+		return new TrafficManager(map,cars);
+	}
+	
+	public static TrafficManager testcaseBig() {
+		int nodeN = 100;
+		int carsN = 100;
+		ArrayList<Node> nodes = new ArrayList<Node>();
+		ArrayList<Edge> edges = new ArrayList<Edge>();
+		ArrayList<Vehicle> cars = new ArrayList<Vehicle>();
+		
+		for(int i = 0; i < nodeN; i++)
+			nodes.add(new Node(0,i*100));
+		
+		for(int i = 0; i < nodeN-1; i++)
+			edges.add(new Edge(nodes.get(i),nodes.get(i+1)));
+		
+		Map map = new Map(nodes,edges);
+		
+		for(int i = 0; i < carsN; i++) {
+			Car car = new Car(nodes.get(0),nodes.get(nodeN-1),map);
+			car.setDriverModel(new SimpleDriverModel());
+			
+			car.setEdgePath(edges);
+			
+			cars.add(car);			
+		}
+		
+		return new TrafficManager(map,cars);
+	}
+
+	public static void main(String[] args) {
+		TrafficManager tm = testcaseBig();
+		
+		System.out.println("Created test case");
 		
 		tm.simulate(getMaximumTimesteps());
 		
