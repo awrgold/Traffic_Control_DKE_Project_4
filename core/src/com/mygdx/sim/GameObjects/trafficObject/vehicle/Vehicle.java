@@ -98,10 +98,6 @@ public abstract class Vehicle implements TrafficObject {
 	 */
 	ArrayList<Double> speeds = new ArrayList<Double>();
 	
-	// Ignore. Keeps track of whether you're doing something very wrong.
-	ArrayList<Boolean> computedSpeeds = new ArrayList<Boolean>();
-	ArrayList<Boolean> computedLocations = new ArrayList<Boolean>();
-	
 	/**
 	 * Stores the algorithm that this vehicle uses for navigation/pathfinding.
 	 * By default, it uses a simple A* pathfinder at the start of the trip, and
@@ -198,10 +194,10 @@ public abstract class Vehicle implements TrafficObject {
 	}
 	
 	public void accelerate(int timestep, double acceleration) {
-		if(computedSpeeds.get(timestep)) {
-			System.out.println("You're trying to set a speed that has already been set. You're doing something wrong.");
-			return;
-		}
+//		if(computedSpeeds.get(timestep)) {
+//			System.out.println("You're trying to set a speed that has already been set. You're doing something wrong.");
+//			return;
+//		}
 		
 		double previousSpeed = 0;
 		if(timestep!=0) 
@@ -210,7 +206,7 @@ public abstract class Vehicle implements TrafficObject {
 		double newSpeed = Math.max(previousSpeed + acceleration / TrafficManager.TIMESTEPS_PER_SECOND,0);
 		
 		speeds.set(timestep, newSpeed);
-		computedSpeeds.set(timestep, true);
+//		computedSpeeds.set(timestep, true);
 	}
 	
 	/**
@@ -219,15 +215,15 @@ public abstract class Vehicle implements TrafficObject {
 	 */
 	public void move(int timestep) {
 		
-		if(computedLocations.get(timestep)) {
-			System.out.println("You're setting a location for a timestep where the location has already been computed. You're doing something wrong.");
-			return;
-		}
-		
-		if(!computedSpeeds.get(timestep-1)) {
-			System.out.println("You're setting a location for a timestep where the previous speed hasn't been computed. You're doing something wrong.");
-			return;
-		}
+//		if(computedLocations.get(timestep)) {
+//			System.out.println("You're setting a location for a timestep where the location has already been computed. You're doing something wrong.");
+//			return;
+//		}
+//		
+//		if(!computedSpeeds.get(timestep-1)) {
+//			System.out.println("You're setting a location for a timestep where the previous speed hasn't been computed. You're doing something wrong.");
+//			return;
+//		}
 		
 		// Get the speed we are moving at
 		double speed = speeds.get(timestep-1)/TrafficManager.TIMESTEPS_PER_SECOND;
@@ -277,7 +273,7 @@ public abstract class Vehicle implements TrafficObject {
 		distancesTraveledOnEdge.set(timestep, distanceTraveledOnEdge);
 		
 		// Indicate that the location for this timestep has been computed
-		computedLocations.set(timestep, true);
+//		computedLocations.set(timestep, true);
 	}
 	
 	/**
@@ -332,7 +328,7 @@ public abstract class Vehicle implements TrafficObject {
 	private void initialize() {
 		if(edgeIndices.size() == 0) {
 			addZeros();
-			computedLocations.set(0, true);
+//			computedLocations.set(0, true);
 		} else
 			System.out.println("You're trying to initialize a vehicle that has already been initialized. You're doing something wrong.");		
 	}
@@ -344,8 +340,8 @@ public abstract class Vehicle implements TrafficObject {
 		edgeIndices.add(0);
 		distancesTraveledOnEdge.add(0.);
 		speeds.add(0.);
-		computedLocations.add(false);
-		computedSpeeds.add(false);
+//		computedLocations.add(false);
+//		computedSpeeds.add(false);
 	}
 	
 	/**
