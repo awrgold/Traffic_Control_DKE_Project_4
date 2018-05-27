@@ -37,7 +37,7 @@ public class TrafficManager {
 	public final static int MAP_X_DIM = 1000;
 	public final static int MAP_Y_DIM = 1000;
 	public final static int GRID_FACTOR = 2;
-	public final static int vehicleCount = 1000;
+	public final static int vehicleCount = 1;
 	public final static int numUrbanCenters = 9;
 	public final static double lambda = 1.0;
 
@@ -132,6 +132,10 @@ public class TrafficManager {
 
 			// Increment the timestep for lights
 			for (Node n : map.getIntersections()){
+				if(n.getLights() == null) {
+					continue;
+				}
+				
 				for (int i = 0; i < n.getLights().size(); i++){
 					n.getLights().get(i).incrementTimeStep();
 				}

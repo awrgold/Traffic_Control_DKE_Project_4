@@ -32,7 +32,6 @@ public class Map {
 
 		setIntersections();
 
-
 		// Temporary hardcoded map bound until we have a save and load feature
 		this.reset(TrafficManager.MAP_X_DIM, TrafficManager.MAP_Y_DIM);
 
