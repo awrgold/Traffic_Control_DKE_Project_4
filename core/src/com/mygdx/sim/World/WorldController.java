@@ -6,11 +6,12 @@ import java.util.List;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.sim.GameObjects.TrafficManager;
-import com.mygdx.sim.GameObjects.data.Coordinates;
 import com.mygdx.sim.GameObjects.data.Edge;
 import com.mygdx.sim.GameObjects.data.Map;
 import com.mygdx.sim.GameObjects.data.Node;
 import com.mygdx.sim.GameObjects.roads.Road;
+import com.mygdx.sim.GameObjects.trafficObject.TrafficObject;
+import com.mygdx.sim.GameObjects.trafficObject.TrafficObjectState;
 import com.mygdx.sim.GameObjects.trafficObject.vehicle.Vehicle;
 
 public class WorldController {
@@ -25,11 +26,11 @@ public class WorldController {
 	private WorldState worldState;
 	private WorldState previousWorldState;
 	
-	// Current TimeStep
-	public int timeStep;
+	// Current Timestep
+	public int timestep;
 	
 	// Max TimeStep
-	public int timeStepMax;
+	public int timestepMax;
 
 	// Camera
 	private WorldCamera worldCamera;
@@ -47,7 +48,7 @@ public class WorldController {
 		previousWorldState = WorldState.RUNNING;
 		
 		// TimeStep
-		timeStep = 1;
+		timestep = 1;
 
 		// Create Map Object Lists
 		vehicles = new ArrayList<Vehicle>();
@@ -68,7 +69,7 @@ public class WorldController {
 		worldGenerator = new WorldGenerator(this);
 
 		// Start Simulation
-		trafficManager.simulate(timeStepMax = trafficManager.getMaximumTimesteps());
+		trafficManager.simulate(timestepMax = trafficManager.getMaximumTimesteps());
 	}
 
 	public void update() {
@@ -107,7 +108,7 @@ public class WorldController {
 		return vehicles;
 	}
 
-	public HashMap<Vehicle, Coordinates> getVehicleState(int timestep) {
+	public HashMap<TrafficObject, TrafficObjectState> getTrafficObjectState(int timestep) {
 		return trafficManager.getState(timestep);
 	}
 

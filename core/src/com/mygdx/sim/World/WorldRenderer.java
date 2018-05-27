@@ -48,13 +48,13 @@ public class WorldRenderer {
 				if(worldState == WorldState.RUNNING)
 				{
 					// Increase Time Step
-					if (worldController.timeStep + 1 < worldController.timeStepMax) {
-						worldController.timeStep++;
+					if (worldController.timestep + 1 < worldController.timestepMax) {
+						worldController.timestep++;
 					}
 				} else if(worldState == WorldState.REWINDING) {
 					// Decrease Time Step
-					if (worldController.timeStep - 1 > 0) {
-						worldController.timeStep--;
+					if (worldController.timestep - 1 > 0) {
+						worldController.timestep--;
 					}
 				}
 
@@ -75,7 +75,7 @@ public class WorldRenderer {
 
 		this.drawMapRoads(spriteBatch);
 		this.drawMapNodes(spriteBatch);
-		this.drawMapVehicles(spriteBatch, worldController.timeStep);
+		this.drawMapTrafficObjects(spriteBatch, worldController.timestep);
 
 		// Draw Outline
 		// this.drawMapOutline();
@@ -112,11 +112,11 @@ public class WorldRenderer {
 		}
 	}
 
-	private void drawMapVehicles(SpriteBatch spriteBatch, int timeStep) {
+	private void drawMapTrafficObjects(SpriteBatch spriteBatch, int timestep) {
 		// Iterate through all vehicles
 		for (Vehicle vehicle : worldController.getVehicles()) {
-			Coordinates previousCoord = worldController.getVehicleState(worldController.timeStep - 1).get(vehicle);
-			Coordinates nextCoord = worldController.getVehicleState(worldController.timeStep - 1).get(vehicle);
+			Coordinates previousCoord = worldController.getTrafficObjectState(timestep).get(vehicle).getLocation();
+			Coordinates nextCoord = worldController.getTrafficObjectState(timestep).get(vehicle).getLocation();
 
 			float x = (float) (previousCoord.getX() - nextCoord.getX());
 			float y = (float) (previousCoord.getY() - nextCoord.getY());
