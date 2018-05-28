@@ -1,6 +1,5 @@
 package com.mygdx.sim.GameObjects.trafficObject.vehicle;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -16,6 +15,7 @@ import com.mygdx.sim.GameObjects.pathfinding.AStarPathfinder;
 import com.mygdx.sim.GameObjects.pathfinding.Pathfinder;
 import com.mygdx.sim.GameObjects.trafficObject.TrafficObject;
 import com.mygdx.sim.GameObjects.trafficObject.TrafficObjectState;
+import com.mygdx.sim.Resources.Resources;
 
 public abstract class Vehicle implements TrafficObject {
 	
@@ -144,8 +144,8 @@ public abstract class Vehicle implements TrafficObject {
 	private void setSprite(String spriteName) {
 		this.spriteName = spriteName;
 		
-//		sprite = Resources.world.vehicleSprites.get(spriteName);
-//		sprite.setScale(0.5f);
+		this.sprite = Resources.world.vehicleSprites.get(spriteName);
+		sprite.setScale(0.5f);
 	}
 	
 	public void ensureCapacity() {

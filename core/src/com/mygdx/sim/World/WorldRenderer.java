@@ -115,7 +115,7 @@ public class WorldRenderer {
 	private void drawMapTrafficObjects(SpriteBatch spriteBatch, int timestep) {
 		// Iterate through all vehicles
 		for (Vehicle vehicle : worldController.getVehicles()) {
-			Coordinates previousCoord = worldController.getTrafficObjectState(timestep).get(vehicle).getLocation();
+			Coordinates previousCoord = worldController.getTrafficObjectState(timestep - 1).get(vehicle).getLocation();
 			Coordinates nextCoord = worldController.getTrafficObjectState(timestep).get(vehicle).getLocation();
 
 			float x = (float) (previousCoord.getX() - nextCoord.getX());

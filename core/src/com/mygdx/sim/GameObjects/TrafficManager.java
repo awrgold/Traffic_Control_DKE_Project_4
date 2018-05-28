@@ -34,10 +34,10 @@ public class TrafficManager {
 	private final static int RIDICULOUS_SPEED = 1000;
 
 	// Temporary map bounds
-	public final static int MAP_X_DIM = 1000;
-	public final static int MAP_Y_DIM = 1000;
+	public final static int MAP_X_DIM = 10000;
+	public final static int MAP_Y_DIM = 10000;
 	public final static int GRID_FACTOR = 2;
-	public final static int vehicleCount = 1;
+	public final static int vehicleCount = 1000;
 	public final static int numUrbanCenters = 9;
 	public final static double lambda = 1.0;
 

@@ -1,8 +1,13 @@
 package com.mygdx.sim.GameObjects.trafficObject.vehicle;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 import com.mygdx.sim.GameObjects.data.Map;
 import com.mygdx.sim.GameObjects.data.Node;
 import com.mygdx.sim.GameObjects.pathfinding.Pathfinder;
+import com.mygdx.sim.Resources.Resources;
 
 public class Car extends Vehicle {
 	private final static String SPRITE_NAME = "car1_red";
@@ -22,9 +27,9 @@ public class Car extends Vehicle {
 	}
 	
 	public static String randomSprite() {
-//		List<String> vehicleSpriteNames = new ArrayList<String>(Resources.world.vehicleSprites.keySet());
+		List<String> vehicleSpriteNames = new ArrayList<String>(Resources.world.vehicleSprites.keySet());
 		
-		return null;
+		return vehicleSpriteNames.get((new Random()).nextInt(vehicleSpriteNames.size()));
 	}
 
 	public int getMaxSpeed(){
