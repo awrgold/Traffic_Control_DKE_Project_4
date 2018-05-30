@@ -17,7 +17,6 @@ public class Node implements Comparable<Node> {
 	private boolean isDestination;
 	private String type;
 	private boolean isIntersection = false;
-	private boolean hasCarAlready = false;
 	private List<Stoplight> lights;
 
 	public Node(float xCoordinate, float yCoordinate, String type) {
@@ -86,14 +85,6 @@ public class Node implements Comparable<Node> {
 
 	public String toString() {
 		return "[Node@" + location + "]";
-	}
-
-	public boolean hasCarAlready(){
-		return hasCarAlready;
-	}
-
-	public void setHasCarAlready(){
-		if (!hasCarAlready) hasCarAlready = true;
 	}
 
 	public void setPreviousNode(Node previousNode) {

@@ -21,8 +21,6 @@ public abstract class Vehicle implements TrafficObject {
 	
 	private static int lastGivenId = 0;
 	
-	private boolean findDifferentPathOnFail = true;
-	
 	private int id;
 	
 	/**
@@ -103,7 +101,7 @@ public abstract class Vehicle implements TrafficObject {
 	 * By default, it uses a simple A* pathfinder at the start of the trip, and
 	 * doesn't adjust its path afterwards.
 	 */
-	Pathfinder pathfinder;
+	private static Pathfinder pathfinder;
 	
 	/**
 	 * Stores the algorithm that this vehicle uses to determine its acceleration.
@@ -193,7 +191,9 @@ public abstract class Vehicle implements TrafficObject {
 		this.maxSpeed = maxSpeed;
 		setAggression();
 		
-		pathfinder = new AStarPathfinder(graph);
+		if(pathfinder == null) {
+			pathfinder = new AStarPathfinder(graph);
+		}
 		
 		this.startTimestep = startTimestep;
 		
@@ -228,7 +228,7 @@ public abstract class Vehicle implements TrafficObject {
 	 * @param timestep - the edges that have already been traveled at that timestep may not be changed by the pathfinder
 	 */
 	public void computePath(int timestep) {
-		this.edgePath = pathfinder.findPath(this, timestep, findDifferentPathOnFail);
+		this.edgePath = pathfinder.findPath(this, timestep);
 	}
 	
 	public void accelerate(int timestep, double acceleration) {
@@ -319,7 +319,7 @@ public abstract class Vehicle implements TrafficObject {
 	 * @param timestep
 	 * @return the Edge that this vehicle is located on at the given timestep
 	 */
-	public Edge getEdgeAt(int timestep) {
+	public Edge getEdgeAt(int timestep) {		
 		return edgePath.get(edgeIndices[timestep]);
 	}
 	

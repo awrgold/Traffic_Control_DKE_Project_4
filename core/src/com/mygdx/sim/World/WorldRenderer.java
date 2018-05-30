@@ -1,6 +1,5 @@
 package com.mygdx.sim.World;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
@@ -8,11 +7,11 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
 import com.mygdx.sim.GameObjects.data.Coordinates;
 import com.mygdx.sim.GameObjects.data.Node;
 import com.mygdx.sim.GameObjects.roads.Road;
+import com.mygdx.sim.GameObjects.trafficObject.TrafficObject;
+import com.mygdx.sim.GameObjects.trafficObject.TrafficObjectState;
 import com.mygdx.sim.GameObjects.trafficObject.vehicle.Vehicle;
 import com.mygdx.sim.Resources.Resources;
 
@@ -28,11 +27,19 @@ public class WorldRenderer {
 	// Simulation Speed
 	private float simulationSpeed = 0.1f;
 	private float timer = 0;
+	
+	// State HashMaps
+	HashMap<TrafficObject, TrafficObjectState> previousTrafficObjectState;
+	HashMap<TrafficObject, TrafficObjectState> nextTrafficObjectState;
 
 	public WorldRenderer(WorldController worldController) {
 
 		// World Controller
 		this.worldController = worldController;
+		
+		// Get initial HashMaps
+		previousTrafficObjectState = worldController.getTrafficObjectState(worldController.timestep - 1);
+		nextTrafficObjectState = worldController.getTrafficObjectState(worldController.timestep);
 
 		// Render Objects
 		shapeRenderer = new ShapeRenderer();
@@ -57,11 +64,19 @@ public class WorldRenderer {
 						worldController.timestep--;
 					}
 				}
-
+				
+				
+				previousTrafficObjectState = worldController.getTrafficObjectState(worldController.timestep - 1);
+				nextTrafficObjectState = worldController.getTrafficObjectState(worldController.timestep);
+				
 				// Reset Timer
 				timer = 0f;
 			}
 		}
+		
+		this.drawMapRoads(spriteBatch);
+		this.drawMapNodes(spriteBatch);
+		this.drawMapTrafficObjects(spriteBatch, worldController.timestep);
 
 		// Calculate Scissors
 		/*
@@ -72,10 +87,6 @@ public class WorldRenderer {
 		 * this.drawMapNodes(spriteBatch); this.drawMapVehicles(spriteBatch, timeStep);
 		 * spriteBatch.flush(); } ScissorStack.popScissors();
 		 */
-
-		this.drawMapRoads(spriteBatch);
-		this.drawMapNodes(spriteBatch);
-		this.drawMapTrafficObjects(spriteBatch, worldController.timestep);
 
 		// Draw Outline
 		// this.drawMapOutline();
@@ -115,8 +126,9 @@ public class WorldRenderer {
 	private void drawMapTrafficObjects(SpriteBatch spriteBatch, int timestep) {
 		// Iterate through all vehicles
 		for (Vehicle vehicle : worldController.getVehicles()) {
-			Coordinates previousCoord = worldController.getTrafficObjectState(timestep - 1).get(vehicle).getLocation();
-			Coordinates nextCoord = worldController.getTrafficObjectState(timestep).get(vehicle).getLocation();
+			
+			Coordinates previousCoord = previousTrafficObjectState.get(vehicle).getLocation();
+			Coordinates nextCoord = nextTrafficObjectState.get(vehicle).getLocation();
 
 			float x = (float) (previousCoord.getX() - nextCoord.getX());
 			float y = (float) (previousCoord.getY() - nextCoord.getY());

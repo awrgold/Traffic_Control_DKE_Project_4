@@ -1,12 +1,10 @@
 package com.mygdx.sim.GameObjects.roads;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mygdx.sim.GameObjects.data.Edge;
+import com.mygdx.sim.Resources.Resources;
 
 public class Road {
 
@@ -22,9 +20,7 @@ public class Road {
 
 	public Road(Edge edge) {
 		
-		texture = new Texture(Gdx.files.internal("resources/roads/road_lane_" + edge.getNumLanes() +".png"));
-		texture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
-		texture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
+		texture = Resources.world.roadTextures.get("road_lane_" + edge.getNumLanes());
 		
 		length = (float) edge.getLength() + texture.getWidth();
 		

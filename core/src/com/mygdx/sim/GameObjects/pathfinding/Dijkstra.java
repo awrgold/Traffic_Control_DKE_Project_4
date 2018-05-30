@@ -34,7 +34,7 @@ public class Dijkstra extends Pathfinder {
     }
 
 
-    public List<Edge> findPath(Vehicle vehicle, int timestep, boolean findDifferentPathOnFail) {
+    public List<Edge> findPath(Vehicle vehicle, int timestep) {
         // TODO Auto-generated method stub
 
         return vehicle.getEdgePath();

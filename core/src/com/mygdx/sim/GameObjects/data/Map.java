@@ -50,8 +50,10 @@ public class Map {
 		for (Edge edge : edges) {
 			ArrayList<ArrayList<Vehicle>> history = locationCache.get(edge);
 
-			while (history.size() <= timestep)
+			while (history.size() <= timestep) {
+				System.out.println(history.size() + " <= " + timestep);
 				history.add(new ArrayList<Vehicle>());
+			}
 		}
 	}
 
