@@ -297,11 +297,11 @@ public class TrafficManager {
 				end = nodeList.get((int) (Math.floor(r.nextDouble() * nodeList.size())));
 			}
 
-			Car car = new Car(start, end, map, 0);
+			Car car = new Car.Builder(start, end, map).build();
 			while(car.getEdgePath() == null) {
 				start = nodeList.get((int) (Math.floor(r.nextDouble() * nodeList.size())));
 				end = nodeList.get((int) (Math.floor(r.nextDouble() * nodeList.size())));
-				car = new Car(start, end, map, 0);
+				car = new Car.Builder(start, end, map).build();
 			}
 			car.setDriverModel(new SimpleDriverModel(10));
 			cars.add(i, car);
@@ -369,7 +369,7 @@ public class TrafficManager {
 			}
 
 			if (mapNodes.get(y).isDestination()) {
-				Car temp = new Car(mapNodes.get(x), mapNodes.get(y), map, 0);
+				Car temp = new Car.Builder(mapNodes.get(x), mapNodes.get(y), map).build();
 				cars.add(temp);
 				temp.setDriverModel(new IntelligentDriverModel());
 			}
@@ -459,15 +459,15 @@ public class TrafficManager {
 
 		Map map = new Map(Arrays.asList(node1, node2, node3), Arrays.asList(edge1, edge2));
 
-		Car car1 = new Car(node2, node3, map, 0);
+		Car car1 = new Car.Builder(node2, node3, map).build();
 		car1.setEdgePath(Arrays.asList(edge2));
 		car1.setDriverModel(new SimpleDriverModel(10));
 
-		Car car2 = new Car(node2, node3, map, 0);
+		Car car2 = new Car.Builder(node2, node3, map).build();
 		car2.setEdgePath(Arrays.asList(edge2));
 		car2.setDriverModel(new IntelligentDriverModel());
 
-		Car car3 = new Car(node1, node3, map, 0);
+		Car car3 = new Car.Builder(node1, node3, map).build();
 		car3.setEdgePath(Arrays.asList(edge1, edge2));
 		car3.setDriverModel(new IntelligentDriverModel());
 
@@ -490,7 +490,7 @@ public class TrafficManager {
 		Map map = new Map(nodes, edges);
 
 		for (int i = 0; i < carsN; i++) {
-			Car car = new Car(nodes.get(0), nodes.get(nodeN - 1), map, 0);
+			Car car = new Car.Builder(nodes.get(0), nodes.get(nodeN - 1), map).build();
 			car.setDriverModel(new SimpleDriverModel());
 
 			car.setEdgePath(edges);

@@ -175,7 +175,7 @@ public abstract class Vehicle implements TrafficObject {
 	}
 	
 
-	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Map graph, int startTimestep) {
+	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Pathfinder pf, Map graph, int startTimestep, DriverModel driverModel) {
 
 		setSprite(spriteName);
 		
@@ -191,16 +191,14 @@ public abstract class Vehicle implements TrafficObject {
 		this.maxSpeed = maxSpeed;
 		setAggression();
 		
-		if(pathfinder == null) {
-			pathfinder = new AStarPathfinder(graph);
-		}
+		this.pathfinder = pf;
 		
 		this.startTimestep = startTimestep;
 		
+		this.driverModel = driverModel;
+		
 		// Find path
 		computePath(0);
-		
-//		initialize();
 	}
 	
 	private void initialize() {
@@ -214,11 +212,6 @@ public abstract class Vehicle implements TrafficObject {
 	public String toString() {
 		return ("[Vehicle " + id + "]");
 	}
-	
-	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Map graph, Pathfinder pathfinder, int startTimestep) {
-		this(startNode,goalNode,maxSpeed,spriteName,graph,startTimestep);
-		this.pathfinder = pathfinder;
-	}
 
 	/**
 	 * Recomputes the path after a given timestep. If this vehicle has already
@@ -231,11 +224,16 @@ public abstract class Vehicle implements TrafficObject {
 		this.edgePath = pathfinder.findPath(this, timestep);
 	}
 	
+	/**
+	 * Applies the acceleration provided by a DriverModel to this vehicle, setting its speed in the given timestep.
+	 * @param timestep timestep to determine speed for
+	 * @param acceleration acceleration to apply
+	 */
 	public void accelerate(int timestep, double acceleration) {
-//		if(computedSpeeds.get(timestep)) {
-//			System.out.println("You're trying to set a speed that has already been set. You're doing something wrong.");
-//			return;
-//		}
+		if(timestep != 0 && speeds[timestep] != -1) {
+			System.out.println("You're trying to set a speed that has already been set. You're doing something wrong.");
+			return;
+		}
 		
 		double previousSpeed = 0;
 		if(timestep!=0) 
@@ -244,7 +242,6 @@ public abstract class Vehicle implements TrafficObject {
 		double newSpeed = Math.max(previousSpeed + acceleration / TrafficManager.TIMESTEPS_PER_SECOND,0);
 		
 		speeds[timestep] = ((float) newSpeed);
-//		computedSpeeds.set(timestep, true);
 	}
 	
 	/**
@@ -253,15 +250,15 @@ public abstract class Vehicle implements TrafficObject {
 	 */
 	public void move(int timestep) {
 		
-//		if(computedLocations.get(timestep)) {
-//			System.out.println("You're setting a location for a timestep where the location has already been computed. You're doing something wrong.");
-//			return;
-//		}
-//		
-//		if(!computedSpeeds.get(timestep-1)) {
-//			System.out.println("You're setting a location for a timestep where the previous speed hasn't been computed. You're doing something wrong.");
-//			return;
-//		}
+		if(distancesTraveledOnEdge[timestep] != -1) {
+			System.out.println("You're setting a location for a timestep where the location has already been computed. You're doing something wrong.");
+			return;
+		}
+		
+		if(speeds[timestep-1] == -1) {
+			System.out.println("You're setting a location for a timestep where the previous speed hasn't been computed. You're doing something wrong.");
+			return;
+		}
 		
 		// Get the speed we are moving at
 		float speed = speeds[timestep-1]/TrafficManager.TIMESTEPS_PER_SECOND;
@@ -309,9 +306,6 @@ public abstract class Vehicle implements TrafficObject {
 		// Set the edge index and traveled distance 
 		edgeIndices[timestep] = edgeIdx;
 		distancesTraveledOnEdge[timestep] = distanceTraveledOnEdge;
-		
-		// Indicate that the location for this timestep has been computed
-//		computedLocations.set(timestep, true);
 	}
 	
 	/**
@@ -343,55 +337,6 @@ public abstract class Vehicle implements TrafficObject {
 	public int getMaxSpeed(int timestep) {
 		return (int) Math.min(maxSpeed, getEdgeAt(timestep).getSpeedLimit());
 	}
-	
-	/**
-	 * Sets this vehicle's speed at a given timestep.
-	 * @param timestep - the timestep for which we're setting the speed
-	 * @param speed - the speed at that timestep
-	 */
-//	public void setSpeed(int timestep, double speed) {
-//		if(computedSpeeds.get(timestep)) {
-//			System.out.println("You're trying to set a speed that has already been set. You're doing something wrong.");
-//			return;
-//		}
-//		
-//		speeds.set(timestep, speed);
-//		computedSpeeds.set(timestep, true);
-//	}
-	
-	/**
-	 * Initializes the history-keeping ArrayLists to hold at least one element.
-	 * Things break otherwise
-	 */
-//	private void initialize() {
-//		if(edgeIndices.size() == 0) {
-//			addZeros();
-////			computedLocations.set(0, true);
-//		} else
-//			System.out.println("You're trying to initialize a vehicle that has already been initialized. You're doing something wrong.");		
-//	}
-//	
-//	/**
-//	 * Utility method used by ensureCapacity to increase the capacity of all ArrayLists.
-//	 */
-//	private void addZeros() {
-//		edgeIndices.add(0);
-////		distancesTraveledOnEdge.add(0.);
-////		speeds.add(0.);
-//		computedLocations.add(false);
-//		computedSpeeds.add(false);
-//	}
-	
-	/**
-	 * Ensures that the history-keeping variables of this Vehicle have sufficient capacity
-	 * for the given number of timesteps
-	 * @param timestep - number of timesteps we need to be able to keep history of
-	 */
-//	public void ensureCapacity(int timestep) {
-//		while(edgeIndices.size() <= timestep) {
-//			addZeros();
-//		}
-//	}
 
 	public float getTraveledDistance(int timestep) {
 		return distancesTraveledOnEdge[timestep];
@@ -431,7 +376,6 @@ public abstract class Vehicle implements TrafficObject {
 		
 		return (v.id == this.id);
 	}
-
 
 	public void setAggression(){
 		maxSpeed = (int)(maxSpeed * drawRandomExponential(-0.1));
