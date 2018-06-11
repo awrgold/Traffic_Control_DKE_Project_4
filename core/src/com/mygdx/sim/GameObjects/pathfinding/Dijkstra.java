@@ -7,7 +7,7 @@ import com.mygdx.sim.GameObjects.data.Edge;
 import com.mygdx.sim.GameObjects.data.Map;
 import com.mygdx.sim.GameObjects.data.Node;
 import com.mygdx.sim.GameObjects.data.Tuple;
-import com.mygdx.sim.GameObjects.vehicle.Vehicle;
+import com.mygdx.sim.GameObjects.trafficObject.vehicle.Vehicle;
 
 import static java.lang.Double.MAX_VALUE;
 import static java.lang.Double.MIN_VALUE;
@@ -34,7 +34,7 @@ public class Dijkstra extends Pathfinder {
     }
 
 
-    public List<Edge> findPath(Vehicle vehicle, int timestep, boolean findDifferentPathOnFail) {
+    public List<Edge> findPath(Vehicle vehicle, int timestep) {
         // TODO Auto-generated method stub
 
         return vehicle.getEdgePath();

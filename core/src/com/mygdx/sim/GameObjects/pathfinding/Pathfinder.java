@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.mygdx.sim.GameObjects.data.Edge;
 import com.mygdx.sim.GameObjects.data.Map;
-import com.mygdx.sim.GameObjects.vehicle.Vehicle;
+import com.mygdx.sim.GameObjects.trafficObject.vehicle.Vehicle;
 
 public abstract class Pathfinder {
 	public Map graph;
@@ -17,7 +17,7 @@ public abstract class Pathfinder {
 	 * @param timestep - timestep before which we are not allowed to change the path
 	 * @return new path
 	 */
-	public abstract List<Edge> findPath(Vehicle vehicle, int timestep, boolean findDifferentPathOnFail);
+	public abstract List<Edge> findPath(Vehicle vehicle, int timestep);
 
 //	public boolean canFindPath(Vehicle vehicle, int timestep){
 //		if (findPath(vehicle, timestep).size() > 0){

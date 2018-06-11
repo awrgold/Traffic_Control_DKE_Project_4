@@ -10,7 +10,7 @@ import com.mygdx.sim.GameObjects.Intersection;
 import com.mygdx.sim.GameObjects.IntersectionSingle;
 import com.mygdx.sim.GameObjects.Stoplight;
 import com.mygdx.sim.GameObjects.TrafficManager;
-import com.mygdx.sim.GameObjects.vehicle.Vehicle;
+import com.mygdx.sim.GameObjects.trafficObject.vehicle.Vehicle;
 
 public class Map {
 	private List<Node> nodes = new ArrayList<Node>();
@@ -32,7 +32,6 @@ public class Map {
 
 		setIntersections();
 
-
 		// Temporary hardcoded map bound until we have a save and load feature
 		this.reset(TrafficManager.MAP_X_DIM, TrafficManager.MAP_Y_DIM);
 
@@ -51,8 +50,9 @@ public class Map {
 		for (Edge edge : edges) {
 			ArrayList<ArrayList<Vehicle>> history = locationCache.get(edge);
 
-			while (history.size() <= timestep)
+			while (history.size() <= timestep) {
 				history.add(new ArrayList<Vehicle>());
+			}
 		}
 	}
 

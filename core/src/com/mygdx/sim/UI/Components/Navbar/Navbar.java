@@ -88,7 +88,7 @@ public class Navbar extends Table {
 	}
 	
 	public void update() {
-		tickLabel.setText("Tick: " + worldController.timeStep);
+		tickLabel.setText("Tick: " + worldController.timestep);
 		playButton.setText(worldController.getWorldState() == WorldState.PAUSED ? "Play" : "Pause");
 	}
 }

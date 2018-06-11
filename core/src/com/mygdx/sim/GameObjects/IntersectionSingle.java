@@ -60,8 +60,8 @@ public class IntersectionSingle {
                     && !hasBeenChecked[nodes.indexOf(centerNode)][nodes.indexOf(neighbourNode)]) {
 
                 // Node 1
-                double distanceX = neighbourNode.getX() - centerNode.getX();
-                double distanceY = neighbourNode.getY() - centerNode.getY();
+                float distanceX = neighbourNode.getX() - centerNode.getX();
+                float distanceY = neighbourNode.getY() - centerNode.getY();
 
                 int offset = (int) (map.euclideanDistance(neighbourNode, centerNode) / 10);
                 int offsetX = 0;

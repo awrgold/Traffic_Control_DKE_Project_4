@@ -1,6 +1,5 @@
-package com.mygdx.sim.GameObjects.vehicle;
+package com.mygdx.sim.GameObjects.trafficObject.vehicle;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -14,25 +13,27 @@ import com.mygdx.sim.GameObjects.driverModel.DriverModel;
 import com.mygdx.sim.GameObjects.driverModel.SimpleDriverModel;
 import com.mygdx.sim.GameObjects.pathfinding.AStarPathfinder;
 import com.mygdx.sim.GameObjects.pathfinding.Pathfinder;
+import com.mygdx.sim.GameObjects.trafficObject.TrafficObject;
+import com.mygdx.sim.GameObjects.trafficObject.TrafficObjectState;
 import com.mygdx.sim.Resources.Resources;
 
-public abstract class Vehicle {
+public abstract class Vehicle implements TrafficObject {
 	
 	private static int lastGivenId = 0;
-	
-	private boolean findDifferentPathOnFail = true;
 	
 	private int id;
 	
 	/**
-	 * The node this vehicle starts its trip at.
+	 * The node this vehicle starts its trip at and the node it wants to reach.
 	 */
 	Node startNode;
+	Node goalNode;
 	
 	/**
-	 * The node this vehicle wants to reach.
+	 * The timesteps when this vehicle begins and ends its journey.
 	 */
-	Node goalNode;
+	final int startTimestep;
+	int endTimestep = Integer.MAX_VALUE;
 	
 	/**
 	 * The maximum speed that this vehicle can achieve, ever.
@@ -42,11 +43,23 @@ public abstract class Vehicle {
 	/**
 	 * The physical length of the vehicle in meters.
 	 */
-	private double length = 4;
+	private float length = 4;
 	
-	public double getLength() {
-		return length;
+	public float getLength() {	return length; }
+	
+	public TrafficObjectState getState(int timestep) {
+		Coordinates location = this.getLocationCoordinates(timestep);
+		boolean vizualize = this.isVisibleInVisualization(timestep);
+		boolean visibleToDrivers = this.isVisibleToDrivers(timestep);
+		
+		return new TrafficObjectState(location,vizualize,visibleToDrivers);
 	}
+	
+	public boolean isVisibleToDrivers(int timestep) { return timestep >= startTimestep && timestep <= endTimestep; }
+
+	public boolean isVisibleInVisualization(int timestep) {	return timestep >= startTimestep && timestep <= endTimestep; }
+	
+	public boolean isMoving(int timestep) { return timestep >= startTimestep && timestep <= endTimestep; }
 	
 	/**
 	 * The edges that this vehicle is supposed to travel from its start point
@@ -60,13 +73,6 @@ public abstract class Vehicle {
 		this.edgePath = edgePath;
 	}
 	
-	
-	/**
-	 * True means the car is allowed to move, false means it is not.
-	 * False if it has reached its destination.
-	 */
-	private boolean moving = true;
-	
 	/**
 	 * Stores for each timestep, the index in edgesToTravel of the edge
 	 * that this vehicle is located at.
@@ -74,7 +80,7 @@ public abstract class Vehicle {
 	 * If we do edgesToTravel.get(edgeIndices.get(t)), we should get
 	 * the edge where this vehicle is located at timestep t.
 	 */
-	ArrayList<Integer> edgeIndices = new ArrayList<Integer>();
+	int[] edgeIndices = new int[0];
 	
 	/**
 	 * Stores for each timestep, the distance that this vehicle has traveled
@@ -83,23 +89,19 @@ public abstract class Vehicle {
 	 * If we have a 10-long edge, and we're moving at 3 per second:
 	 * 0 3 6 9 2 5 8 ...
 	 */
-	ArrayList<Double> distancesTraveledOnEdge = new ArrayList<Double>();
+	float[] distancesTraveledOnEdge = new float[0];
 	
 	/**
 	 * Stores for each timestep, the speed that this vehicle was traveling at.
 	 */
-	ArrayList<Double> speeds = new ArrayList<Double>();
-	
-	// Ignore. Keeps track of whether you're doing something very wrong.
-	ArrayList<Boolean> computedSpeeds = new ArrayList<Boolean>();
-	ArrayList<Boolean> computedLocations = new ArrayList<Boolean>();
+	float[] speeds = new float[0];
 	
 	/**
 	 * Stores the algorithm that this vehicle uses for navigation/pathfinding.
 	 * By default, it uses a simple A* pathfinder at the start of the trip, and
 	 * doesn't adjust its path afterwards.
 	 */
-	Pathfinder pathfinder;
+	private static Pathfinder pathfinder;
 	
 	/**
 	 * Stores the algorithm that this vehicle uses to determine its acceleration.
@@ -140,14 +142,44 @@ public abstract class Vehicle {
 	private void setSprite(String spriteName) {
 		this.spriteName = spriteName;
 		
-		sprite = Resources.world.vehicleSprites.get(spriteName);
+		this.sprite = Resources.world.vehicleSprites.get(spriteName);
 		sprite.setScale(0.5f);
 	}
 	
+	public void ensureCapacity() {
+		ensureCapacity(speeds.length + 1440);
+	}
+	
+	public void ensureCapacity(int capacity) {
+		int currentCapacity = speeds.length;
+		
+		float[] newSpeeds = new float[capacity];
+		float[] newDistances = new float[capacity];
+		int[] newEdgeIndices = new int[capacity];
+		
+		for(int i = 0; i < currentCapacity; i++) {
+			newSpeeds[i] = speeds[i];
+			newDistances[i] = distancesTraveledOnEdge[i];
+			newEdgeIndices[i] = edgeIndices[i];
+		}
+		
+		for(int i = currentCapacity; i < capacity; i++) {
+			newSpeeds[i] = -1;
+			newDistances[i] = -1;
+			newEdgeIndices[i] = -1;
+		}
+		
+		speeds = newSpeeds;
+		distancesTraveledOnEdge = newDistances;
+		edgeIndices = newEdgeIndices;
+	}
+	
 
-	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Map graph) {
+	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Map graph, int startTimestep) {
 
 		setSprite(spriteName);
+		
+		initialize();		
 		
 		this.id = lastGivenId++;
 
@@ -159,20 +191,32 @@ public abstract class Vehicle {
 		this.maxSpeed = maxSpeed;
 		setAggression();
 		
-		pathfinder = new AStarPathfinder(graph);
+		if(pathfinder == null) {
+			pathfinder = new AStarPathfinder(graph);
+		}
+		
+		this.startTimestep = startTimestep;
 		
 		// Find path
 		computePath(0);
 		
-		initialize();
+//		initialize();
 	}
 	
+	private void initialize() {
+		ensureCapacity();
+		
+		speeds[0] = 0;
+		edgeIndices[0] = 0;
+		distancesTraveledOnEdge[0] = 0;
+	}
+
 	public String toString() {
 		return ("[Vehicle " + id + "]");
 	}
 	
-	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Map graph, Pathfinder pathfinder) {
-		this(startNode,goalNode,maxSpeed,spriteName,graph);
+	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Map graph, Pathfinder pathfinder, int startTimestep) {
+		this(startNode,goalNode,maxSpeed,spriteName,graph,startTimestep);
 		this.pathfinder = pathfinder;
 	}
 
@@ -184,23 +228,23 @@ public abstract class Vehicle {
 	 * @param timestep - the edges that have already been traveled at that timestep may not be changed by the pathfinder
 	 */
 	public void computePath(int timestep) {
-		this.edgePath = pathfinder.findPath(this, timestep, findDifferentPathOnFail);
+		this.edgePath = pathfinder.findPath(this, timestep);
 	}
 	
 	public void accelerate(int timestep, double acceleration) {
-		if(computedSpeeds.get(timestep)) {
-			System.out.println("You're trying to set a speed that has already been set. You're doing something wrong.");
-			return;
-		}
+//		if(computedSpeeds.get(timestep)) {
+//			System.out.println("You're trying to set a speed that has already been set. You're doing something wrong.");
+//			return;
+//		}
 		
 		double previousSpeed = 0;
 		if(timestep!=0) 
-			previousSpeed = speeds.get(timestep-1);
+			previousSpeed = speeds[timestep-1];
 		
-		double newSpeed = previousSpeed + acceleration * TrafficManager.TIMESTEPS_PER_SECOND;
+		double newSpeed = Math.max(previousSpeed + acceleration / TrafficManager.TIMESTEPS_PER_SECOND,0);
 		
-		speeds.set(timestep, newSpeed);
-		computedSpeeds.set(timestep, true);
+		speeds[timestep] = ((float) newSpeed);
+//		computedSpeeds.set(timestep, true);
 	}
 	
 	/**
@@ -209,33 +253,33 @@ public abstract class Vehicle {
 	 */
 	public void move(int timestep) {
 		
-		if(computedLocations.get(timestep)) {
-			System.out.println("You're setting a location for a timestep where the location has already been computed. You're doing something wrong.");
-			return;
-		}
-		
-		if(!computedSpeeds.get(timestep-1)) {
-			System.out.println("You're setting a location for a timestep where the previous speed hasn't been computed. You're doing something wrong.");
-			return;
-		}
+//		if(computedLocations.get(timestep)) {
+//			System.out.println("You're setting a location for a timestep where the location has already been computed. You're doing something wrong.");
+//			return;
+//		}
+//		
+//		if(!computedSpeeds.get(timestep-1)) {
+//			System.out.println("You're setting a location for a timestep where the previous speed hasn't been computed. You're doing something wrong.");
+//			return;
+//		}
 		
 		// Get the speed we are moving at
-		double speed = speeds.get(timestep-1)/TrafficManager.TIMESTEPS_PER_SECOND;
+		float speed = speeds[timestep-1]/TrafficManager.TIMESTEPS_PER_SECOND;
 		
 		// Get the index of the edge we are currently on
-		int edgeIdx = edgeIndices.get(timestep-1);
+		int edgeIdx = edgeIndices[timestep-1];
 		
 		// Get the distance we have traveled on the current edge
-		double distanceTraveledOnEdge = distancesTraveledOnEdge.get(timestep-1);
+		float distanceTraveledOnEdge = distancesTraveledOnEdge[timestep-1];
 		
 		// Check if the vehicle is still allowed to move.
-		if(moving) {
+		if(isMoving(timestep)) {
 			// Add the speed we are currently moving at to our old location in order to determine
 			// our new location
 			distanceTraveledOnEdge += speed;
 			
 			// Get the length of the current edge
-			double currentEdgeLength = getEdgeAt(timestep-1).getLength();
+			float currentEdgeLength = getEdgeAt(timestep-1).getLength();
 			
 			// Check if we have reached the end of the edge we were on in the last timestep. 
 			// If yes, we need to move to the next edge.		
@@ -245,7 +289,7 @@ public abstract class Vehicle {
 				if(edgeIdx == edgePath.size()-1) {
 					
 					// Disallow the car from moving further
-					moving = false;
+					endTimestep = timestep;
 					
 					// Set the distance traveled on the edge to the length on the edge
 					// to indicate that we are at its end
@@ -263,11 +307,11 @@ public abstract class Vehicle {
 		}
 		
 		// Set the edge index and traveled distance 
-		edgeIndices.set(timestep, edgeIdx);
-		distancesTraveledOnEdge.set(timestep, distanceTraveledOnEdge);
+		edgeIndices[timestep] = edgeIdx;
+		distancesTraveledOnEdge[timestep] = distanceTraveledOnEdge;
 		
 		// Indicate that the location for this timestep has been computed
-		computedLocations.set(timestep, true);
+//		computedLocations.set(timestep, true);
 	}
 	
 	/**
@@ -275,8 +319,8 @@ public abstract class Vehicle {
 	 * @param timestep
 	 * @return the Edge that this vehicle is located on at the given timestep
 	 */
-	public Edge getEdgeAt(int timestep) {
-		return edgePath.get(edgeIndices.get(timestep));
+	public Edge getEdgeAt(int timestep) {		
+		return edgePath.get(edgeIndices[timestep]);
 	}
 	
 	/**
@@ -286,7 +330,7 @@ public abstract class Vehicle {
 	 */
 	public Coordinates getLocationCoordinates(int timestep) {	
 		Edge edge = getEdgeAt(timestep);
-		double distance = distancesTraveledOnEdge.get(timestep);
+		float distance = distancesTraveledOnEdge[timestep];
 		return edge.getLocationIfTraveledDistance(distance);
 	}
 
@@ -319,46 +363,46 @@ public abstract class Vehicle {
 	 * Initializes the history-keeping ArrayLists to hold at least one element.
 	 * Things break otherwise
 	 */
-	private void initialize() {
-		if(edgeIndices.size() == 0) {
-			addZeros();
-			computedLocations.set(0, true);
-		} else
-			System.out.println("You're trying to initialize a vehicle that has already been initialized. You're doing something wrong.");		
-	}
-	
-	/**
-	 * Utility method used by ensureCapacity to increase the capacity of all ArrayLists.
-	 */
-	private void addZeros() {
-		edgeIndices.add(0);
-		distancesTraveledOnEdge.add(0.);
-		speeds.add(0.);
-		computedLocations.add(false);
-		computedSpeeds.add(false);
-	}
+//	private void initialize() {
+//		if(edgeIndices.size() == 0) {
+//			addZeros();
+////			computedLocations.set(0, true);
+//		} else
+//			System.out.println("You're trying to initialize a vehicle that has already been initialized. You're doing something wrong.");		
+//	}
+//	
+//	/**
+//	 * Utility method used by ensureCapacity to increase the capacity of all ArrayLists.
+//	 */
+//	private void addZeros() {
+//		edgeIndices.add(0);
+////		distancesTraveledOnEdge.add(0.);
+////		speeds.add(0.);
+//		computedLocations.add(false);
+//		computedSpeeds.add(false);
+//	}
 	
 	/**
 	 * Ensures that the history-keeping variables of this Vehicle have sufficient capacity
 	 * for the given number of timesteps
 	 * @param timestep - number of timesteps we need to be able to keep history of
 	 */
-	public void ensureCapacity(int timestep) {
-		while(edgeIndices.size() <= timestep) {
-			addZeros();
-		}
-	}
+//	public void ensureCapacity(int timestep) {
+//		while(edgeIndices.size() <= timestep) {
+//			addZeros();
+//		}
+//	}
 
-	public double getTraveledDistance(int timestep) {
-		return distancesTraveledOnEdge.get(timestep);
+	public float getTraveledDistance(int timestep) {
+		return distancesTraveledOnEdge[timestep];
 	}
 	
 	public List<Edge> getEdgePath() {
 		return edgePath;
 	}
 	
-	public double getSpeedAt(int timestep){
-		return speeds.get(timestep);
+	public float getSpeedAt(int timestep){
+		return speeds[timestep];
 	}
 
 	public Node getStartNode(){
@@ -401,8 +445,4 @@ public abstract class Vehicle {
 		//System.out.println(res);
 		return res;
 		}
-
-	public boolean isMoving() {
-		return moving;
-	}
 }

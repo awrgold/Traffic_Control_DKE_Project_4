@@ -38,8 +38,8 @@ public class MapReader {
 				org.w3c.dom.Node xmlElement = xmlElements.item(i);
 
 				String nodeID = xmlElement.getAttributes().getNamedItem("id").getTextContent();
-				double nodeX = Double.parseDouble(xmlElement.getAttributes().getNamedItem("x").getTextContent()) * MAPMULTIPLIER;
-				double nodeY = Double.parseDouble(xmlElement.getAttributes().getNamedItem("y").getTextContent()) * MAPMULTIPLIER;
+				float nodeX = Float.parseFloat(xmlElement.getAttributes().getNamedItem("x").getTextContent()) * MAPMULTIPLIER;
+				float nodeY = Float.parseFloat(xmlElement.getAttributes().getNamedItem("y").getTextContent()) * MAPMULTIPLIER;
 				String nodeType = xmlElement.getAttributes().getNamedItem("type").getTextContent();
 
 				 Node node = new Node(nodeX, nodeY, nodeType);

@@ -1,6 +1,6 @@
 package com.mygdx.sim.GameObjects.data;
 
-import com.mygdx.sim.GameObjects.vehicle.Vehicle;
+import com.mygdx.sim.GameObjects.trafficObject.vehicle.Vehicle;
 
 public class DistanceAndVehicle {
 	double distance;

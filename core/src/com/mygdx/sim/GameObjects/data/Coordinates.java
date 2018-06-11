@@ -9,11 +9,11 @@ package com.mygdx.sim.GameObjects.data;
 public class Coordinates {
 	
 	/** Width */
-	private double x;
+	private float x;
 	/** Height */
-    private double y;
+    private float y;
     
-    public Coordinates(double x, double y) {
+    public Coordinates(float x, float y) {
     	this.x = x;
     	this.y = y;
     }
@@ -22,7 +22,7 @@ public class Coordinates {
     	return add(coords.getX(),coords.getY());    	
     }
     
-    public Coordinates add(double x, double y) {
+    public Coordinates add(float x, float y) {
     	return new Coordinates(this.x+x,this.y+y);
     }
     
@@ -30,7 +30,7 @@ public class Coordinates {
     	return subtract(coords.getX(),coords.getY());
     }
     
-    public Coordinates subtract(double x, double y) {
+    public Coordinates subtract(float x, float y) {
     	return new Coordinates(this.x-x,this.y-y);
     }
     
@@ -38,15 +38,15 @@ public class Coordinates {
     	return subtractAbs(coords.getX(),coords.getY());
     }
     
-    public Coordinates subtractAbs(double x, double y) {
+    public Coordinates subtractAbs(float x, float y) {
     	return new Coordinates(Math.abs(this.x-x),Math.abs(this.y-y));
     }
     
-    public double getX() {
+    public float getX() {
     	return x;
     }
     
-    public double getY() {
+    public float getY() {
     	return y;
     }
     
@@ -65,8 +65,8 @@ public class Coordinates {
     public static void main(String[] args) {
     	Coordinates coords1 = new Coordinates(10,20);    	
     	Coordinates coords2 = new Coordinates(10,20);
-    	Coordinates coords3 = new Coordinates(10,20.000000001);
-    	Coordinates coords4 = new Coordinates(10,20.0001);
+    	Coordinates coords3 = new Coordinates(10,20.000000001f);
+    	Coordinates coords4 = new Coordinates(10,20.0001f);
     	Object redFlag = new Object();
     	
     	if(coords1.equals(coords2)) 
