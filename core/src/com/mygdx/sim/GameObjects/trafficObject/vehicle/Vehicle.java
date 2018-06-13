@@ -1,6 +1,7 @@
 package com.mygdx.sim.GameObjects.trafficObject.vehicle;
 
 import java.util.List;
+import java.util.Random;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -379,6 +380,14 @@ public abstract class Vehicle implements TrafficObject {
 
 	public void setAggression(){
 		maxSpeed = (int)(maxSpeed * drawRandomExponential(-0.1));
+	}
+
+	public void setAggression(int mean){
+		Random r = new Random();
+		double g = r.nextGaussian() + mean;
+		if (g < 0 || g > mean*2) {
+			setAggression(mean);
+		}
 	}
 
 	public static double drawRandomExponential(double mean) {

@@ -24,12 +24,15 @@ import com.mygdx.sim.GameObjects.trafficObject.vehicle.Vehicle;
 
 public class TrafficManager {
 
+	// Turn on all print statements
+	private static boolean DEBUG = true;
+
 	// Duration of the simulation (hours, minutes, seconds)
-	public final static Time DURATION = new Time(1, 0, 0);
+	private final static Time DURATION = new Time(0, 30, 0);
 
 	// Sampling frequency. Larger number means higher fidelity of the model, but
 	// also more computation
-	public final static int TIMESTEPS_PER_SECOND = 2;
+	public final static int TIMESTEPS_PER_SECOND = 1;
 
 	private final static int VIEW_DISTANCE = 500;
 	private final static int RIDICULOUS_SPEED = 1000;
@@ -39,7 +42,7 @@ public class TrafficManager {
 	public final static int MAP_Y_DIM = 100000;
 	public final static int GRID_FACTOR = 2;
 	public final static int vehicleCount = 1000;
-	public final static int numUrbanCenters = 2;
+	public final static int numUrbanCenters = 5;
 	public final static double mean = 0.2;
 	public final static double lambda = 1.0;
 
@@ -114,7 +117,7 @@ public class TrafficManager {
 
 		// Ensure all Vehicles have enough memory capacity
 		for (Vehicle vehicle : vehicles)
-			vehicle.ensureCapacity(finalTimeStep);
+		vehicle.ensureCapacity(finalTimeStep);
 		System.out.println("vehicles");
 
 		while (lastComputedTimestep < finalTimeStep - 1) {
@@ -263,9 +266,8 @@ public class TrafficManager {
 		List<Node> nodeList = new ArrayList<Node>(nodeMap.values());
 
 		// Sort the nodeList in descending order based on priority
-//		Collections.sort(nodeList, new SortNode());
+		Collections.sort(nodeList, new SortNode());
 		List<Edge> edgeList = new ArrayList<Edge>(edgeMap.values());
-
 		Map map = new Map(nodeList, edgeList);
 
 		List<Node> destinations = new ArrayList<Node>();
@@ -284,13 +286,16 @@ public class TrafficManager {
 			}
 		}
 
-		System.out.println("Destination list size: " + destinations.size());
+		if(DEBUG){
+			System.out.println("Destination list size: " + destinations.size());
+		}
 
 		List cars = new ArrayList();
-		for (int i = 0; i < vehicleCount; i++) {
 
-			// TODO: Make priorities based on neighborhood
-			createNeighborhoods(destinations, numUrbanCenters);
+		// Create the neighborhood scheme (see methods below)
+		createNeighborhoods(destinations, numUrbanCenters);
+
+		for (int i = 0; i < vehicleCount; i++) {
 
 			// This utilizes an exponential distribution prioritizing nodes at the start of the list
 			// Nodes at the start of the list are higher priority than those at the end
@@ -300,22 +305,30 @@ public class TrafficManager {
 			while (start == end) {
 				end = destinations.get((int) (Math.floor(drawRandomExponential(lambda) * destinations.size())));
 			}
+			// Build each car with their given destination and a randomly chosen spawn time
+			int r = (int)(Math.round(Math.random()*getMaximumTimesteps()));
+			Car car = new Car.Builder(start, end, map).setStartTimestep(r).build();
 
-			Car car = new Car.Builder(start, end, map).build();
 			while(car.getEdgePath() == null) {
 				start = destinations.get((int) (Math.floor(drawRandomExponential(lambda) * destinations.size())));
 				end = destinations.get((int) (Math.floor(drawRandomExponential(lambda) * destinations.size())));
 				car = new Car.Builder(start, end, map).build();
 			}
+
+			// Set the driver's model
 			car.setDriverModel(new SimpleDriverModel(10));
 			cars.add(i, car);
 		}
 
 		TrafficManager tm = new TrafficManager(map, cars);
-
 		return tm;
 	}
 
+	/**
+	 * Draws a random variate from an (negative) exponential distribution with given rate
+	 * @param rate - lambda, rate of arrival
+	 * @return
+	 */
 	public static double drawRandomExponential(double rate) {
 		// draw a [0,1] uniform distributed number
 		double u = Math.random();
@@ -324,6 +337,10 @@ public class TrafficManager {
 		return x;
 	}
 
+	/**
+	 * Procedurally generates a grid based on static parameters, unused as of phase 2
+	 * @return
+	 */
 	public static TrafficManager createEnvironment() {
 
 		List<Node> mapNodes = new ArrayList<Node>();
@@ -404,14 +421,14 @@ public class TrafficManager {
 		while (d >= 0.1){
 			d = Math.random();
 		}
-
 		int r = (int) d*nodes.size();
 
 		nodes.get(r).setNodePriorityWeight(setRandomUrbanCenterWeight(urbanCenterWeight));
 		setNeighborWeights(nodes.get(r), urbanCenterWeight);
 		createNeighborhoods(nodes, numUrbanCenters-1);
-		System.out.println("Remaining urban centers to work with: " + (numUrbanCenters - 1));
-
+		if (DEBUG){
+			System.out.println("Remaining urban centers to work with: " + (numUrbanCenters - 1));
+		}
 	}
 
 	/**
@@ -420,17 +437,21 @@ public class TrafficManager {
 	 * @param weight - the current weight of the iteration
 	 */
 	public static void setNeighborWeights(Node node, int weight){
-		if (weight == 0) return;
-		for (Node n : node.getOutgoingNeighbors()){
+		if (weight <= 0) return;
+		for (Node n : node.getNeighbors()){
 			n.setNodePriorityWeight(weight);
 			setNeighborWeights(n, weight-1);
-		}
-		for (Node n : node.getIncomingNeighbors()){
-			n.setNodePriorityWeight(weight);
-			setNeighborWeights(n, weight-1);
+			if(DEBUG){
+				System.out.println("Weight of node " + n.getNodeID() + " -> " + weight);
+			}
 		}
 	}
 
+	/**
+	 * Randomly (Gaussian) choose a weight for each urban center around the mean
+	 * @param mean - defined in class
+	 * @return
+	 */
 	public static int setRandomUrbanCenterWeight(int mean){
 		Random r = new Random();
 		double g = r.nextGaussian() + mean;

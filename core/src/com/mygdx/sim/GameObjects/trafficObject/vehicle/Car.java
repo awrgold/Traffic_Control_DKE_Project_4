@@ -35,6 +35,7 @@ public class Car extends Vehicle {
 			this.startNode = startNode;
 			this.goalNode = goalNode;
 			this.graph = graph;
+
 		}
 		
 		public Builder setMaxSpeed(int maxSpeed) {

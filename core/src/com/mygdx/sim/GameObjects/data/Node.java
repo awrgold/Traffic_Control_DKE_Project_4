@@ -1,7 +1,9 @@
 package com.mygdx.sim.GameObjects.data;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import com.mygdx.sim.GameObjects.Stoplight;
 
@@ -13,6 +15,7 @@ public class Node implements Comparable<Node> {
 	private Coordinates location;
 	private double nodeDistanceWeight;
 	private double nodeDistanceWeightEstimate;
+	private UUID ID;
 	private int nodePriorityWeight = 0;
 	private boolean isDestination;
 	private String type;
@@ -22,13 +25,22 @@ public class Node implements Comparable<Node> {
 	public Node(float xCoordinate, float yCoordinate, String type) {
 		location = new Coordinates(xCoordinate, yCoordinate);
 		this.type = type;
+		ID = new UUID(Integer.MAX_VALUE, 0);
 	}
+
     public Node(float xCoordinate, float yCoordinate) {
         location = new Coordinates(xCoordinate, yCoordinate);
-    }
+		ID = new UUID(Integer.MAX_VALUE, 0);
+	}
 
     public void setLights(List<Stoplight> lights){
 		this.lights = lights;
+	}
+
+
+
+	public int getNodeID(){
+		return ID.variant();
 	}
 
 	public void addLight(Stoplight light){
@@ -144,6 +156,18 @@ public class Node implements Comparable<Node> {
 		}
 
 		return incomingNeighbors;
+	}
+
+	public ArrayList<Node> getNeighbors(){
+		ArrayList<Node> neighbors = new ArrayList<Node>();
+
+		for (Edge e : inEdges){
+			neighbors.add(e.getFrom());
+		}
+		for (Edge e : outEdges){
+			neighbors.add(e.getTo());
+		}
+		return neighbors;
 	}
 
 	public boolean isDestination() {

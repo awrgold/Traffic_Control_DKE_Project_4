@@ -25,7 +25,7 @@ public class WorldRenderer {
 	//private Rectangle scissor;
 
 	// Simulation Speed
-	private float simulationSpeed = 0.1f;
+	private float simulationSpeed = 0.05f;
 	private float timer = 0;
 	
 	// State HashMaps
