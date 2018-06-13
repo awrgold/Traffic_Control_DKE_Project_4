@@ -38,14 +38,16 @@ public class TrafficManager {
 	public final static int MAP_X_DIM = 100000;
 	public final static int MAP_Y_DIM = 100000;
 	public final static int GRID_FACTOR = 2;
-	public final static int vehicleCount = 10000;
-	public final static int numUrbanCenters = 9;
+	public final static int vehicleCount = 1000;
+	public final static int numUrbanCenters = 2;
+	public final static double mean = 0.2;
 	public final static double lambda = 1.0;
 
 	private Map map;
 	private List<TrafficObject> trafficObjects;
 	private List<Vehicle> vehicles;
 	private static List<Node> intersections = new ArrayList<Node>();
+	private static int urbanCenterWeight = 3;
 
 	private int lastComputedTimestep = 0;
 	private static double aggressionRandomizer;
@@ -136,7 +138,7 @@ public class TrafficManager {
 				 * path - we're only giving it the opportunity to change the path, not requiring
 				 * it
 				 */
-				// vehicle.computePath(lastComputedTimestep);
+				 // vehicle.computePath(lastComputedTimestep);
 			}
 
 			// Increment the timestep for lights
@@ -259,48 +261,50 @@ public class TrafficManager {
 		mr.printAll(nodeMap, edgeMap);
 
 		List<Node> nodeList = new ArrayList<Node>(nodeMap.values());
+
 		// Sort the nodeList in descending order based on priority
-		Collections.sort(nodeList, new SortNode());
+//		Collections.sort(nodeList, new SortNode());
 		List<Edge> edgeList = new ArrayList<Edge>(edgeMap.values());
 
 		Map map = new Map(nodeList, edgeList);
 
 		List<Node> destinations = new ArrayList<Node>();
 
-		// // Make nodes that have multiple edges connecting to them destinations
-		// int minLanes = Integer.MAX_VALUE;
-		// for (Node n : nodeList){
-		// for (Edge e : n.getInEdges()){
-		// if (e.getNumLanes() < minLanes){
-		// minLanes = e.getNumLanes();
-		// }
-		// }
-		// if (minLanes >= 2){
-		// n.makeDestination();
-		// destinations.add(n);
-		// }
-		// }
+		// Make small side roads the only place cars can spawn
+		for (Node n : nodeList){
+			int minLanes = Integer.MIN_VALUE;
+			for (Edge e : n.getInEdges()){
+				if (e.getNumLanes() > minLanes){
+					minLanes = e.getNumLanes();
+				}
+			}
+			if (minLanes == 1){
+				n.makeDestination();
+				destinations.add(n);
+			}
+		}
+
+		System.out.println("Destination list size: " + destinations.size());
 
 		List cars = new ArrayList();
 		for (int i = 0; i < vehicleCount; i++) {
 
 			// TODO: Make priorities based on neighborhood
-			// createNeighborhoods(nodeList, numUrbanCenters);
+			createNeighborhoods(destinations, numUrbanCenters);
 
-			// This utilizes an exponential distribution prioritizing nodes at the start of
-			// the list
+			// This utilizes an exponential distribution prioritizing nodes at the start of the list
 			// Nodes at the start of the list are higher priority than those at the end
-			Random r = new Random();
-			Node start = nodeList.get((int) (Math.floor(r.nextDouble() * nodeList.size())));
-			Node end = nodeList.get((int) (Math.floor(r.nextDouble() * nodeList.size())));
+			Collections.sort(destinations, new SortNode());
+			Node start = destinations.get((int) (Math.floor(drawRandomExponential(lambda) * destinations.size())));
+			Node end = destinations.get((int) (Math.floor(drawRandomExponential(lambda) * destinations.size())));
 			while (start == end) {
-				end = nodeList.get((int) (Math.floor(r.nextDouble() * nodeList.size())));
+				end = destinations.get((int) (Math.floor(drawRandomExponential(lambda) * destinations.size())));
 			}
 
 			Car car = new Car.Builder(start, end, map).build();
 			while(car.getEdgePath() == null) {
-				start = nodeList.get((int) (Math.floor(r.nextDouble() * nodeList.size())));
-				end = nodeList.get((int) (Math.floor(r.nextDouble() * nodeList.size())));
+				start = destinations.get((int) (Math.floor(drawRandomExponential(lambda) * destinations.size())));
+				end = destinations.get((int) (Math.floor(drawRandomExponential(lambda) * destinations.size())));
 				car = new Car.Builder(start, end, map).build();
 			}
 			car.setDriverModel(new SimpleDriverModel(10));
@@ -312,13 +316,12 @@ public class TrafficManager {
 		return tm;
 	}
 
-	public static double drawRandomExponential(double mean) {
+	public static double drawRandomExponential(double rate) {
 		// draw a [0,1] uniform distributed number
 		double u = Math.random();
-		// Convert it into a exponentially distributed random variate with given mean
-		double res = (1 + (-mean * Math.log(u)));
-		// System.out.println(res);
-		return res;
+		// Convert it into a exponentially distributed random variate, truncated to [0,1]
+		double x = -Math.log(1 - (1 - Math.pow(Math.E, -rate)) * u) / rate;
+		return x;
 	}
 
 	public static TrafficManager createEnvironment() {
@@ -388,36 +391,54 @@ public class TrafficManager {
 
 	/**
 	 * The idea is to create priority neighborhoods such as urban/suburban centers
-	 * that cars are more likely to head towards. However, since intersections have
-	 * multiple nodes, we need to redefine several parameters. First of all, we need
-	 * to classify what a "destination" node is, such that a car does not decide to
-	 * choose the middle of an intersection as his "destination." This is necessary
-	 * because we have to define priority to a specific node (as a car chooses only
-	 * a node as his destination) so only destination nodes can receive priority.
-	 * 
-	 * @param nodes
-	 *            - Map nodes
-	 * @param numUrbanCenters
-	 *            - the number of Urban Centers designed for this map
+	 * that cars are more likely to head towards.
+	 * @param nodes - Map nodes
+	 * @param numUrbanCenters - the number of Urban Centers designed for this map
 	 */
 	private static void createNeighborhoods(List<Node> nodes, int numUrbanCenters) {
-		int centers = numUrbanCenters;
 
-		if (centers == 0)
-			return;
-		for (Node n : nodes) {
-			if (n.isDestination() && Math.random() < .1 && centers > 0) {
-				// n.setNodePriorityWeight(uCenterWeight);
-				for (Node i : n.getOutgoingNeighbors()) {
-					i.setNodePriorityWeight(n.getNodePriorityWeight() - 1);
-				}
-				for (Node j : n.getIncomingNeighbors()) {
-					j.setNodePriorityWeight(n.getNodePriorityWeight() - 1);
-				}
-				centers--;
-			}
+		// Keep track of how many centers are left to define
+		if (numUrbanCenters == 0) return;
+
+		double d = Math.random();
+		while (d >= 0.1){
+			d = Math.random();
 		}
 
+		int r = (int) d*nodes.size();
+
+		nodes.get(r).setNodePriorityWeight(setRandomUrbanCenterWeight(urbanCenterWeight));
+		setNeighborWeights(nodes.get(r), urbanCenterWeight);
+		createNeighborhoods(nodes, numUrbanCenters-1);
+		System.out.println("Remaining urban centers to work with: " + (numUrbanCenters - 1));
+
+	}
+
+	/**
+	 * Recursively sets the weights of all neighbors of urban centers down to 0
+	 * @param node - the node we're working with
+	 * @param weight - the current weight of the iteration
+	 */
+	public static void setNeighborWeights(Node node, int weight){
+		if (weight == 0) return;
+		for (Node n : node.getOutgoingNeighbors()){
+			n.setNodePriorityWeight(weight);
+			setNeighborWeights(n, weight-1);
+		}
+		for (Node n : node.getIncomingNeighbors()){
+			n.setNodePriorityWeight(weight);
+			setNeighborWeights(n, weight-1);
+		}
+	}
+
+	public static int setRandomUrbanCenterWeight(int mean){
+		Random r = new Random();
+		double g = r.nextGaussian() + mean;
+		if (g < 0 || g > mean*2) {
+			setRandomUrbanCenterWeight(mean);
+		}
+		System.out.println("Urban center weight: " + (int)g);
+		return (int)g;
 	}
 
 	public static double getDurationOfTimestepInSeconds() {

@@ -33,6 +33,9 @@ public class AStarPathfinder extends Pathfinder {
 	 * @param goal
 	 * @return
 	 */
+
+	//TODO: Fix A* to remove loopy paths (12 June)
+	
 	public List<Edge> searchPath(List<Node> nodes, Vehicle vehicle) {
 
 		// Start/Goal Nodes
