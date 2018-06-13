@@ -2,148 +2,145 @@ package com.mygdx.sim.GameObjects.data;
 
 public class Edge implements Comparable<Edge> {
 
-    private Node from;
-    private Node to;
-    private int speedLimit;
-    private double lengthScore;
-    private int numLanes;
+	private Node from;
+	private Node to;
+	private int speedLimit;
+	private double lengthScore;
+	private int numLanes;
 
-    public Edge(Node from, Node to){
-        this(from,to,50);
-    }
-    
-    public Edge(Node from, Node to, int speedLimit){
-        this.from = from;
-        from.addOutEdge(this);
-        
-        this.to = to;
-        to.addInEdge(this);
-        
-        this.speedLimit = speedLimit;
-    }
-    public Edge(Node from, Node to, int speedLimit, int numLanes){
-        this.from = from;
-        from.addOutEdge(this);
+	public Edge(Node from, Node to) {
+		this(from, to, 50);
+	}
 
-        this.to = to;
-        to.addInEdge(this);
+	public Edge(Node from, Node to, int speedLimit) {
+		this.from = from;
+		from.addOutEdge(this);
 
-        this.speedLimit = speedLimit;
-        this.numLanes = numLanes;
+		this.to = to;
+		to.addInEdge(this);
 
-        if (numLanes>4){
-            this.numLanes = 4;
-        }
+		this.speedLimit = speedLimit;
+	}
 
-        /**
-         * Does this work? Creating "children" edges for multi-lane roads
-         */
-        /*
-        ArrayList<Edge> children = new ArrayList<Edge>();
+	public Edge(Node from, Node to, int speedLimit, int numLanes) {
+		this.from = from;
+		from.addOutEdge(this);
 
-        if (numLanes > 1){
-            for (int i = 0; i < (numLanes*2); i++) {
-                if (i < (numLanes-1)){
-                    Edge e = new Edge(from, to, speedLimit, 1);
-                    children.add(e);
-                }else{
-                    Edge e = new Edge(to, from, speedLimit, 1);
-                    children.add(e);
-                }
-            }
-        }
-        */
+		this.to = to;
+		to.addInEdge(this);
 
-    }
+		this.speedLimit = speedLimit;
+		this.numLanes = numLanes;
 
-    public Node getFrom(){
-        return from;
-    }
+		if (numLanes > 4) {
+			this.numLanes = 4;
+		}
 
-    public Node getTo(){
-        return to;
-    }
+		/**
+		 * Does this work? Creating "children" edges for multi-lane roads
+		 */
+		/*
+		 * ArrayList<Edge> children = new ArrayList<Edge>();
+		 * 
+		 * if (numLanes > 1){ for (int i = 0; i < (numLanes*2); i++) { if (i <
+		 * (numLanes-1)){ Edge e = new Edge(from, to, speedLimit, 1); children.add(e);
+		 * }else{ Edge e = new Edge(to, from, speedLimit, 1); children.add(e); } } }
+		 */
 
-    public int getNumLanes(){
-        return numLanes;
-    }
+	}
 
-    public void setNumLanes(int lanes){
-        this.numLanes = lanes;
-    }
+	public Node getFrom() {
+		return from;
+	}
 
+	public Node getTo() {
+		return to;
+	}
 
-    public void setSpeedLimit(int speedLimit){
-        this.speedLimit = speedLimit;
-    }
+	public int getNumLanes() {
+		return numLanes;
+	}
 
-    public double getSpeedLimit(){
-        return speedLimit;
-    }
+	public void setNumLanes(int lanes) {
+		this.numLanes = lanes;
+	}
 
-    /**
-     * Returns the length of the road section that this edge represents.
-     * @return double
-     */
-    public float getLength(){
-    	Coordinates md = getManhattanDistanceTraveled();
-    	return ((float) Math.sqrt(Math.pow(md.getX(),2)+Math.pow(md.getY(),2)));
-    }
+	public void setSpeedLimit(int speedLimit) {
+		this.speedLimit = speedLimit;
+	}
 
-    public void setLengthScore(double newScore){
-        this.lengthScore = newScore;
-    }
-    
-    /**
-     * Gives you your (x,y) coordinates if you have traveled a certain distance on this edge.
-     * E.g. edge is from (0,0) to (10,10) and you've traveled 5*sqrt(2) on it - that means
-     * you're at (5,5)
-     * @param traveledDistance - distance that you have traveled on the edge
-     * @return (x,y) Coordinates
-     */
-    public Coordinates getLocationIfTraveledDistance(float traveledDistance) {
-    	float fraction = traveledDistance/getLength();
-    	return getLocationIfTraveledFraction(fraction);
-    }
-    
-    /**
-     * Gives you your (x,y) coordinates if you have traveled a certain fraction of this edge.
-     * E.g. edge is from (0,0) to (10,10) and you've traveled 50% of it - that means you're at
-     * (5,5)
-     * @param traveledFraction - fraction of the edge's total length that you have traveled
-     * @return (x,y) Coordinates
-     */
-    public Coordinates getLocationIfTraveledFraction(float traveledFraction) {
-    	Coordinates change = getCoordinateChange();
-    	float startX = (float) from.getX();
-    	float startY = (float) from.getY();
-    	return new Coordinates(startX + change.getX()*traveledFraction, 
-    			startY + change.getY()*traveledFraction);
-    }
-    
-    /** Returns a Coordinates object that describes the change in X and Y that you experience when
-     * going from fromNode to toNode
-     * e.g. if you're going from (5,-5) to (-5,10) this method will return (-10,15)
-     */
-    private Coordinates getCoordinateChange() {
-    	return (to.getLocation().subtract(from.getLocation()));
-    }
-    
-    private Coordinates getManhattanDistanceTraveled() {
-    	return (from.getLocation().subtractAbs(to.getLocation()));
-    }
-    
-    public String toString() {
-    	return ("["+from+","+to+"]");
-    }
+	public double getSpeedLimit() {
+		return speedLimit;
+	}
 
-    public int compareTo(Edge edge) {
-        if((this.getFrom().equals(edge.getFrom()) || this.getFrom().equals(edge.getTo())) &&
-                (this.getTo().equals(edge.getFrom()) || this.getTo().equals(edge.getTo()))){
-            return 0;
+	/**
+	 * Returns the length of the road section that this edge represents.
+	 * 
+	 * @return double
+	 */
+	public float getLength() {
+		Coordinates md = getManhattanDistanceTraveled();
+		return ((float) Math.sqrt(Math.pow(md.getX(), 2) + Math.pow(md.getY(), 2)));
+	}
 
-        }
-        return -1;
-    }
+	public void setLengthScore(double newScore) {
+		this.lengthScore = newScore;
+	}
+
+	/**
+	 * Gives you your (x,y) coordinates if you have traveled a certain distance on
+	 * this edge. E.g. edge is from (0,0) to (10,10) and you've traveled 5*sqrt(2)
+	 * on it - that means you're at (5,5)
+	 * 
+	 * @param traveledDistance
+	 *            - distance that you have traveled on the edge
+	 * @return (x,y) Coordinates
+	 */
+	public Coordinates getLocationIfTraveledDistance(float traveledDistance) {
+		float fraction = traveledDistance / getLength();
+		return getLocationIfTraveledFraction(fraction);
+	}
+
+	/**
+	 * Gives you your (x,y) coordinates if you have traveled a certain fraction of
+	 * this edge. E.g. edge is from (0,0) to (10,10) and you've traveled 50% of it -
+	 * that means you're at (5,5)
+	 * 
+	 * @param traveledFraction
+	 *            - fraction of the edge's total length that you have traveled
+	 * @return (x,y) Coordinates
+	 */
+	public Coordinates getLocationIfTraveledFraction(float traveledFraction) {
+		Coordinates change = getCoordinateChange();
+		float startX = (float) from.getX();
+		float startY = (float) from.getY();
+		return new Coordinates(startX + change.getX() * traveledFraction,
+				startY + change.getY() * traveledFraction);
+	}
+
+	/**
+	 * Returns a Coordinates object that describes the change in X and Y that you
+	 * experience when going from fromNode to toNode e.g. if you're going from
+	 * (5,-5) to (-5,10) this method will return (-10,15)
+	 */
+	private Coordinates getCoordinateChange() {
+		return (to.getLocation().subtract(from.getLocation()));
+	}
+
+	private Coordinates getManhattanDistanceTraveled() {
+		return (from.getLocation().subtractAbs(to.getLocation()));
+	}
+
+	public String toString() {
+		return ("[" + from + "," + to + "]");
+	}
+
+	public int compareTo(Edge edge) {
+		if ((this.getFrom().equals(edge.getFrom()) || this.getFrom().equals(edge.getTo())) && (this.getTo().equals(edge.getFrom()) || this.getTo().equals(edge.getTo()))) {
+			return 0;
+
+		}
+		return -1;
+	}
 
 }
