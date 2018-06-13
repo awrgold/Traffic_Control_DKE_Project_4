@@ -136,7 +136,9 @@ public class WorldRenderer {
 			
 			rotation += (float) Math.toDegrees(Math.atan2(y, x));
 
-			vehicle.draw(spriteBatch, (float) nextCoord.getX(), (float) previousCoord.getY(), rotation);
+			while (vehicle.getStartTimestep() >= timestep){
+				vehicle.draw(spriteBatch, (float) nextCoord.getX(), (float) previousCoord.getY(), rotation);
+			}
 		}
 	}
 }

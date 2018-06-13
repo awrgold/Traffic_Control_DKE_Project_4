@@ -214,6 +214,14 @@ public abstract class Vehicle implements TrafficObject {
 		return ("[Vehicle " + id + "]");
 	}
 
+	public int getStartTimestep(){
+		return startTimestep;
+	}
+
+	public int getEndTimestep(){
+		return endTimestep;
+	}
+
 	/**
 	 * Recomputes the path after a given timestep. If this vehicle has already
 	 * traveled for 10 timesteps and you're recomputing then, timestep should
