@@ -39,7 +39,7 @@ public class Road {
 		for (int i = 0; i < shapeCoordinates.size(); i++) {
 			if (i < shapeCoordinates.size() - 1) {
 				Coordinates mannhatten = shapeCoordinates.get(i).subtractAbs(shapeCoordinates.get(i + 1));
-				length = (float) Math.sqrt(Math.pow(mannhatten.getX(), 2) + Math.pow(mannhatten.getY(), 2)) + texture.getWidth();
+				length = (float) Math.sqrt(Math.pow(mannhatten.getX(), 2) + Math.pow(mannhatten.getY(), 2));
 
 				int x = (int) (shapeCoordinates.get(i + 1).getX() - shapeCoordinates.get(i).getX());
 				int y = (int) (shapeCoordinates.get(i + 1).getY() - shapeCoordinates.get(i).getY());
@@ -55,7 +55,7 @@ public class Road {
 	}
 
 	private void createSingleTextureRegion(Edge edge) {
-		length = (float) edge.getLength() + texture.getWidth();
+		length = (float) edge.getLength();
 
 		int x = (int) (edge.getTo().getX() - edge.getFrom().getX());
 		int y = (int) (edge.getTo().getY() - edge.getFrom().getY());
