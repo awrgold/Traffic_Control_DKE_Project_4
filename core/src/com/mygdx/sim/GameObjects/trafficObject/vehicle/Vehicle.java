@@ -1,5 +1,6 @@
 package com.mygdx.sim.GameObjects.trafficObject.vehicle;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -29,7 +30,61 @@ public abstract class Vehicle implements TrafficObject {
 	 */
 	Node startNode;
 	Node goalNode;
-	
+	float timeLimit;
+	/**
+	 * The name of the sprite that this vehicle uses.
+	 */
+	protected String spriteName;
+
+	/**
+	 * The sprite that this vehicle uses.
+	 */
+	private Sprite sprite;
+
+	private double maxAcceleration = 1.4;
+
+	/**
+	 * The edges that this vehicle is supposed to travel from its start point
+	 * to its endpoint.
+	 */
+	List<Edge> edgePath;
+
+	/**
+	 * Stores for each timestep, the index in edgesToTravel of the edge
+	 * that this vehicle is located at.
+	 *
+	 * If we do edgesToTravel.get(edgeIndices.get(t)), we should get
+	 * the edge where this vehicle is located at timestep t.
+	 */
+	int[] edgeIndices = new int[0];
+
+	/**
+	 * Stores for each timestep, the distance that this vehicle has traveled
+	 * on the edge it is located on.
+	 *
+	 * If we have a 10-long edge, and we're moving at 3 per second:
+	 * 0 3 6 9 2 5 8 ...
+	 */
+	float[] distancesTraveledOnEdge = new float[0];
+
+	/**
+	 * Stores for each timestep, the speed that this vehicle was traveling at.
+	 */
+	float[] speeds = new float[0];
+
+	/**
+	 * Stores the algorithm that this vehicle uses for navigation/pathfinding.
+	 * By default, it uses a simple A* pathfinder at the start of the trip, and
+	 * doesn't adjust its path afterwards.
+	 */
+	private static Pathfinder pathfinder;
+
+	/**
+	 * Stores the algorithm that this vehicle uses to determine its acceleration.
+	 * By default, it uses a very simple model that maintains a constant speed.
+	 */
+	DriverModel driverModel;
+
 	/**
 	 * The timesteps when this vehicle begins and ends its journey.
 	 */
@@ -45,9 +100,65 @@ public abstract class Vehicle implements TrafficObject {
 	 * The physical length of the vehicle in meters.
 	 */
 	private float length = 4;
+
+	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Pathfinder pf, Map graph, int startTimestep, DriverModel driverModel, float initialSpeed) {
+
+		setSprite(spriteName);
+
+		initialize();
+
+		this.id = lastGivenId++;
+
+		// Set Start/Goal
+		this.startNode = startNode;
+		this.goalNode = goalNode;
+
+		// Set maximum speed
+		this.maxSpeed = maxSpeed;
+		setAggression();
+
+		this.pathfinder = pf;
+
+		this.startTimestep = startTimestep;
+
+		this.driverModel = driverModel;
+
+		speeds[0] = initialSpeed;
+
+		// Find path
+		computePath(0);
+		setTimeLimit(getEdgePath());
+	}
 	
 	public float getLength() {	return length; }
-	
+
+	public float getTimeLimit(){
+		return timeLimit;
+	}
+
+	public void setTimeLimit(List<Edge> path){
+		float len = 0;
+		for (Edge e : path){
+			len += e.getLength();
+		}
+		timeLimit = Math.round(len/10);
+	}
+
+	public void decrementTime(){
+		if (timeLimit > 0){
+			timeLimit = timeLimit -1;
+		}
+	}
+
+	// TODO: Get a way to find out how much time is left
+//	public float getTimeRemaining(){
+//
+//	}
+
+	public static double manhattanDistance(Node a, Node b) {
+		return Math.abs((a.getY() - b.getY()) + (a.getX() - b.getX()));
+	}
+
 	public TrafficObjectState getState(int timestep) {
 		Coordinates location = this.getLocationCoordinates(timestep);
 		boolean vizualize = this.isVisibleInVisualization(timestep);
@@ -61,12 +172,6 @@ public abstract class Vehicle implements TrafficObject {
 	public boolean isVisibleInVisualization(int timestep) {	return timestep >= startTimestep && timestep <= endTimestep; }
 	
 	public boolean isMoving(int timestep) { return timestep >= startTimestep && timestep <= endTimestep; }
-	
-	/**
-	 * The edges that this vehicle is supposed to travel from its start point
-	 * to its endpoint.
-	 */
-	List<Edge> edgePath;
 
 	
 	// DO NOT USE THIS! This is for testing *ONLY*.
@@ -74,57 +179,9 @@ public abstract class Vehicle implements TrafficObject {
 		this.edgePath = edgePath;
 	}
 	
-	/**
-	 * Stores for each timestep, the index in edgesToTravel of the edge
-	 * that this vehicle is located at.
-	 * 
-	 * If we do edgesToTravel.get(edgeIndices.get(t)), we should get
-	 * the edge where this vehicle is located at timestep t.
-	 */
-	int[] edgeIndices = new int[0];
-	
-	/**
-	 * Stores for each timestep, the distance that this vehicle has traveled
-	 * on the edge it is located on.
-	 * 
-	 * If we have a 10-long edge, and we're moving at 3 per second:
-	 * 0 3 6 9 2 5 8 ...
-	 */
-	float[] distancesTraveledOnEdge = new float[0];
-	
-	/**
-	 * Stores for each timestep, the speed that this vehicle was traveling at.
-	 */
-	float[] speeds = new float[0];
-	
-	/**
-	 * Stores the algorithm that this vehicle uses for navigation/pathfinding.
-	 * By default, it uses a simple A* pathfinder at the start of the trip, and
-	 * doesn't adjust its path afterwards.
-	 */
-	private static Pathfinder pathfinder;
-	
-	/**
-	 * Stores the algorithm that this vehicle uses to determine its acceleration.
-	 * By default, it uses a very simple model that maintains a constant speed.
-	 */
-	DriverModel driverModel;
-	
 	public DriverModel getDriverModel() {
 		return driverModel;
 	}
-
-	/**
-	 * The name of the sprite that this vehicle uses.
-	 */
-	protected String spriteName;
-
-	/**
-	 * The sprite that this vehicle uses.
-	 */
-	private Sprite sprite;
-	
-	private double maxAcceleration = 1.4;
 	
 	public double getMaxAcceleration() {
 		return maxAcceleration;
@@ -170,35 +227,7 @@ public abstract class Vehicle implements TrafficObject {
 		distancesTraveledOnEdge = newDistances;
 		edgeIndices = newEdgeIndices;
 	}
-	
 
-	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Pathfinder pf, Map graph, int startTimestep, DriverModel driverModel, float initialSpeed) {
-
-		setSprite(spriteName);
-		
-		initialize();		
-		
-		this.id = lastGivenId++;
-
-		// Set Start/Goal
-		this.startNode = startNode;
-		this.goalNode = goalNode;
-		
-		// Set maximum speed
-		this.maxSpeed = maxSpeed;
-		setAggression();
-		
-		this.pathfinder = pf;	
-		
-		this.startTimestep = startTimestep;
-		
-		this.driverModel = driverModel;
-		
-		speeds[0] = initialSpeed;
-		
-		// Find path
-		computePath(0);
-	}
 	
 	private void initialize() {
 		ensureCapacity();

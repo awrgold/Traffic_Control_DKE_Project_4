@@ -323,88 +323,6 @@ public class TrafficManager {
 	}
 
 	/**
-	 * Draws a random variate from an (negative) exponential distribution with given rate
-	 * @param rate - lambda
-	 * @return
-	 */
-	public static double drawRandomExponential(double rate) {
-		// draw a [0,1] uniform distributed number
-		double u = Math.random();
-		// Convert it into a exponentially distributed random variate, truncated to [0,1]
-		double x = -Math.log(1 - (1 - Math.pow(Math.E, -rate)) * u) / rate;
-		return x;
-	}
-
-	/**
-	 * Procedurally generates a grid based on static parameters, unused as of phase 2
-	 * @return
-	 */
-	public static TrafficManager createEnvironment() {
-
-		List<Node> mapNodes = new ArrayList<Node>();
-		List<Edge> mapEdges = new ArrayList<Edge>();
-		List<Node> mapDestinations = new ArrayList<Node>();
-
-		int nodeCount = 0;
-		int edgeCount = 0;
-		for (int i = 0; i < MAP_X_DIM; i++) {
-			for (int j = 0; j < MAP_Y_DIM; j++) {
-				if (i % (MAP_X_DIM / GRID_FACTOR) == 0 && j % (MAP_Y_DIM / GRID_FACTOR) == 0) {
-					Node n = new Node(i, j);
-					n.makeDestination();
-					mapNodes.add(n);
-					System.out.println("Adding node at: (" + i + ", " + j + ")");
-					nodeCount++;
-					System.out.println("Nodes: " + nodeCount);
-				}
-			}
-		}
-
-		for (int i = 0; i < mapNodes.size(); i++) {
-			for (int j = 0; j < mapNodes.size(); j++) {
-				if ((euclideanDistance(mapNodes.get(i), mapNodes.get(j)) == (MAP_X_DIM / GRID_FACTOR)
-						|| euclideanDistance(mapNodes.get(i), mapNodes.get(j)) == (MAP_Y_DIM / GRID_FACTOR))
-						&& i != j) {
-					System.out.println("Adding Edge between: (" + mapNodes.get(i).getLocation().toString() + ", "
-							+ mapNodes.get(j).getLocation().toString() + ")");
-					mapEdges.add(new Edge(mapNodes.get(i), mapNodes.get(j)));
-					edgeCount++;
-					System.out.println("Edges: " + edgeCount);
-
-				}
-			}
-		}
-		List<Vehicle> cars = new ArrayList<Vehicle>();
-		Map map = new Map(mapNodes, mapEdges);
-
-		for (int i = 0; i < vehicleCount; i++) {
-
-			int x = 0;
-			int y = 0;
-			while (x == y) {
-				x = (int) (Math.random() * mapNodes.size());
-				y = (int) (Math.random() * mapNodes.size());
-			}
-
-			if (mapNodes.get(y).isDestination()) {
-				Car temp = new Car.Builder(mapNodes.get(x), mapNodes.get(y), map)
-						.setDriverModel(new IntelligentDriverModel()).build();
-				cars.add(temp);
-			}
-
-		}
-
-		TrafficManager tm = new TrafficManager(map, cars);
-
-		int y = 0;
-
-		// createNeighborhoods(mapNodes, numUrbanCenters);
-
-		return tm;
-
-	}
-
-	/**
 	 * The idea is to create priority neighborhoods such as urban/suburban centers
 	 * that cars are more likely to head towards.
 	 * @param nodes - Map nodes
@@ -418,10 +336,15 @@ public class TrafficManager {
 		double d = Math.random();
 		while (d >= 0.1){
 			d = Math.random();
-		}
+        }
 
-		int r = (int) d*nodes.size();
-		// randomly choose a node to set as an urban center, and update the weights involved
+		int r = (int)Math.round(d*nodes.size());
+		if(DEBUG){
+            System.out.println("Random urban center index: " + r);
+            System.out.println("Node " + nodes.get(r).getNodeID() + " is chosen as an urban center.");
+        }
+
+        // randomly choose a node to set as an urban center, and update the weights involved
 		nodes.get(r).setNodePriorityWeight(setRandomUrbanCenterWeight(urbanCenterWeight));
 		setNeighborWeights(nodes.get(r), urbanCenterWeight-1);
 		createNeighborhoods(nodes, numUrbanCenters-1);
@@ -463,6 +386,88 @@ public class TrafficManager {
 		System.out.println("Urban center weight: " + (int)g);
 		return (int)g;
 	}
+
+    /**
+     * Draws a random variate from an (negative) exponential distribution with given rate
+     * @param rate - lambda
+     * @return
+     */
+    public static double drawRandomExponential(double rate) {
+        // draw a [0,1] uniform distributed number
+        double u = Math.random();
+        // Convert it into a exponentially distributed random variate, truncated to [0,1]
+        double x = -Math.log(1 - (1 - Math.pow(Math.E, -rate)) * u) / rate;
+        return x;
+    }
+
+    /**
+     * Procedurally generates a grid based on static parameters, unused as of phase 2
+     * @return
+     */
+    public static TrafficManager createEnvironment() {
+
+        List<Node> mapNodes = new ArrayList<Node>();
+        List<Edge> mapEdges = new ArrayList<Edge>();
+        List<Node> mapDestinations = new ArrayList<Node>();
+
+        int nodeCount = 0;
+        int edgeCount = 0;
+        for (int i = 0; i < MAP_X_DIM; i++) {
+            for (int j = 0; j < MAP_Y_DIM; j++) {
+                if (i % (MAP_X_DIM / GRID_FACTOR) == 0 && j % (MAP_Y_DIM / GRID_FACTOR) == 0) {
+                    Node n = new Node(i, j);
+                    n.makeDestination();
+                    mapNodes.add(n);
+                    System.out.println("Adding node at: (" + i + ", " + j + ")");
+                    nodeCount++;
+                    System.out.println("Nodes: " + nodeCount);
+                }
+            }
+        }
+
+        for (int i = 0; i < mapNodes.size(); i++) {
+            for (int j = 0; j < mapNodes.size(); j++) {
+                if ((euclideanDistance(mapNodes.get(i), mapNodes.get(j)) == (MAP_X_DIM / GRID_FACTOR)
+                        || euclideanDistance(mapNodes.get(i), mapNodes.get(j)) == (MAP_Y_DIM / GRID_FACTOR))
+                        && i != j) {
+                    System.out.println("Adding Edge between: (" + mapNodes.get(i).getLocation().toString() + ", "
+                            + mapNodes.get(j).getLocation().toString() + ")");
+                    mapEdges.add(new Edge(mapNodes.get(i), mapNodes.get(j)));
+                    edgeCount++;
+                    System.out.println("Edges: " + edgeCount);
+
+                }
+            }
+        }
+        List<Vehicle> cars = new ArrayList<Vehicle>();
+        Map map = new Map(mapNodes, mapEdges);
+
+        for (int i = 0; i < vehicleCount; i++) {
+
+            int x = 0;
+            int y = 0;
+            while (x == y) {
+                x = (int) (Math.random() * mapNodes.size());
+                y = (int) (Math.random() * mapNodes.size());
+            }
+
+            if (mapNodes.get(y).isDestination()) {
+                Car temp = new Car.Builder(mapNodes.get(x), mapNodes.get(y), map)
+                        .setDriverModel(new IntelligentDriverModel()).build();
+                cars.add(temp);
+            }
+
+        }
+
+        TrafficManager tm = new TrafficManager(map, cars);
+
+        int y = 0;
+
+        // createNeighborhoods(mapNodes, numUrbanCenters);
+
+        return tm;
+
+    }
 
 	public static double getDurationOfTimestepInSeconds() {
 		return 1. / TIMESTEPS_PER_SECOND;
