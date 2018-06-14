@@ -311,7 +311,7 @@ public class TrafficManager {
 			}
 
 			// Set the driver's model
-			car.setDriverModel(new SimpleDriverModel(15));
+			car.setDriverModel(new IntelligentDriverModel());
 			cars.add(i, car);
 		}
 
@@ -420,7 +420,7 @@ public class TrafficManager {
 		int r = (int) d*nodes.size();
 		// randomly choose a node to set as an urban center, and update the weights involved
 		nodes.get(r).setNodePriorityWeight(setRandomUrbanCenterWeight(urbanCenterWeight));
-		setNeighborWeights(nodes.get(r), urbanCenterWeight);
+		setNeighborWeights(nodes.get(r), urbanCenterWeight-1);
 		createNeighborhoods(nodes, numUrbanCenters-1);
 		if (DEBUG){
 			System.out.println("Remaining urban centers to work with: " + (numUrbanCenters - 1));
@@ -438,7 +438,7 @@ public class TrafficManager {
 			n.setNodePriorityWeight(weight);
 			setNeighborWeights(n, weight-1);
 			if(DEBUG){
-				System.out.println("Weight of node " + n.getNodeID() + " -> " + weight);
+				System.out.println("Weight of node " + n.getNodeID() + ": " + weight);
 			}
 		}
 	}

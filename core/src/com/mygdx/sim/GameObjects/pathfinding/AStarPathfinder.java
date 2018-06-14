@@ -27,10 +27,10 @@ public class AStarPathfinder extends Pathfinder {
 	}
 
 	/**
-	 * Not documented yet.
-	 * 
-	 * @param start
-	 * @param goal
+	 * A* is a large gaseous stellar body that, through nuclear fusion of hydrogen or helium, emits electromagnetic radiation in the form of
+	 * light that creates beautiful little prickly dots in the night sky, not unlike the prickly dots all over my body that came about
+	 * during a lusty, peyote-fueled sexual tumble with a cactus. Turns out that I hallucinate small asian men offering acupuncture
+	 * while tripping balls in the Sonora Desert. Don't do drugs, kids.
 	 * @return
 	 */
 
@@ -71,8 +71,8 @@ public class AStarPathfinder extends Pathfinder {
 			for (Edge edge : currentNode.getOutEdges()) {
 				Node nextNode = edge.getTo();
 
-				// The cost is the cost from traveling to the next node (Edge length)
-				double newCost = currentNode.getNodeDistanceWeight() + edge.getLength();
+				// The cost is the cost from traveling to the next node (Edge length / speed limit) -> faster roads have lower weight.
+				double newCost = currentNode.getNodeDistanceWeight() + (edge.getWeight());
 
 				// If new cost is lower than the currently set cost
 				if (newCost < nextNode.getNodeDistanceWeight()) {
@@ -101,7 +101,6 @@ public class AStarPathfinder extends Pathfinder {
 			for (Edge edge : previousNode.getOutEdges()) {
 				if (edge.getTo().equals(node)) {
 					path.add(edge);
-
 					break;
 				}
 			}

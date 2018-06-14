@@ -1,9 +1,6 @@
 package com.mygdx.sim.GameObjects.data;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import com.mygdx.sim.GameObjects.Stoplight;
 
@@ -15,7 +12,8 @@ public class Node implements Comparable<Node> {
 	private Coordinates location;
 	private double nodeDistanceWeight;
 	private double nodeDistanceWeightEstimate;
-	private UUID ID;
+	private static int lastID;
+	private int ID;
 	private int nodePriorityWeight = 0;
 	private boolean isDestination;
 	private String type;
@@ -25,12 +23,12 @@ public class Node implements Comparable<Node> {
 	public Node(float xCoordinate, float yCoordinate, String type) {
 		location = new Coordinates(xCoordinate, yCoordinate);
 		this.type = type;
-		ID = new UUID(Integer.MAX_VALUE, 0);
+		ID = lastID++;
 	}
 
     public Node(float xCoordinate, float yCoordinate) {
         location = new Coordinates(xCoordinate, yCoordinate);
-		ID = new UUID(Integer.MAX_VALUE, 0);
+		ID = lastID++;
 	}
 
     public void setLights(List<Stoplight> lights){
@@ -40,7 +38,7 @@ public class Node implements Comparable<Node> {
 
 
 	public int getNodeID(){
-		return ID.variant();
+		return ID;
 	}
 
 	public void addLight(Stoplight light){

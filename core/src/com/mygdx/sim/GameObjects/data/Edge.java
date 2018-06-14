@@ -5,7 +5,7 @@ public class Edge implements Comparable<Edge> {
     private Node from;
     private Node to;
     private int speedLimit;
-    private double lengthScore;
+    private double weight;
     private int numLanes;
 
     public Edge(Node from, Node to){
@@ -20,6 +20,7 @@ public class Edge implements Comparable<Edge> {
         to.addInEdge(this);
         
         this.speedLimit = speedLimit;
+        this.weight = (getLength()/getSpeedLimit());
     }
     public Edge(Node from, Node to, int speedLimit, int numLanes){
         this.from = from;
@@ -30,31 +31,13 @@ public class Edge implements Comparable<Edge> {
 
         this.speedLimit = speedLimit;
         this.numLanes = numLanes;
+        this.weight = (getLength()/getSpeedLimit());
 
         if (numLanes>4){
             this.numLanes = 4;
         }
-
-        /**
-         * Does this work? Creating "children" edges for multi-lane roads
-         */
-        /*
-        ArrayList<Edge> children = new ArrayList<Edge>();
-
-        if (numLanes > 1){
-            for (int i = 0; i < (numLanes*2); i++) {
-                if (i < (numLanes-1)){
-                    Edge e = new Edge(from, to, speedLimit, 1);
-                    children.add(e);
-                }else{
-                    Edge e = new Edge(to, from, speedLimit, 1);
-                    children.add(e);
-                }
-            }
-        }
-        */
-
     }
+
 
     public Node getFrom(){
         return from;
@@ -66,6 +49,10 @@ public class Edge implements Comparable<Edge> {
 
     public int getNumLanes(){
         return numLanes;
+    }
+
+    public double getWeight(){
+        return weight;
     }
 
     public void setNumLanes(int lanes){
@@ -91,7 +78,7 @@ public class Edge implements Comparable<Edge> {
     }
 
     public void setLengthScore(double newScore){
-        this.lengthScore = newScore;
+        this.weight = newScore;
     }
     
     /**
