@@ -288,6 +288,9 @@ public class TrafficManager {
 		List cars = new ArrayList();
 
 		// Create the neighborhood scheme (see methods below)
+		if (DEBUG){
+			System.out.println("Creating neighborhoods with " + destinations.size() + " destinations, and " + numUrbanCenters + " urban centers.");
+		}
 		createNeighborhoods(destinations, numUrbanCenters);
 
 		for (int i = 0; i < vehicleCount; i++) {
@@ -435,10 +438,13 @@ public class TrafficManager {
 	public static void setNeighborWeights(Node node, int weight){
 		if (weight <= 0) return;
 		for (Node n : node.getNeighbors()){
-			n.setNodePriorityWeight(weight);
-			setNeighborWeights(n, weight-1);
-			if(DEBUG){
-				System.out.println("Weight of node " + n.getNodeID() + ": " + weight);
+			// if a node doesn't already have an assigned weight (preventing double decrements)
+			if (!n.isHasWeight()){
+				n.setNodePriorityWeight(weight);
+				if(DEBUG){
+					System.out.println("Weight of node " + n.getNodeID() + " = " + weight);
+				}
+				setNeighborWeights(n, weight-1);
 			}
 		}
 	}

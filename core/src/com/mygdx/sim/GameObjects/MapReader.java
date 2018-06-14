@@ -96,8 +96,8 @@ public class MapReader {
                     numToLanes += e.getNumLanes();
                 }
 
-                fromNode.setNodePriorityWeight(numFromLanes);
-                toNode.setNodePriorityWeight(numToLanes);
+                fromNode.setNumLanesAttached(numFromLanes);
+                toNode.setNumLanesAttached(numToLanes);
 
                 // edgeMap.put(id + "#2", new Edge(nodeMap.get(to), nodeMap.get(from), (int) speed, laneNum));
 

@@ -12,9 +12,11 @@ public class Node implements Comparable<Node> {
 	private Coordinates location;
 	private double nodeDistanceWeight;
 	private double nodeDistanceWeightEstimate;
+	private int numLanesAttached;
 	private static int lastID;
 	private int ID;
 	private int nodePriorityWeight = 0;
+	public boolean hasWeight = false;
 	private boolean isDestination;
 	private String type;
 	private boolean isIntersection = false;
@@ -39,6 +41,18 @@ public class Node implements Comparable<Node> {
 
 	public int getNodeID(){
 		return ID;
+	}
+
+	public boolean isHasWeight(){
+		return hasWeight;
+	}
+
+	public void setNumLanesAttached(int numLanes){
+		numLanesAttached = numLanes;
+	}
+
+	public int getNumLanesAttached(){
+		return numLanesAttached;
 	}
 
 	public void addLight(Stoplight light){
@@ -111,6 +125,7 @@ public class Node implements Comparable<Node> {
 
 	public void setNodePriorityWeight(int nodePriorityWeight) {
 		this.nodePriorityWeight = nodePriorityWeight;
+		hasWeight = true;
 	}
 
 	public void setNodeDistanceWeight(double nodeDistanceWeight) {
@@ -159,12 +174,9 @@ public class Node implements Comparable<Node> {
 	public ArrayList<Node> getNeighbors(){
 		ArrayList<Node> neighbors = new ArrayList<Node>();
 
-		for (Edge e : inEdges){
-			neighbors.add(e.getFrom());
-		}
-		for (Edge e : outEdges){
-			neighbors.add(e.getTo());
-		}
+		neighbors.addAll(getOutgoingNeighbors());
+		neighbors.addAll(getIncomingNeighbors());
+
 		return neighbors;
 	}
 
