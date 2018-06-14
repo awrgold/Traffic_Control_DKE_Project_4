@@ -1,7 +1,9 @@
 package com.mygdx.sim.GameObjects;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -14,6 +16,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.badlogic.gdx.Gdx;
+import com.mygdx.sim.GameObjects.data.Coordinates;
 import com.mygdx.sim.GameObjects.data.Edge;
 import com.mygdx.sim.GameObjects.data.Node;
 
@@ -32,9 +35,8 @@ public class MapReader {
 			documentBuilder = documentBuilderFactory.newDocumentBuilder();
 			Document document = documentBuilder.parse(chooseFile());
 
-
 			NodeList xmlElements = document.getElementsByTagName("node");
-			for(int i = 0; i < xmlElements.getLength(); i++) {
+			for (int i = 0; i < xmlElements.getLength(); i++) {
 				org.w3c.dom.Node xmlElement = xmlElements.item(i);
 
 				String nodeID = xmlElement.getAttributes().getNamedItem("id").getTextContent();
@@ -42,8 +44,8 @@ public class MapReader {
 				float nodeY = Float.parseFloat(xmlElement.getAttributes().getNamedItem("y").getTextContent()) * MAPMULTIPLIER;
 				String nodeType = xmlElement.getAttributes().getNamedItem("type").getTextContent();
 
-				 Node node = new Node(nodeX, nodeY, nodeType);
-				 nodeMap.put(nodeID, node);
+				Node node = new Node(nodeX, nodeY, nodeType);
+				nodeMap.put(nodeID, node);
 			}
 
 		} catch (ParserConfigurationException e1) {
@@ -69,7 +71,7 @@ public class MapReader {
 			Document document = documentBuilder.parse(chooseFile());
 
 			NodeList xmlElements = document.getElementsByTagName("edge");
-			for(int i = 0; i < xmlElements.getLength(); i++) {
+			for (int i = 0; i < xmlElements.getLength(); i++) {
 				org.w3c.dom.Node xmlElement = xmlElements.item(i);
 
 				String edgeID = xmlElement.getAttributes().getNamedItem("id").getTextContent();
@@ -78,30 +80,44 @@ public class MapReader {
 				int edgeLanes = Integer.parseInt(xmlElement.getAttributes().getNamedItem("numLanes").getTextContent());
 				double edgeSpeed = Double.parseDouble(xmlElement.getAttributes().getNamedItem("speed").getTextContent());
 
+				List<Coordinates> shapeCoordinates = null;
+				if (xmlElement.getAttributes().getNamedItem("shape") != null) {
+					String shape = xmlElement.getAttributes().getNamedItem("shape").getTextContent();
+
+					String shapeArray[] = shape.split(" ");
+					if (shapeArray.length > 0) {
+						shapeCoordinates = new ArrayList<Coordinates>();
+						for (String shapeString : shapeArray) {
+							String coordinates[] = shapeString.split(",");
+							shapeCoordinates.add(new Coordinates(Float.valueOf(coordinates[0]) * MAPMULTIPLIER, Float.valueOf(coordinates[1]) * MAPMULTIPLIER));
+						}
+					}
+				}
+
 				Node fromNode = nodeMap.get(edgeFrom);
 				Node toNode = nodeMap.get(edgeTo);
 
-				Edge edge = new Edge(fromNode, toNode, (int)edgeSpeed, edgeLanes);
-                fromNode.addOutEdge(edge);
-                toNode.addInEdge(edge);
+				Edge edge = new Edge(edgeID, fromNode, toNode, (int) edgeSpeed, edgeLanes, shapeCoordinates);
+				fromNode.addOutEdge(edge);
+				toNode.addInEdge(edge);
 
+				// Increment node's Edge counter here
+				int numFromLanes = 0;
+				for (Edge e : fromNode.getOutEdges()) {
+					numFromLanes += e.getNumLanes();
+				}
+				int numToLanes = 0;
+				for (Edge e : toNode.getInEdges()) {
+					numToLanes += e.getNumLanes();
+				}
 
-                // Increment node's Edge counter here
-                int numFromLanes = 0;
-                for (Edge e : fromNode.getOutEdges()){
-                    numFromLanes += e.getNumLanes();
-                }
-                int numToLanes = 0;
-                for (Edge e : toNode.getInEdges()){
-                    numToLanes += e.getNumLanes();
-                }
+				fromNode.setNodePriorityWeight(numFromLanes);
+				toNode.setNodePriorityWeight(numToLanes);
 
-                fromNode.setNodePriorityWeight(numFromLanes);
-                toNode.setNodePriorityWeight(numToLanes);
+				// edgeMap.put(id + "#2", new Edge(nodeMap.get(to), nodeMap.get(from), (int)
+				// speed, laneNum));
 
-                // edgeMap.put(id + "#2", new Edge(nodeMap.get(to), nodeMap.get(from), (int) speed, laneNum));
-
-                edgeMap.put(edgeID, edge);
+				edgeMap.put(edgeID, edge);
 			}
 
 		} catch (ParserConfigurationException e1) {

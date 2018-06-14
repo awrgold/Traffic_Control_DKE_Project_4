@@ -13,12 +13,25 @@ import com.mygdx.sim.GameObjects.TrafficManager;
 import com.mygdx.sim.GameObjects.trafficObject.vehicle.Vehicle;
 
 public class Map {
+	private boolean DEBUG = true;
+	
 	private List<Node> nodes = new ArrayList<Node>();
 	private List<Edge> edges = new ArrayList<Edge>();
+	
 	private List<Node> destinations = new ArrayList<Node>();
 	private List<Node> intersections = new ArrayList<Node>();
 	private List<IntersectionSingle> intersectionObjects;
-	private boolean DEBUG = true;
+	
+	// Map padding
+	private int mapPadding = 200;
+	
+	// Maximum map coordinates
+	private int mapMaxX;
+	private int mapMaxY;
+	
+	// Minimum map coordinates
+	private int mapMinX;
+	private int mapMinY;
 
 	HashMap<Edge, ArrayList<ArrayList<Vehicle>>> locationCache;
 
@@ -28,12 +41,13 @@ public class Map {
 	public Map(List<Node> nodes, List<Edge> edges) {
 		this.nodes = nodes;
 		this.edges = edges;
-
+		
+		calculateMapDimensions();
 
 		setIntersections();
 
-		// Temporary hardcoded map bound until we have a save and load feature
-		this.reset(TrafficManager.MAP_X_DIM, TrafficManager.MAP_Y_DIM);
+		// Temporary hard-coded map bound until we have a save and load feature
+		this.reset(mapMinX, mapMinY, mapMaxX, mapMaxY);
 
 		locationCache = new HashMap<Edge, ArrayList<ArrayList<Vehicle>>>();
 
@@ -95,6 +109,41 @@ public class Map {
 			}
 		}
 	}
+	
+	private void calculateMapDimensions() {
+		mapMaxX = (int)nodes.get(0).getX();
+		mapMaxY = (int)nodes.get(0).getY();
+		
+		mapMinX = mapMaxX;
+		mapMinY = mapMaxY;
+		
+		for(Node node : nodes) {
+			int nodeX = (int)node.getX();
+			int nodeY = (int)node.getY();
+			
+			if(nodeX > mapMaxX) {
+				mapMaxX = nodeX;
+			}
+			
+			if(nodeY > mapMaxY) {
+				mapMaxY = nodeY;
+			}
+			
+			if(nodeX < mapMinX) {
+				mapMinX = nodeX;
+			}
+			
+			if(nodeY < mapMinY) {
+				mapMinY = nodeY;
+			}
+		}
+		
+		mapMaxX += mapPadding;
+		mapMaxY += mapPadding;
+		
+		mapMinX -= mapPadding;
+		mapMinY -= mapPadding;
+	}
 
 
 	public List<Node> getIntersections(){
@@ -121,9 +170,9 @@ public class Map {
 		return destinations;
 	}
 
-	public void reset(int maxX, int maxY) {
-		// Init Map Bounds
-		bounds = new Rectangle(0f, 0f, maxX, maxY);
+	public void reset(int minX, int minY, int maxX, int maxY) {
+		// Initialise Map Bounds
+		bounds = new Rectangle(minX, minY, maxX - minX, maxY - minY);
 
 	}
 

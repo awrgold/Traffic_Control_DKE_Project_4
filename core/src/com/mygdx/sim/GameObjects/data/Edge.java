@@ -1,12 +1,24 @@
 package com.mygdx.sim.GameObjects.data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Edge implements Comparable<Edge> {
 
+	// ID
+	public String id;
+	
+	// Nodes
 	private Node from;
 	private Node to;
+	
+	// Properties
 	private int speedLimit;
 	private double lengthScore;
 	private int numLanes;
+	
+	// UI
+	private List<Coordinates> shapeCoordinates = null;
 
 	public Edge(Node from, Node to) {
 		this(from, to, 50);
@@ -22,7 +34,9 @@ public class Edge implements Comparable<Edge> {
 		this.speedLimit = speedLimit;
 	}
 
-	public Edge(Node from, Node to, int speedLimit, int numLanes) {
+	public Edge(String id, Node from, Node to, int speedLimit, int numLanes, List<Coordinates> shapeCoordinates) {
+		this.id = id;
+		
 		this.from = from;
 		from.addOutEdge(this);
 
@@ -31,10 +45,8 @@ public class Edge implements Comparable<Edge> {
 
 		this.speedLimit = speedLimit;
 		this.numLanes = numLanes;
-
-		if (numLanes > 4) {
-			this.numLanes = 4;
-		}
+		
+		this.shapeCoordinates = shapeCoordinates;
 
 		/**
 		 * Does this work? Creating "children" edges for multi-lane roads
@@ -71,6 +83,10 @@ public class Edge implements Comparable<Edge> {
 
 	public double getSpeedLimit() {
 		return speedLimit;
+	}
+
+	public List<Coordinates> getShapeCoordinates() {
+		return shapeCoordinates;
 	}
 
 	/**

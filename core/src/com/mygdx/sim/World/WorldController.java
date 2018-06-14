@@ -89,7 +89,7 @@ public class WorldController {
 	}
 
 	public void createMap(int columns, int rows) {
-		map.reset(columns, rows);
+		map.reset(0, 0, columns, rows);
 	}
 
 	public Rectangle getBounds() {

@@ -2,12 +2,16 @@ package com.mygdx.sim.World;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.MathUtils;
 
 public class WorldCamera extends OrthographicCamera {
+	
+	private float maxZoom = 50;
+	private float minZoom = 0.5f;
+	private float scrollSpeed = 0.5f;
 
 	public WorldCamera() {
 		this.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		zoom = maxZoom;
 	}
 
 	@Override
@@ -28,13 +32,13 @@ public class WorldCamera extends OrthographicCamera {
 	}
 
 	public void zoomIn() {
-		if (this.zoom < 50)
-			this.zoom += 0.5f;
+		if (this.zoom < this.maxZoom)
+			this.zoom += this.scrollSpeed;
 	}
 
 	public void zoomOut() {
-		if (this.zoom > 0.5f)
-			this.zoom -= 0.5f;
+		if (this.zoom > this.minZoom)
+			this.zoom -= this.scrollSpeed;
 	}
 
 }
