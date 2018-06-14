@@ -28,7 +28,7 @@ public class TrafficManager {
 	private static boolean DEBUG = true;
 
 	// Duration of the simulation (hours, minutes, seconds)
-	private final static Time DURATION = new Time(0, 30, 0);
+	private final static Time DURATION = new Time(1, 0, 0);
 
 	// Sampling frequency. Larger number means higher fidelity of the model, but
 	// also more computation
@@ -136,12 +136,8 @@ public class TrafficManager {
 				// Set the acceleration
 				vehicle.accelerate(lastComputedTimestep, acceleration);
 
-				/*
-				 * Ask our pathfinding algorithm for a path - It can still return the very same
-				 * path - we're only giving it the opportunity to change the path, not requiring
-				 * it
-				 */
-				 // vehicle.computePath(lastComputedTimestep);
+				// (OPTIONAL) update the path for our vehicle based on the current location. Requires updated A* heuristics
+				// vehicle.computePath(lastComputedTimestep);
 			}
 
 			// Increment the timestep for lights
@@ -149,7 +145,6 @@ public class TrafficManager {
 				if (n.getLights() == null) {
 					continue;
 				}
-
 				for (int i = 0; i < n.getLights().size(); i++) {
 					n.getLights().get(i).incrementTimeStep();
 				}
@@ -316,7 +311,7 @@ public class TrafficManager {
 			}
 
 			// Set the driver's model
-			car.setDriverModel(new SimpleDriverModel(10));
+			car.setDriverModel(new SimpleDriverModel(15));
 			cars.add(i, car);
 		}
 
@@ -326,7 +321,7 @@ public class TrafficManager {
 
 	/**
 	 * Draws a random variate from an (negative) exponential distribution with given rate
-	 * @param rate - lambda, rate of arrival
+	 * @param rate - lambda
 	 * @return
 	 */
 	public static double drawRandomExponential(double rate) {
@@ -421,8 +416,9 @@ public class TrafficManager {
 		while (d >= 0.1){
 			d = Math.random();
 		}
-		int r = (int) d*nodes.size();
 
+		int r = (int) d*nodes.size();
+		// randomly choose a node to set as an urban center, and update the weights involved
 		nodes.get(r).setNodePriorityWeight(setRandomUrbanCenterWeight(urbanCenterWeight));
 		setNeighborWeights(nodes.get(r), urbanCenterWeight);
 		createNeighborhoods(nodes, numUrbanCenters-1);
