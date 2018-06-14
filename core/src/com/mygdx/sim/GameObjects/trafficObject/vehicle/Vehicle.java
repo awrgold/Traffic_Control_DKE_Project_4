@@ -108,14 +108,10 @@ public abstract class Vehicle implements TrafficObject {
 	 * Stores the algorithm that this vehicle uses to determine its acceleration.
 	 * By default, it uses a very simple model that maintains a constant speed.
 	 */
-	DriverModel driverModel = new SimpleDriverModel();
+	DriverModel driverModel;
 	
 	public DriverModel getDriverModel() {
 		return driverModel;
-	}
-	
-	public void setDriverModel(DriverModel dm) {
-		this.driverModel = dm;
 	}
 
 	/**
@@ -176,7 +172,7 @@ public abstract class Vehicle implements TrafficObject {
 	}
 	
 
-	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Pathfinder pf, Map graph, int startTimestep, DriverModel driverModel) {
+	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Pathfinder pf, Map graph, int startTimestep, DriverModel driverModel, float initialSpeed) {
 
 		setSprite(spriteName);
 		
@@ -192,11 +188,13 @@ public abstract class Vehicle implements TrafficObject {
 		this.maxSpeed = maxSpeed;
 		setAggression();
 		
-		this.pathfinder = pf;
+		this.pathfinder = pf;	
 		
 		this.startTimestep = startTimestep;
 		
 		this.driverModel = driverModel;
+		
+		speeds[0] = initialSpeed;
 		
 		// Find path
 		computePath(0);
@@ -239,14 +237,15 @@ public abstract class Vehicle implements TrafficObject {
 	 * @param acceleration acceleration to apply
 	 */
 	public void accelerate(int timestep, double acceleration) {
-		if(timestep != 0 && speeds[timestep] != -1) {
+		if(timestep == 0)
+			return;
+		
+		if(speeds[timestep] != -1) {
 			System.out.println("You're trying to set a speed that has already been set. You're doing something wrong.");
 			return;
 		}
 		
-		double previousSpeed = 0;
-		if(timestep!=0) 
-			previousSpeed = speeds[timestep-1];
+		double previousSpeed = speeds[timestep-1];
 		
 		double newSpeed = Math.max(previousSpeed + acceleration / TrafficManager.TIMESTEPS_PER_SECOND,0);
 		

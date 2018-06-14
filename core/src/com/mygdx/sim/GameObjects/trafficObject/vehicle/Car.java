@@ -29,6 +29,8 @@ public class Car extends Vehicle {
 		
 		int startTimestep = 0;
 		
+		float initialSpeed = 0;
+		
 		Pathfinder pf = null;
 		
 		public Builder(Node startNode, Node goalNode, Map graph) {
@@ -58,16 +60,21 @@ public class Car extends Vehicle {
 			return this;
 		}
 		
+		public Builder setInitialSpeed(float initialSpeed) {
+			this.initialSpeed = initialSpeed;
+			return this;
+		}
+		
 		public Car build() {
 			if(pf == null) 
 				pf = new AStarPathfinder(graph);
 			
-			return new Car(startNode,goalNode,maxSpeed,graph,pf,startTimestep,driverModel);
+			return new Car(startNode,goalNode,maxSpeed,graph,pf,startTimestep,driverModel,initialSpeed);
 		}
 	}
 
-	private Car(Node startNode, Node goalNode, int maxSpeed, Map graph, Pathfinder pf, int startTimestep, DriverModel driverModel) {
-		super(startNode, goalNode, maxSpeed, randomSprite(), pf, graph, startTimestep,driverModel);
+	private Car(Node startNode, Node goalNode, int maxSpeed, Map graph, Pathfinder pf, int startTimestep, DriverModel driverModel,float initialSpeed) {
+		super(startNode, goalNode, maxSpeed, randomSprite(), pf, graph, startTimestep,driverModel,initialSpeed);
 	}
 	
 	public static String randomSprite() {
