@@ -50,7 +50,7 @@ public class TrafficManager {
 	private List<TrafficObject> trafficObjects;
 	private List<Vehicle> vehicles;
 	private static List<Node> intersections = new ArrayList<Node>();
-	private static int urbanCenterWeight = 3;
+	private static int urbanCenterWeight = 10;
 
 	private int lastComputedTimestep = 0;
 	private static double aggressionRandomizer;
@@ -353,8 +353,13 @@ public class TrafficManager {
 
 		if(DEBUG){
 			System.out.println("Determined time limit for car " + car.toString() + " in [" + timeLimit + "] timesteps.");
+			System.out.println("Actual time taken for car + " + car.toString() + " in [" + determineTimeTaken(car) + "] timesteps.");
 		}
 		return timeLimit;
+	}
+
+	public static int determineTimeTaken(Vehicle car){
+		return car.getEndTimestep()-car.getStartTimestep();
 	}
 
 

@@ -193,6 +193,10 @@ public abstract class Vehicle implements TrafficObject {
 		this.timeLimit = timeLimit;
 	}
 
+	public void setEndTimestep(int timestep){
+		this.endTimestep = timestep;
+	}
+
 	public void decrementTime(){
 		if (timeLimit > 0){
 			timeLimit = timeLimit -1;
@@ -372,8 +376,12 @@ public abstract class Vehicle implements TrafficObject {
 				}				
 			}			
 		}
-		
-		// Set the edge index and traveled distance 
+
+		if (!isMoving(timestep) && timestep > startTimestep){
+			setEndTimestep(timestep);
+		}
+
+		// Set the edge index and traveled distance
 		edgeIndices[timestep] = edgeIdx;
 		distancesTraveledOnEdge[timestep] = distanceTraveledOnEdge;
 	}

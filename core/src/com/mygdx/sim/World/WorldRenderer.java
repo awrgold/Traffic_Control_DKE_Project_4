@@ -27,6 +27,9 @@ public class WorldRenderer {
 	// Simulation Speed
 	private float simulationSpeed = 0.05f;
 	private float timer = 0;
+
+	// Control whether to always show all vehicles
+	boolean alwaysShowVehicles = false;
 	
 	// State HashMaps
 	HashMap<TrafficObject, TrafficObjectState> previousTrafficObjectState;
@@ -136,9 +139,18 @@ public class WorldRenderer {
 			
 			rotation += (float) Math.toDegrees(Math.atan2(y, x));
 
-			if (vehicle.isVisibleInVisualization(timestep)){
+			/**
+			 * Whether or not vehicles will always be visible, regardless if they've spawned or not.
+			 * */
+			if (!alwaysShowVehicles){
+				if (vehicle.isVisibleInVisualization(timestep)){
+					vehicle.draw(spriteBatch, (float) nextCoord.getX(), (float) previousCoord.getY(), rotation);
+				}
+			}else{
 				vehicle.draw(spriteBatch, (float) nextCoord.getX(), (float) previousCoord.getY(), rotation);
 			}
+
+
 		}
 	}
 }
