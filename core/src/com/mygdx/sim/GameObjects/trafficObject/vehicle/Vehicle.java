@@ -24,30 +24,33 @@ public abstract class Vehicle implements TrafficObject {
 	private static int lastGivenId = 0;
 	
 	private int id;
-	
-	/**
-	 * The node this vehicle starts its trip at and the node it wants to reach.
-	 */
+
+
+	// The node this vehicle starts its trip at and the node it wants to reach.
 	Node startNode;
 	Node goalNode;
+	// The "time limit" for a car to reach its destination, used for experiments
 	float timeLimit;
-	/**
-	 * The name of the sprite that this vehicle uses.
-	 */
 	protected String spriteName;
-
-	/**
-	 * The sprite that this vehicle uses.
-	 */
 	private Sprite sprite;
 
+	// The max acceleration factor for IDM
 	private double maxAcceleration = 1.4;
-
-	/**
-	 * The edges that this vehicle is supposed to travel from its start point
-	 * to its endpoint.
-	 */
+	// Vehicle path
 	List<Edge> edgePath;
+	// The distance a car with IDM will stay away from the car in front of it
+	private double safetyHeadway = 1.5;
+
+
+	// The timesteps when this vehicle begins and ends its journey.
+	final int startTimestep;
+	int endTimestep = Integer.MAX_VALUE;
+
+	// The maximum speed that this vehicle can achieve, ever.
+	int maxSpeed;
+
+	// The physical length of the vehicle in meters.
+	private float length = 4;
 
 	/**
 	 * Stores for each timestep, the index in edgesToTravel of the edge
@@ -67,9 +70,7 @@ public abstract class Vehicle implements TrafficObject {
 	 */
 	float[] distancesTraveledOnEdge = new float[0];
 
-	/**
-	 * Stores for each timestep, the speed that this vehicle was traveling at.
-	 */
+	// Stores for each timestep, the speed that this vehicle was traveling at.
 	float[] speeds = new float[0];
 
 	/**
@@ -84,22 +85,6 @@ public abstract class Vehicle implements TrafficObject {
 	 * By default, it uses a very simple model that maintains a constant speed.
 	 */
 	DriverModel driverModel;
-
-	/**
-	 * The timesteps when this vehicle begins and ends its journey.
-	 */
-	final int startTimestep;
-	int endTimestep = Integer.MAX_VALUE;
-	
-	/**
-	 * The maximum speed that this vehicle can achieve, ever.
-	 */
-	int maxSpeed;
-	
-	/**
-	 * The physical length of the vehicle in meters.
-	 */
-	private float length = 4;
 
 	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Pathfinder pf, Map graph, int startTimestep, DriverModel driverModel, float initialSpeed) {
 
@@ -136,6 +121,72 @@ public abstract class Vehicle implements TrafficObject {
 		return timeLimit;
 	}
 
+	public TrafficObjectState getState(int timestep) {
+		Coordinates location = this.getLocationCoordinates(timestep);
+		boolean vizualize = this.isVisibleInVisualization(timestep);
+		boolean visibleToDrivers = this.isVisibleToDrivers(timestep);
+
+		return new TrafficObjectState(location,vizualize,visibleToDrivers);
+	}
+
+	public DriverModel getDriverModel() {
+		return driverModel;
+	}
+
+	public double getMaxAcceleration() {
+		return maxAcceleration;
+	}
+
+	public double getSafetyHeadway() {
+		return safetyHeadway;
+	}
+
+	public int getStartTimestep(){
+		return startTimestep;
+	}
+
+	public int getEndTimestep(){
+		return endTimestep;
+	}
+
+	public int getMaxSpeed(int timestep) {
+		return (int) Math.min(maxSpeed, getEdgeAt(timestep).getSpeedLimit());
+	}
+
+	public float getTraveledDistance(int timestep) {
+		return distancesTraveledOnEdge[timestep];
+	}
+
+	public List<Edge> getEdgePath() {
+		return edgePath;
+	}
+
+	public float getSpeedAt(int timestep){
+		return speeds[timestep];
+	}
+
+	public Node getStartNode(){
+		return startNode;
+	}
+
+	public void setStartNode(Node startNode){
+		this.startNode = startNode;
+	}
+
+	public Node getGoalNode(){
+		return goalNode;
+	}
+
+	public void setGoalNode(Node goalNode){
+		this.goalNode = goalNode;
+	}
+
+	public Coordinates getLocationCoordinates(int timestep) {
+		Edge edge = getEdgeAt(timestep);
+		float distance = distancesTraveledOnEdge[timestep];
+		return edge.getLocationIfTraveledDistance(distance);
+	}
+
 	public void setTimeLimit(List<Edge> path){
 		float len = 0;
 		for (Edge e : path){
@@ -150,6 +201,30 @@ public abstract class Vehicle implements TrafficObject {
 		}
 	}
 
+	public void setAggression(){
+		maxSpeed = (int)(maxSpeed * drawRandomExponential(-0.1));
+	}
+
+	public void setAggression(int mean){
+		Random r = new Random();
+		double g = r.nextGaussian() + mean;
+		if (g < 0 || g > mean*2) {
+			setAggression(mean);
+		}
+	}
+
+	// DO NOT USE THIS! This is for testing *ONLY*.
+	public void setEdgePath(List<Edge> edgePath) {
+		this.edgePath = edgePath;
+	}
+
+	private void setSprite(String spriteName) {
+		this.spriteName = spriteName;
+
+		this.sprite = Resources.world.vehicleSprites.get(spriteName);
+		sprite.setScale(0.5f);
+	}
+
 	// TODO: Get a way to find out how much time is left
 //	public float getTimeRemaining(){
 //
@@ -159,46 +234,11 @@ public abstract class Vehicle implements TrafficObject {
 		return Math.abs((a.getY() - b.getY()) + (a.getX() - b.getX()));
 	}
 
-	public TrafficObjectState getState(int timestep) {
-		Coordinates location = this.getLocationCoordinates(timestep);
-		boolean vizualize = this.isVisibleInVisualization(timestep);
-		boolean visibleToDrivers = this.isVisibleToDrivers(timestep);
-		
-		return new TrafficObjectState(location,vizualize,visibleToDrivers);
-	}
-	
 	public boolean isVisibleToDrivers(int timestep) { return timestep >= startTimestep && timestep <= endTimestep; }
 
 	public boolean isVisibleInVisualization(int timestep) {	return timestep >= startTimestep && timestep <= endTimestep; }
 	
 	public boolean isMoving(int timestep) { return timestep >= startTimestep && timestep <= endTimestep; }
-
-	
-	// DO NOT USE THIS! This is for testing *ONLY*.
-	public void setEdgePath(List<Edge> edgePath) {
-		this.edgePath = edgePath;
-	}
-	
-	public DriverModel getDriverModel() {
-		return driverModel;
-	}
-	
-	public double getMaxAcceleration() {
-		return maxAcceleration;
-	}
-	
-	private double safetyHeadway = 1.5;
-	
-	public double getSafetyHeadway() {
-		return safetyHeadway;
-	}
-	
-	private void setSprite(String spriteName) {
-		this.spriteName = spriteName;
-		
-		this.sprite = Resources.world.vehicleSprites.get(spriteName);
-		sprite.setScale(0.5f);
-	}
 	
 	public void ensureCapacity() {
 		ensureCapacity(speeds.length + 1440);
@@ -228,7 +268,6 @@ public abstract class Vehicle implements TrafficObject {
 		edgeIndices = newEdgeIndices;
 	}
 
-	
 	private void initialize() {
 		ensureCapacity();
 		
@@ -239,14 +278,6 @@ public abstract class Vehicle implements TrafficObject {
 
 	public String toString() {
 		return ("[Vehicle " + id + "]");
-	}
-
-	public int getStartTimestep(){
-		return startTimestep;
-	}
-
-	public int getEndTimestep(){
-		return endTimestep;
 	}
 
 	/**
@@ -356,53 +387,13 @@ public abstract class Vehicle implements TrafficObject {
 	
 	/**
 	 * Returns the Coordinates that this vehicle is located on at the given timestep.
-	 * @param timestep
-	 * @return the Coordinates that this vehicle is located on at the given timestep
 	 */
-	public Coordinates getLocationCoordinates(int timestep) {	
-		Edge edge = getEdgeAt(timestep);
-		float distance = distancesTraveledOnEdge[timestep];
-		return edge.getLocationIfTraveledDistance(distance);
-	}
-
 	public void draw(SpriteBatch spriteBatch, float x, float y, float rotation) {
 		sprite.setPosition(x, y);
 		sprite.setRotation(rotation);
 		sprite.draw(spriteBatch);
 	}
-	
-	public int getMaxSpeed(int timestep) {
-		return (int) Math.min(maxSpeed, getEdgeAt(timestep).getSpeedLimit());
-	}
 
-	public float getTraveledDistance(int timestep) {
-		return distancesTraveledOnEdge[timestep];
-	}
-	
-	public List<Edge> getEdgePath() {
-		return edgePath;
-	}
-	
-	public float getSpeedAt(int timestep){
-		return speeds[timestep];
-	}
-
-	public Node getStartNode(){
-		return startNode;
-	}
-	
-	public void setStartNode(Node startNode){
-		this.startNode = startNode;
-	}
-
-	public Node getGoalNode(){
-		return goalNode;
-	}
-	
-	public void setGoalNode(Node goalNode){
-		this.goalNode = goalNode;
-	}
-	
 	public int hashCode() {
 		return id;
 	}
@@ -412,18 +403,6 @@ public abstract class Vehicle implements TrafficObject {
 		Vehicle v = (Vehicle) o;
 		
 		return (v.id == this.id);
-	}
-
-	public void setAggression(){
-		maxSpeed = (int)(maxSpeed * drawRandomExponential(-0.1));
-	}
-
-	public void setAggression(int mean){
-		Random r = new Random();
-		double g = r.nextGaussian() + mean;
-		if (g < 0 || g > mean*2) {
-			setAggression(mean);
-		}
 	}
 
 	public static double drawRandomExponential(double mean) {
