@@ -22,9 +22,7 @@ import com.mygdx.sim.Resources.Resources;
 public abstract class Vehicle implements TrafficObject {
 	
 	private static int lastGivenId = 0;
-	
 	private int id;
-
 
 	// The node this vehicle starts its trip at and the node it wants to reach.
 	Node startNode;
@@ -41,10 +39,10 @@ public abstract class Vehicle implements TrafficObject {
 	// The distance a car with IDM will stay away from the car in front of it
 	private double safetyHeadway = 1.5;
 
-
 	// The timesteps when this vehicle begins and ends its journey.
 	final int startTimestep;
 	int endTimestep = Integer.MAX_VALUE;
+	int tripDuration = -1;
 
 	// The maximum speed that this vehicle can achieve, ever.
 	int maxSpeed;
@@ -109,10 +107,10 @@ public abstract class Vehicle implements TrafficObject {
 		this.driverModel = driverModel;
 
 		speeds[0] = initialSpeed;
+		tripDuration = 0;
 
 		// Find path
 		computePath(0);
-		setTimeLimit(getEdgePath());
 	}
 	
 	public float getLength() {	return length; }
@@ -140,6 +138,10 @@ public abstract class Vehicle implements TrafficObject {
 	public double getSafetyHeadway() {
 		return safetyHeadway;
 	}
+
+	public int getTripDuration(){
+	    return tripDuration;
+    }
 
 	public int getStartTimestep(){
 		return startTimestep;
@@ -187,12 +189,8 @@ public abstract class Vehicle implements TrafficObject {
 		return edge.getLocationIfTraveledDistance(distance);
 	}
 
-	public void setTimeLimit(List<Edge> path){
-		float len = 0;
-		for (Edge e : path){
-			len += e.getLength();
-		}
-		timeLimit = Math.round(len/10);
+	public void setTimeLimit(int timeLimit){
+		this.timeLimit = timeLimit;
 	}
 
 	public void decrementTime(){
@@ -239,6 +237,10 @@ public abstract class Vehicle implements TrafficObject {
 	public boolean isVisibleInVisualization(int timestep) {	return timestep >= startTimestep && timestep <= endTimestep; }
 	
 	public boolean isMoving(int timestep) { return timestep >= startTimestep && timestep <= endTimestep; }
+
+	public boolean isFinished(int timestep){
+	    return timestep >= endTimestep;
+    }
 	
 	public void ensureCapacity() {
 		ensureCapacity(speeds.length + 1440);

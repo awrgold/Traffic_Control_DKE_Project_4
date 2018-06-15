@@ -246,11 +246,11 @@ public class TrafficManager {
 		return new DistanceAndVehicle(smallestDistance, closestVehicle);
 	}
 
-	public static double manhattanDistance(Node a, Node b) {
+	private static double manhattanDistance(Node a, Node b) {
 		return Math.abs((a.getY() - b.getY()) + (a.getX() - b.getX()));
 	}
 
-	public static double euclideanDistance(Node a, Node b) {
+	private static double euclideanDistance(Node a, Node b) {
 		return Math.abs(Math.sqrt(Math.pow((a.getY() - b.getY()), 2) + Math.pow((a.getX() - b.getX()), 2)));
 	}
 
@@ -267,10 +267,29 @@ public class TrafficManager {
 		List<Edge> edgeList = new ArrayList<Edge>(edgeMap.values());
 		Map map = new Map(nodeList, edgeList);
 
-		List<Node> destinations = new ArrayList<Node>();
+		List<Node> destinations = createSpawnPoints(map);
+		List cars = createCars(destinations, map);
+		createNeighborhoods(destinations, numUrbanCenters);
 
+		if(DEBUG){
+			System.out.println("Destination list size: " + destinations.size());
+			System.out.println("Creating neighborhoods with " + destinations.size() + " destinations, and " + numUrbanCenters + " urban centers.");
+		}
+
+		TrafficManager tm = new TrafficManager(map, cars);
+		return tm;
+	}
+
+	/**
+	 * Create spawn/despawn points for vehicles in the simulation
+	 * @param map: The current map of the sim
+	 * @return: the list of points vehicles may spawn at
+	 */
+	private static ArrayList<Node> createSpawnPoints(Map map){
+
+		ArrayList<Node> spawnPoints = new ArrayList<Node>();
 		// Make small side roads the only place cars can spawn
-		for (Node n : nodeList){
+		for (Node n : map.getNodes()){
 			int minLanes = Integer.MIN_VALUE;
 			for (Edge e : n.getInEdges()){
 				if (e.getNumLanes() > minLanes){
@@ -279,22 +298,20 @@ public class TrafficManager {
 			}
 			if (minLanes == 1){
 				n.makeDestination();
-				destinations.add(n);
+				spawnPoints.add(n);
 			}
 		}
+		return spawnPoints;
+	}
 
-		if(DEBUG){
-			System.out.println("Destination list size: " + destinations.size());
-		}
-
+	/**
+	 * Create all the vehicles for the simulation
+	 * @param destinations: the list of vehicles cars can spawn at
+	 * @param map: the map of the sim
+	 * @return the list of vehicles in the sim
+	 */
+	private static List createCars(List<Node> destinations, Map map){
 		List cars = new ArrayList();
-
-		// Create the neighborhood scheme (see methods below)
-		if (DEBUG){
-			System.out.println("Creating neighborhoods with " + destinations.size() + " destinations, and " + numUrbanCenters + " urban centers.");
-		}
-		createNeighborhoods(destinations, numUrbanCenters);
-
 		for (int i = 0; i < vehicleCount; i++) {
 
 			// This utilizes an exponential distribution prioritizing nodes at the start of the list
@@ -314,17 +331,38 @@ public class TrafficManager {
 				end = destinations.get((int) (Math.floor(drawRandomExponential(lambda) * destinations.size())));
 				car = new Car.Builder(start, end, map).setDriverModel(new IntelligentDriverModel()).build();
 			}
-
 			cars.add(i, car);
+			car.setTimeLimit(determineTimeLimit(car));
 		}
-
-		TrafficManager tm = new TrafficManager(map, cars);
-		return tm;
+		return cars;
 	}
+
+	// TODO: Make this robust - right now just arbitrarily calculating a time limit, not based on something realistic
+	private static int determineTimeLimit(Vehicle car){
+		double mDist = manhattanDistance(car.getStartNode(), car.getGoalNode());
+		List<Edge> path = car.getEdgePath();
+		double actualDist = 0;
+		double avgSpeedOnPath = 0;
+		for (Edge e : path){
+			actualDist += e.getLength();
+			avgSpeedOnPath += e.getSpeedLimit();
+		}
+		avgSpeedOnPath = (avgSpeedOnPath/path.size());
+		double differential = Math.abs(actualDist/mDist);
+		int timeLimit = (int)Math.round(actualDist/((avgSpeedOnPath*1000)/60));
+
+		if(DEBUG){
+			System.out.println("Determined time limit for car " + car.toString() + " in [" + timeLimit + "] timesteps.");
+		}
+		return timeLimit;
+	}
+
+
 
 	/**
 	 * The idea is to create priority neighborhoods such as urban/suburban centers
-	 * that cars are more likely to head towards.
+	 * that cars are more likely to spawn at and head towards.
+	 * TODO: Update this with more specific locations. Too random right now.
 	 * @param nodes - Map nodes
 	 * @param numUrbanCenters - the number of Urban Centers designed for this map
 	 */
