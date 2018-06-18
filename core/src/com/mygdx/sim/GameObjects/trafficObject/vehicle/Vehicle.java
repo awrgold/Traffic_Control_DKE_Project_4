@@ -365,6 +365,7 @@ public abstract class Vehicle implements TrafficObject {
 					// Set the distance traveled on the edge to the length on the edge
 					// to indicate that we are at its end
 					distanceTraveledOnEdge = currentEdgeLength;
+
 				} else {
 					
 					// Increment the edge index to indicate we have moved on to the next edge from our path
@@ -377,6 +378,7 @@ public abstract class Vehicle implements TrafficObject {
 			}			
 		}
 
+		// Record the final time step in which the vehicle reaches the goal
 		if (!isMoving(timestep) && timestep > startTimestep){
 			setEndTimestep(timestep);
 		}
@@ -388,8 +390,6 @@ public abstract class Vehicle implements TrafficObject {
 	
 	/**
 	 * Returns the Edge that this vehicle is located on at the given timestep.
-	 * @param timestep
-	 * @return the Edge that this vehicle is located on at the given timestep
 	 */
 	public Edge getEdgeAt(int timestep) {		
 		return edgePath.get(edgeIndices[timestep]);

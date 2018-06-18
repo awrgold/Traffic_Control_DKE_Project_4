@@ -66,9 +66,8 @@ public class Map {
 				}
 			}
 
-
 			// If a node has 3 or more edges connected to it, we consider it large enough to deserve an intersection
-			if(node.getOutgoingNeighbors().size() >= 3 && minLanes >= 3) {
+			if(node.getOutgoingNeighbors().size() >= 4 && minLanes >= 4) {
 				node.setIntersection(true);
 				intersections.add(node);
 			}
@@ -134,23 +133,6 @@ public class Map {
 	public String toString() {
 		return "[Map]";
 	}
-
-	/*
-	public static void main(String[] args) {
-		Node node1 = new Node(0,0);
-		Node node2 = new Node(0,10);
-		
-		Edge edge = new Edge(node1,node2,50);
-		
-		Map map = new Map(Arrays.asList(node1,node2),Arrays.asList(edge));
-		
-		System.out.println("Created map");
-		
-		map.ensureCapacity(10);
-		
-		int x = 0;
-	}
-	*/
 
 	public static double euclideanDistance(Node a, Node b){
 		return Math.abs(Math.sqrt(Math.pow((a.getY()-b.getY()), 2) + Math.pow((a.getX() - b.getX()), 2)));

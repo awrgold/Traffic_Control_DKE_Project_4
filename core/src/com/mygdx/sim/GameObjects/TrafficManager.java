@@ -32,8 +32,7 @@ public class TrafficManager {
 
 	// Sampling frequency. Larger number means higher fidelity of the model, but
 	// also more computation
-	public final static int TIMESTEPS_PER_SECOND = 1;
-
+	public final static int TIMESTEPS_PER_SECOND = 2;
 	private final static int VIEW_DISTANCE = 500;
 	private final static int RIDICULOUS_SPEED = 1000;
 
@@ -266,6 +265,7 @@ public class TrafficManager {
 		Collections.sort(nodeList, new SortNode());
 		List<Edge> edgeList = new ArrayList<Edge>(edgeMap.values());
 		Map map = new Map(nodeList, edgeList);
+		intersections = map.getIntersections();
 
 		List<Node> destinations = createSpawnPoints(map);
 		List cars = createCars(destinations, map);
@@ -288,6 +288,7 @@ public class TrafficManager {
 	private static ArrayList<Node> createSpawnPoints(Map map){
 
 		ArrayList<Node> spawnPoints = new ArrayList<Node>();
+
 		// Make small side roads the only place cars can spawn
 		for (Node n : map.getNodes()){
 			int minLanes = Integer.MIN_VALUE;
@@ -358,10 +359,10 @@ public class TrafficManager {
 		return timeLimit;
 	}
 
+	// TODO: Doesn't work, EndTimeStep is always MAX_VALUE. Look at Vehicle class to fix.
 	public static int determineTimeTaken(Vehicle car){
 		return car.getEndTimestep()-car.getStartTimestep();
 	}
-
 
 
 	/**
