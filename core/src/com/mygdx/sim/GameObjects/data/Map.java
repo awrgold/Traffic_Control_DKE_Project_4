@@ -74,23 +74,35 @@ public class Map {
 		}
 
 		for (Node m : intersections){
-
-			// Here, we place stoplights for each "row" of lanes on the node. The node contains multiple stoplights (current build)
 			for (Edge e : m.getInEdges()){
-				List<Edge> lanes = new ArrayList<Edge>();
-				// Going through the list of lanes attached to the node,
-				for (int i = 0; i < m.getInEdges().size(); i++) {
-					// ... check if the lanes are adjacent (i.e. they have the same "from" node)
-					if (e.getFrom().equals(m.getInEdges().get(i).getFrom())){
-						// if that edge isn't already in the list of lanes, add it
-						if (!lanes.contains(e)) lanes.add(e);
-					}
-				}
+
 				// Add a light to this node.
-				m.addLight(new Stoplight(lanes, m.getLocation()));
+				m.addLight(new Stoplight(e, m.getLocation()));
 				if(DEBUG){
 					System.out.println("Stoplight added at: " + m.getLocation() + " with " + e.getNumLanes() + " lanes.");
 				}
+
+
+
+
+
+
+
+
+
+//			// Here, we place stoplights for each lane entering the intersection.
+//			for (Edge e : m.getInEdges()){
+//				List<Edge> lanes = new ArrayList<Edge>();
+//				// Going through the list of lanes attached to the node,
+//				for (int i = 0; i < m.getInEdges().size(); i++) {
+//					// ... check if the lanes are adjacent (i.e. they have the same "from" node)
+//					if (e.getFrom().equals(m.getInEdges().get(i).getFrom())){
+//						// if that edge isn't already in the list of lanes, add it
+//						if (!lanes.contains(e)) lanes.add(e);
+//					}
+//				}
+
+
 			}
 		}
 	}

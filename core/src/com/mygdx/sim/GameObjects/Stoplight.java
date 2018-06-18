@@ -13,42 +13,28 @@ public class Stoplight {
     private int timer;
     private Sprite sprite;
     private Color color;
-    private List<Edge> lanes;
-    private ArrayList<Node> nodeLanes;
+    private Edge lane;
+    private Node parent;
     private Stoplight linked;
     private Coordinates location;
-    private Node parent;
     private int timestepsRemainingUntilChange;
     private int greenTimer = 30;
     private int yellowTimer = 10;
     private int currentTimeStep;
+
         /**
          * The stoplight is an array of Enumerable Colors, where position N (# of lanes) is the left-most lane, and position 0 is the right most lane.
-         * @param lanes: the number of lanes on the current road
          * @param coords: the location of the stoplight in 2D Euclidean space
          */
 
-    public Stoplight(List<Edge> lanes, Coordinates coords){
-        this.lanes = lanes;
+    public Stoplight(Edge lane, Coordinates coords){
+        this.lane = lane;
+        this.parent = lane.getTo();
         this.location = coords;
         this.color = Color.GREEN;
     }
 
-    public Stoplight(Coordinates coords, ArrayList<Node> nodeLanes){
-        this.nodeLanes = nodeLanes;
-        this.location = coords;
-    }
-
     public Stoplight(){}
-
-    public void addLanes(int index, Edge toAdd){
-        if (index >= 0){
-            lanes.add(index, toAdd);
-        }
-        else{
-            lanes.add(toAdd);
-        }
-    }
 
     public void incrementTimeStep(){
         currentTimeStep++;
@@ -63,24 +49,9 @@ public class Stoplight {
         return parent;
     }
 
-    public void addLanes(List<Edge> toAdd){
-        lanes.addAll(toAdd);
+    public Edge getLane(){
+        return lane;
     }
-
-    public List<Edge> getLanes(){
-        return lanes;
-    }
-
-    public ArrayList<Node> getNodeLanes(){ return nodeLanes; }
-
-//    public Node getLane(Node n){
-//        for (Node m : getLanes()){
-//            if (m.equals(n)){
-//                return m;
-//            }
-//        }
-//        return null;
-//    }
 
     public int getTimestepsRemainingUntilChange() {
         return timestepsRemainingUntilChange;
@@ -108,10 +79,6 @@ public class Stoplight {
 
     public Stoplight getLinked(){
         return linked;
-    }
-
-    public int getNumLanes() {
-        return lanes.size();
     }
 
     public void setSprite(Sprite sprite) {

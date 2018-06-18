@@ -1,9 +1,12 @@
 package com.mygdx.sim.GameObjects.data;
 
+import java.util.List;
+
 public class Edge implements Comparable<Edge> {
 
     private Node from;
     private Node to;
+    private List<Edge> neighbors;
     private int speedLimit;
     private double weight;
     private int numLanes;
@@ -22,6 +25,7 @@ public class Edge implements Comparable<Edge> {
         this.speedLimit = speedLimit;
         this.weight = (getLength()/getSpeedLimit());
     }
+
     public Edge(Node from, Node to, int speedLimit, int numLanes){
         this.from = from;
         from.addOutEdge(this);
@@ -38,7 +42,6 @@ public class Edge implements Comparable<Edge> {
         }
     }
 
-
     public Node getFrom(){
         return from;
     }
@@ -49,6 +52,20 @@ public class Edge implements Comparable<Edge> {
 
     public int getNumLanes(){
         return numLanes;
+    }
+
+    public void addNeighbor(Edge neighbor){
+        neighbors.add(neighbor);
+    }
+
+    public void addNeighborAt(Edge neighbor, int index){
+        for (int i = 0; i < neighbors.size(); i++){
+            neighbors.add(index, neighbor);
+        }
+    }
+
+    public void addNeighborList(List<Edge> neighbors){
+        this.neighbors.addAll(neighbors);
     }
 
     public double getWeight(){
