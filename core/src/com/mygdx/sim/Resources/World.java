@@ -49,7 +49,7 @@ public class World {
 		roadTextures = new HashMap<String, Texture>();
 		
 		
-		for(int i = 0; i < 7; i++) {
+		for(int i = 0; i <= 7; i++) {
 			Texture texture;
 			roadTextures.put("road_lane_" + i, (texture = new Texture(Gdx.files.internal("resources/roads/road_lane_" + i +".png"))));
 			
