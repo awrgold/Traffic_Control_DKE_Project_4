@@ -36,13 +36,12 @@ public class SimulatorInput extends InputAdapter {
 		// Mouse Variables
 		mousePos_screen = new Vector2();
 		scrollCenter = new Vector2();
-		
+
 		// Bounds
 		Rectangle bounds = worldController.getBounds();
-		
-		// Center Camera
-		worldController.getWorldCamera().move(bounds.width / 4, bounds.height / 4);
 
+		// Center Camera
+		worldController.getWorldCamera().translate((bounds.getX() + bounds.getWidth()) / 2, (bounds.getY() + bounds.getHeight()) / 2);
 		this.update();
 	}
 
@@ -116,20 +115,20 @@ public class SimulatorInput extends InputAdapter {
 			worldCamera.move(x, y);
 
 			Vector3 worldCameraPos = worldCamera.position;
-			float buffer = worldCamera.zoom * 100f;
-			float width = worldCamera.zoom * worldCamera.viewportWidth;
-			float height = worldCamera.zoom * worldCamera.viewportHeight;
-			float boundsWidth = worldController.getBounds().width;
-			float boundsHeight = worldController.getBounds().height;
+			Rectangle bounds = worldController.getBounds();
 
-			if (worldCameraPos.x < -width / 2f + buffer)
-				worldCameraPos.x = -width / 2f + buffer;
-			if (worldCameraPos.y < -height / 2f + buffer)
-				worldCameraPos.y = -height / 2f + buffer;
-			if (worldCameraPos.x > width / 2f - buffer + boundsWidth)
-				worldCameraPos.x = width / 2f - buffer + boundsWidth;
-			if (worldCameraPos.y > height / 2f - buffer + boundsHeight)
-				worldCameraPos.y = height / 2f - buffer + boundsHeight;
+			if (worldCameraPos.x < bounds.getX()) {
+				worldCameraPos.x = bounds.getX();
+			}
+			if (worldCameraPos.y < bounds.getY()) {
+				worldCameraPos.y = bounds.getY();
+			}
+			if (worldCameraPos.x > bounds.getX() + bounds.getWidth()) {
+				worldCameraPos.x = bounds.getX() + bounds.getWidth();
+			}
+			if (worldCameraPos.y > bounds.getY() + bounds.getHeight()) {
+				worldCameraPos.y = bounds.getY() + bounds.getHeight();
+			}
 		}
 	}
 

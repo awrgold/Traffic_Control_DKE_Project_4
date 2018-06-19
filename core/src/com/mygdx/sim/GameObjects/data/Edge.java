@@ -10,6 +10,10 @@ public class Edge implements Comparable<Edge> {
     private int speedLimit;
     private double weight;
     private int numLanes;
+    private int lane;
+    
+    // UI
+    private List<Coordinates> shapeCoordinates = null;
 
     public Edge(Node from, Node to){
         this(from,to,50);
@@ -26,7 +30,7 @@ public class Edge implements Comparable<Edge> {
         this.weight = (getLength()/getSpeedLimit());
     }
 
-    public Edge(Node from, Node to, int speedLimit, int numLanes){
+    public Edge(Node from, Node to, int speedLimit, int lane, int numLanes, List<Coordinates> shapeCoordinates){
         this.from = from;
         from.addOutEdge(this);
 
@@ -34,12 +38,11 @@ public class Edge implements Comparable<Edge> {
         to.addInEdge(this);
 
         this.speedLimit = speedLimit;
+        this.lane = lane;
         this.numLanes = numLanes;
+        this.shapeCoordinates = shapeCoordinates;
+        
         this.weight = (getLength()/getSpeedLimit());
-
-        if (numLanes>4){
-            this.numLanes = 4;
-        }
     }
 
     public Node getFrom(){
@@ -50,8 +53,16 @@ public class Edge implements Comparable<Edge> {
         return to;
     }
 
-    public int getNumLanes(){
-        return numLanes;
+    public int getlane(){
+        return lane;
+    }
+    
+    public int getNumLanes() {
+    	return numLanes;
+    }
+    
+    public List<Coordinates> getShapeCoordinates() {
+    	return shapeCoordinates;
     }
 
     public void addNeighbor(Edge neighbor){
@@ -72,8 +83,8 @@ public class Edge implements Comparable<Edge> {
         return weight;
     }
 
-    public void setNumLanes(int lanes){
-        this.numLanes = lanes;
+    public void setlane(int lane){
+        this.lane = lane;
     }
 
 

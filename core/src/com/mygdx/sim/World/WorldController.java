@@ -88,10 +88,6 @@ public class WorldController {
 		return this.worldGenerator;
 	}
 
-	public void createMap(int columns, int rows) {
-		map.reset(columns, rows);
-	}
-
 	public Rectangle getBounds() {
 		return map.getBounds();
 	}

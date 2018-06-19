@@ -38,18 +38,6 @@ public class StartMenu extends Table {
 
 		});
 
-		// Editor Button
-		TextButton btn_editor = new DefaultButton("Editor", skin, "default");
-		btn_editor.pad(10.0f);
-		btn_editor.addListener(new ChangeListener() {
-
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				TrafficSimulator.get().setScreen(TrafficSimulator.get().editorScreen);
-			}
-
-		});
-
 		// Settings Button
 		TextButton btn_settings = new DefaultButton("Settings", skin, "default");
 		btn_settings.pad(10.0f);
@@ -67,7 +55,6 @@ public class StartMenu extends Table {
 		tbl_buttons.defaults().center().space(60f);
 
 		tbl_buttons.add(btn_start);
-		tbl_buttons.add(btn_editor);
 		tbl_buttons.add(btn_settings);
 
 		return tbl_buttons;
