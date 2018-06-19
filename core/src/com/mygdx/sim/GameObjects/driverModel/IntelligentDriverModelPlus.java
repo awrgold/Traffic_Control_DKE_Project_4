@@ -27,13 +27,13 @@ public class IntelligentDriverModelPlus implements DriverModel{
 		
 		double deceleration = 3;
 		
-		DistanceAndSpeed nextVehicle = mgr.getDistanceAndSpeedToClosestVehicle(vehicle, timestep);
-		double distanceToNextVehicle = nextVehicle.getDistance();
-		double speedOfNextVehicle = nextVehicle.getSpeed();
+		DistanceAndSpeed nextTrafficObject = mgr.getDistanceAndSpeedToClosestTrafficObject(vehicle, timestep);
+		double distanceToNextTrafficObject = nextTrafficObject.getDistance();
+		double speedOfNextTrafficObject = nextTrafficObject.getSpeed();
 		
 		// End setup; Begin calculations
 		
-		double approachingRate = currentSpeed - speedOfNextVehicle;
+		double approachingRate = currentSpeed - speedOfNextTrafficObject;
 		
 		double safetyHeadway = safetyTimeHeadway * currentSpeed;
 		
@@ -44,7 +44,7 @@ public class IntelligentDriverModelPlus implements DriverModel{
 				+ currentSpeed*approachingRate/(2*Math.sqrt(maximumAcceleration*deceleration));
 		
 		
-		double interactionTerm = Math.max((desiredGap/distanceToNextVehicle),0);
+		double interactionTerm = Math.max((desiredGap/distanceToNextTrafficObject),0);
 		
 		interactionTerm = Math.pow(interactionTerm, 2);
 		

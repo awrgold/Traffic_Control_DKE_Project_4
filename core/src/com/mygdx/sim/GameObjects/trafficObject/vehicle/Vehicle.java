@@ -1,6 +1,5 @@
 package com.mygdx.sim.GameObjects.trafficObject.vehicle;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -9,15 +8,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.sim.GameObjects.TrafficManager;
 import com.mygdx.sim.GameObjects.data.Coordinates;
 import com.mygdx.sim.GameObjects.data.Edge;
+import com.mygdx.sim.GameObjects.data.Location;
 import com.mygdx.sim.GameObjects.data.Map;
 import com.mygdx.sim.GameObjects.data.Node;
 import com.mygdx.sim.GameObjects.driverModel.DriverModel;
-import com.mygdx.sim.GameObjects.driverModel.SimpleDriverModel;
-import com.mygdx.sim.GameObjects.pathfinding.AStarPathfinder;
 import com.mygdx.sim.GameObjects.pathfinding.Pathfinder;
 import com.mygdx.sim.GameObjects.trafficObject.TrafficObject;
 import com.mygdx.sim.GameObjects.trafficObject.TrafficObjectState;
-import com.mygdx.sim.Resources.Resources;
 
 public abstract class Vehicle implements TrafficObject {
 	
@@ -116,11 +113,17 @@ public abstract class Vehicle implements TrafficObject {
 	}
 
 	public TrafficObjectState getState(int timestep) {
-		Coordinates location = this.getLocationCoordinates(timestep);
+		Coordinates coordinates = this.getLocationCoordinates(timestep);
+		Location location = this.getLocation(timestep);
+		float speed = this.getSpeedAt(timestep);
 		boolean vizualize = this.isVisibleInVisualization(timestep);
 		boolean visibleToDrivers = this.isVisibleToDrivers(timestep);
 
-		return new TrafficObjectState(location,vizualize,visibleToDrivers);
+		return new TrafficObjectState(coordinates,location,speed,vizualize,visibleToDrivers);
+	}
+	
+	public Location getLocation(int timestep) {
+		return new Location(this.getEdgeAt(timestep),this.getTraveledDistance(timestep));
 	}
 
 	public DriverModel getDriverModel() {
