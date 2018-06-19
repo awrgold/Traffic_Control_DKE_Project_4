@@ -38,8 +38,10 @@ public class Node implements Comparable<Node> {
         this.id = lastGivenId++;
 	}
 
-    public void setLights(List<Stoplight> lights){
-		this.lights = lights;
+	public Node(){}
+
+	public Node(Coordinates coords) {
+		location = coords;
 	}
 
 	public boolean isHasWeight(){
@@ -54,14 +56,8 @@ public class Node implements Comparable<Node> {
 		return numLanesAttached;
 	}
 
-	public void addLight(Stoplight light){
-    	if (lights != null){
-			lights.add(light);
-		}else{
-    		lights = new ArrayList<Stoplight>();
-    		lights.add(light);
-		}
-
+	public Stoplight getLight(){
+    	return stoplight;
 	}
 
 	public List<Stoplight> getLights(){

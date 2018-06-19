@@ -4,6 +4,11 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.mygdx.sim.GameObjects.data.Coordinates;
 import com.mygdx.sim.GameObjects.data.Edge;
 import com.mygdx.sim.GameObjects.data.Node;
+import com.mygdx.sim.GameObjects.trafficObject.InvisibleCar;
+import com.mygdx.sim.GameObjects.trafficObject.TrafficObject;
+import com.mygdx.sim.GameObjects.trafficObject.TrafficObjectState;
+import com.mygdx.sim.GameObjects.trafficObject.vehicle.Car;
+import com.mygdx.sim.GameObjects.trafficObject.vehicle.Vehicle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,12 +20,13 @@ public class Stoplight {
     private Color color;
     private Edge lane;
     private Node parent;
-    private Stoplight linked;
+    private ArrayList<Stoplight> linked;
     private Coordinates location;
+    private InvisibleCar v;
     private int timestepsRemainingUntilChange;
     private int greenTimer = 30;
     private int yellowTimer = 10;
-    private int currentTimeStep;
+    private int currentTimestep;
 
         /**
          * The stoplight is an array of Enumerable Colors, where position N (# of lanes) is the left-most lane, and position 0 is the right most lane.
@@ -36,8 +42,8 @@ public class Stoplight {
 
     public Stoplight(){}
 
-    public void incrementTimeStep(){
-        currentTimeStep++;
+    public void incrementTimestep(){
+        currentTimestep++;
         updateTimeStepsRemainingUntilChange();
     }
 
@@ -73,11 +79,19 @@ public class Stoplight {
         }
     }
 
-    public void setLinked(Stoplight neighbor){
-        this.linked = neighbor;
+    public void setLinked(ArrayList<Stoplight> neighbors){
+        this.linked = neighbors;
     }
 
-    public Stoplight getLinked(){
+    public void addLinked(Stoplight neighbor){
+        linked.add(neighbor);
+    }
+
+    public void addLinkedAt(int index, Stoplight neighbor){
+        linked.add(index, neighbor);
+    }
+
+    public ArrayList<Stoplight> getLinked(){
         return linked;
     }
 
@@ -93,11 +107,22 @@ public class Stoplight {
         this.color = color;
     }
 
+    /**
+     * This only controls the single stoplight.
+     * Traffic controller must switch lights for all linked.
+     * Use forEach in getLinked() to switch lights
+     */
     public void switchLight(){
         switch (color) {
             case RED: setColor(Color.GREEN); break;
-            case GREEN: setColor(Color.YELLOW);
-            case YELLOW: setColor(Color.RED);
+            case GREEN: setColor(Color.RED);
+        }
+        //TODO Place invisible cars
+        if(getColor().equals(Color.RED)){
+            v = new InvisibleCar(getParent());
+        }
+        if(getColor().equals(Color.GREEN)){
+            v = null;
         }
     }
 

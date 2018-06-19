@@ -28,11 +28,12 @@ public class TrafficManager {
 	private static boolean DEBUG = true;
 
 	// Duration of the simulation (hours, minutes, seconds)
-	private final static Time DURATION = new Time(0, 0, 5);
+	private final static int simulationLengthInHours = 1;
+	private final static Time DURATION = new Time(simulationLengthInHours, 0, 0);
 
 	// Sampling frequency. Larger number means higher fidelity of the model, but
 	// also more computation
-	public final static int TIMESTEPS_PER_SECOND = 2;
+	public final static int TIMESTEPS_PER_SECOND = 1;
 	private final static int VIEW_DISTANCE = 500;
 	private final static int RIDICULOUS_SPEED = 1000;
 
@@ -44,11 +45,12 @@ public class TrafficManager {
 	public final static int numUrbanCenters = 5;
 	public final static double mean = 0.2;
 	public final static double lambda = 1.0;
+	public static double[] lambdaPerHour;
 
 	private Map map;
 	private List<TrafficObject> trafficObjects;
 	private List<Vehicle> vehicles;
-	private static List<Node> intersections = new ArrayList<Node>();
+	private static List<Intersection> intersections = new ArrayList<Intersection>();
 	private static int urbanCenterWeight = 10;
 
 	private int lastComputedTimestep = 0;
@@ -86,9 +88,7 @@ public class TrafficManager {
 	/**
 	 * Gets the state (location+visibility) of all traffic objects at the given
 	 * timestep.
-	 * 
-	 * @param timestep
-	 *            - timestep for which you need the state
+	 * @param timestep - timestep for which you need the state
 	 * @return a HashMap that maps TrafficObjects to their State
 	 */
 	public HashMap<TrafficObject, TrafficObjectState> getState(int timestep) {
@@ -102,9 +102,7 @@ public class TrafficManager {
 
 	/**
 	 * Run the simulation until the given timestep.
-	 * 
-	 * @param finalTimeStep
-	 *            - timestep until which we are running the sim
+	 * @param finalTimeStep - timestep until which we are running the sim
 	 */
 	public void simulate(int finalTimeStep) {
 
@@ -140,14 +138,13 @@ public class TrafficManager {
 				// vehicle.computePath(lastComputedTimestep);
 			}
 
-			// Increment the timestep for lights
-			for (Node n : map.getIntersections()) {
-				if (n.getLights() == null) {
-					continue;
-				}
-
-				for (int i = 0; i < n.getLights().size(); i++) {
-					n.getLights().get(i).incrementTimeStep();
+			// Increment the timestep for light
+			for (Intersection n : map.getIntersections()) {
+				for (Stoplight s : n.getStoplights()){
+					if (s == null) {
+						continue;
+					}
+					s.incrementTimestep();
 				}
 			}
 
@@ -162,11 +159,8 @@ public class TrafficManager {
 	/**
 	 * Gets the distance to and speed of the closest vehicle in front of this
 	 * vehicle.
-	 * 
-	 * @param vehicle
-	 *            - vehicle in front of which we are checking
-	 * @param timestep
-	 *            - timestep at which we are checking
+	 * @param vehicle - vehicle in front of which we are checking
+	 * @param timestep - timestep at which we are checking
 	 * @return distance and speed of closest vehicle
 	 */
 	public DistanceAndSpeed getDistanceAndSpeedToClosestVehicle(Vehicle vehicle, int timestep) {
@@ -267,6 +261,7 @@ public class TrafficManager {
 		Collections.sort(nodeList, new SortNode());
 		List<Edge> edgeList = new ArrayList<Edge>(edgeMap.values());
 		Map map = new Map(nodeList, edgeList);
+		// TODO: Redo intersections
 		intersections = map.getIntersections();
 
 		List<Node> destinations = createSpawnPoints(map);
@@ -326,7 +321,18 @@ public class TrafficManager {
 				end = destinations.get((int) (Math.floor(drawRandomExponential(lambda) * destinations.size())));
 			}
 			// Build each car with their given destination and a randomly chosen spawn time
+			// TODO: Make cars arrive via rush hour and not uniformly.
 			int r = (int)(Math.round(Math.random()*getMaximumTimesteps()));
+
+//			for (int j = 0; j < simulationLengthInHours; j++) {
+//				lambdaPerHour[j] = generateArrivalRateByTime(j);
+//			}
+
+			/**
+			 * Generate cars
+			 * StartTimeStep: when the car spawns
+			 * Need to give it a timestep based on a rush-hour based model
+			 */
 			Car car = new Car.Builder(start, end, map).setStartTimestep(r).build();
 
 			while(car.getEdgePath() == null) {
@@ -338,6 +344,29 @@ public class TrafficManager {
 			car.setTimeLimit(determineTimeLimit(car));
 		}
 		return cars;
+	}
+
+	/**
+	 * Returns a random timestep that mimics rush hour generations
+	 * @param lambdas - the arrival rates per hour
+	 * @return timestep that the car will arrive at
+	 */
+	public static int getArrivalByTime(double[] lambdas){
+		int timestep = 0;
+		for (int i = 0; i < lambdas.length; i++){
+
+		}
+
+		return timestep;
+	}
+
+	public static int[] generateHourlyArrivalRates(){
+		int[] arrivalRates = new int[simulationLengthInHours];
+		for (int i = 0; i < simulationLengthInHours; i++) {
+
+		}
+
+
 	}
 
 	// TODO: Make this robust - right now just arbitrarily calculating a time limit, not based on something realistic
@@ -365,6 +394,11 @@ public class TrafficManager {
 	public static int determineTimeTaken(Vehicle car){
 		return car.getEndTimestep()-car.getStartTimestep();
 	}
+
+	public static int generateArrivalRateByTime(int hour){
+
+	}
+
 
 
 	/**
@@ -445,6 +479,11 @@ public class TrafficManager {
         double x = -Math.log(1 - (1 - Math.pow(Math.E, -rate)) * u) / rate;
         return x;
     }
+
+    public static double drawRandomNormal(double mean, double sd){
+    	Random r = new Random();
+    	return r.nextGaussian()*sd + mean;
+	}
 
     /**
      * Procedurally generates a grid based on static parameters, unused as of phase 2

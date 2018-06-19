@@ -5,6 +5,7 @@ import java.util.Random;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.mygdx.sim.GameObjects.TrafficManager;
 import com.mygdx.sim.GameObjects.data.Coordinates;
 import com.mygdx.sim.GameObjects.data.Edge;
@@ -33,7 +34,7 @@ public abstract class Vehicle implements TrafficObject {
 	List<Edge> edgePath;
 
 	// The timesteps when this vehicle begins and ends its journey.
-	final int startTimestep;
+	int startTimestep;
 	int endTimestep = Integer.MAX_VALUE;
 	int tripDuration = -1;
 
@@ -105,7 +106,7 @@ public abstract class Vehicle implements TrafficObject {
 		// Find path
 		computePath(0);
 	}
-	
+
 	public float getLength() {	return length; }
 
 	public float getTimeLimit(){

@@ -78,8 +78,9 @@ public class Map {
 			// If a node has 3 or more edges connected to it, we consider it large enough to deserve an intersection
 			if(node.getOutgoingNeighbors().size() >= 3 && minLanes >= 3) {
 				node.setIntersection(true);
-				intersections.add(node);
 			}
+			intersections.add(i);
+
 		}
 
 		for (Node m : intersections){
@@ -140,7 +141,7 @@ public class Map {
 	}
 
 
-	public List<Node> getIntersections(){
+	public List<Intersection> getIntersections(){
 		return this.intersections;
 	}
 
@@ -194,7 +195,6 @@ public class Map {
 	public static double euclideanDistance(Node a, Node b){
 		return Math.abs(Math.sqrt(Math.pow((a.getY()-b.getY()), 2) + Math.pow((a.getX() - b.getX()), 2)));
 	}
-
 
 	public int getNodeIndex(Node toFind){
         for (int i = 0; i < nodes.size(); i++){
