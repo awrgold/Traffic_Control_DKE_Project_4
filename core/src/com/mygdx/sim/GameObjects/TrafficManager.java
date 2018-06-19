@@ -28,7 +28,7 @@ public class TrafficManager {
 	private static boolean DEBUG = true;
 
 	// Duration of the simulation (hours, minutes, seconds)
-	private final static Time DURATION = new Time(1, 0, 0);
+	private final static Time DURATION = new Time(0, 0, 5);
 
 	// Sampling frequency. Larger number means higher fidelity of the model, but
 	// also more computation
