@@ -1,12 +1,12 @@
 package com.mygdx.sim.GameObjects;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -22,26 +22,48 @@ import com.mygdx.sim.GameObjects.data.Node;
 
 public class MapReader {
 
-	private static final int MAPMULTIPLIER = 10;
-	
+	private static final int MAPMULTIPLIER = 20;
+
 	private HashMap<String, Node> nodeMap = null;
 	private HashMap<String, Edge> edgeMap = null;
-	
+
 	public HashMap<String, Node> getNodes() {
 		return nodeMap;
 	}
-	
+
 	public HashMap<String, Edge> getEdges() {
 		return edgeMap;
 	}
-	
+
 	public void readMap() {
-		nodeMap = readNodes();
-		edgeMap = readEdges(nodeMap);
-		readConnections(edgeMap);
+
+		JFileChooser chooser = new JFileChooser(Gdx.files.getLocalStoragePath());
+		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		
+		String nodesPath = null;
+		String edgesPath = null;
+		String connectionsPath = null;
+
+		int returnVal = chooser.showOpenDialog(null);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			File dir = new File(chooser.getSelectedFile().getPath());
+			for (File file : dir.listFiles()) {
+				if (file.getName().endsWith(("nod.xml"))) {
+					nodesPath = file.getAbsolutePath();
+				} else if (file.getName().endsWith(("edg.xml"))) {
+					edgesPath = file.getAbsolutePath();
+				} else if (file.getName().endsWith(("con.xml"))) {
+					connectionsPath = file.getAbsolutePath();
+				}
+			}
+		}
+
+		nodeMap = readNodes(nodesPath);
+		edgeMap = readEdges(nodeMap, edgesPath);
+		readConnections(edgeMap, connectionsPath);
 	}
 
-	public HashMap<String, Node> readNodes() {
+	public HashMap<String, Node> readNodes(String path) {
 
 		HashMap<String, Node> nodeMap = new HashMap<String, Node>();
 
@@ -50,7 +72,7 @@ public class MapReader {
 
 		try {
 			documentBuilder = documentBuilderFactory.newDocumentBuilder();
-			Document document = documentBuilder.parse(chooseFile());
+			Document document = documentBuilder.parse(path);
 
 			NodeList xmlElements = document.getElementsByTagName("node");
 			for (int i = 0; i < xmlElements.getLength(); i++) {
@@ -76,7 +98,7 @@ public class MapReader {
 		return nodeMap;
 	}
 
-	public HashMap<String, Edge> readEdges(HashMap<String, Node> nodeMap) {
+	public HashMap<String, Edge> readEdges(HashMap<String, Node> nodeMap, String path) {
 
 		HashMap<String, Edge> edgeMap = new HashMap<String, Edge>();
 
@@ -85,7 +107,7 @@ public class MapReader {
 
 		try {
 			documentBuilder = documentBuilderFactory.newDocumentBuilder();
-			Document document = documentBuilder.parse(chooseFile());
+			Document document = documentBuilder.parse(path);
 
 			NodeList xmlElements = document.getElementsByTagName("edge");
 			for (int i = 0; i < xmlElements.getLength(); i++) {
@@ -145,14 +167,14 @@ public class MapReader {
 		return edgeMap;
 	}
 
-	public void readConnections(HashMap<String, Edge> edges) {
+	public void readConnections(HashMap<String, Edge> edges, String path) {
 
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder documentBuilder;
 
 		try {
 			documentBuilder = documentBuilderFactory.newDocumentBuilder();
-			Document document = documentBuilder.parse(chooseFile());
+			Document document = documentBuilder.parse(path);
 
 			NodeList xmlElements = document.getElementsByTagName("connection");
 			for (int i = 0; i < xmlElements.getLength(); i++) {
@@ -176,19 +198,6 @@ public class MapReader {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-	}
-
-	public String chooseFile() {
-		JFileChooser chooser = new JFileChooser(Gdx.files.getLocalStoragePath());
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("Node XML file", "xml");
-		chooser.setFileFilter(filter);
-
-		int returnVal = chooser.showOpenDialog(null);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			return chooser.getSelectedFile().getAbsolutePath();
-		} else {
-			return null;
 		}
 	}
 
