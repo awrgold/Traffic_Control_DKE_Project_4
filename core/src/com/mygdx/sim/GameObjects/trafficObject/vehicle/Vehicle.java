@@ -378,11 +378,6 @@ public abstract class Vehicle implements TrafficObject {
 			}			
 		}
 
-		// Record the final time step in which the vehicle reaches the goal
-		if (!isMoving(timestep) && timestep > startTimestep){
-			setEndTimestep(timestep);
-		}
-
 		// Set the edge index and traveled distance
 		edgeIndices[timestep] = edgeIdx;
 		distancesTraveledOnEdge[timestep] = distanceTraveledOnEdge;
