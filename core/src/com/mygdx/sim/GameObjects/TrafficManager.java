@@ -255,8 +255,9 @@ public class TrafficManager {
 
 	public static TrafficManager createTestFromFile() {
 		MapReader mr = new MapReader();
-		HashMap<String, Node> nodeMap = mr.readNodes();
-		HashMap<String, Edge> edgeMap = mr.readEdges(nodeMap);
+		HashMap<String, Node> nodeMap = mr.getNodes();
+		HashMap<String, Edge> edgeMap = mr.getEdges();
+		
 		mr.printAll(nodeMap, edgeMap);
 
 		List<Node> nodeList = new ArrayList<Node>(nodeMap.values());

@@ -23,6 +23,23 @@ import com.mygdx.sim.GameObjects.data.Node;
 public class MapReader {
 
 	private static final int MAPMULTIPLIER = 10;
+	
+	private HashMap<String, Node> nodeMap = null;
+	private HashMap<String, Edge> edgeMap = null;
+	
+	public HashMap<String, Node> getNodes() {
+		return nodeMap;
+	}
+	
+	public HashMap<String, Edge> getEdges() {
+		return edgeMap;
+	}
+	
+	public void readMap() {
+		nodeMap = readNodes();
+		edgeMap = readEdges(nodeMap);
+		readConnections(edgeMap);
+	}
 
 	public HashMap<String, Node> readNodes() {
 
@@ -93,17 +110,17 @@ public class MapReader {
 						}
 					}
 				}
-				
-				Node fromNode = nodeMap.get(edgeFrom);
-				Node toNode = nodeMap.get(edgeTo);
 
-				Edge edge = new Edge(fromNode, toNode, (int) edgeSpeed, edgeLanes, edgeLanes, shapeCoordinates);
-				fromNode.addOutEdge(edge);
-				toNode.addInEdge(edge);
+				/*
+				 * Node fromNode = nodeMap.get(edgeFrom); Node toNode = nodeMap.get(edgeTo);
+				 * 
+				 * Edge edge = new Edge(fromNode, toNode, (int) edgeSpeed, edgeLanes, edgeLanes,
+				 * shapeCoordinates); fromNode.addOutEdge(edge); toNode.addInEdge(edge);
+				 * 
+				 * edgeMap.put(edgeID, edge);
+				 */
 
-				edgeMap.put(edgeID, edge);
-
-				/*for (int lane = 0; lane < edgeLanes; lane++) {
+				for (int lane = 0; lane < edgeLanes; lane++) {
 
 					Node fromNode = nodeMap.get(edgeFrom);
 					Node toNode = nodeMap.get(edgeTo);
@@ -112,8 +129,9 @@ public class MapReader {
 					fromNode.addOutEdge(edge);
 					toNode.addInEdge(edge);
 
+					edgeID = (edgeID + "_" + lane);
 					edgeMap.put(edgeID, edge);
-				}*/
+				}
 			}
 
 		} catch (ParserConfigurationException e1) {
@@ -125,6 +143,40 @@ public class MapReader {
 		}
 
 		return edgeMap;
+	}
+
+	public void readConnections(HashMap<String, Edge> edges) {
+
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder documentBuilder;
+
+		try {
+			documentBuilder = documentBuilderFactory.newDocumentBuilder();
+			Document document = documentBuilder.parse(chooseFile());
+
+			NodeList xmlElements = document.getElementsByTagName("connection");
+			for (int i = 0; i < xmlElements.getLength(); i++) {
+				org.w3c.dom.Node xmlElement = xmlElements.item(i);
+
+				String connectionFromID = xmlElement.getAttributes().getNamedItem("from").getTextContent();
+				String connectionToID = xmlElement.getAttributes().getNamedItem("to").getTextContent();
+				String connectionFromLane = xmlElement.getAttributes().getNamedItem("fromLane").getTextContent();
+				String connectionToLane = xmlElement.getAttributes().getNamedItem("toLane").getTextContent();
+
+				Edge fromEdge = null;
+				Edge toEdge = null;
+				if ((fromEdge = edges.get(connectionFromID + "_" + connectionFromLane)) != null && (toEdge = edges.get(connectionToID + "_" + connectionToLane)) != null) {
+					fromEdge.addToEdge(toEdge);
+				}
+			}
+
+		} catch (ParserConfigurationException e1) {
+			e1.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public String chooseFile() {
@@ -149,7 +201,7 @@ public class MapReader {
 
 		counter = 0;
 		for (Edge edge : edgeMap.values()) {
-			System.out.println("Edge " + counter + " is from: " + edge.getFrom() + " to: " + edge.getTo());
+			System.out.println("Edge " + counter + " is from: " + edge.getFrom() + " to: " + edge.getTo() + " to edges: " + edge.getToEdges().size());
 			counter++;
 		}
 	}

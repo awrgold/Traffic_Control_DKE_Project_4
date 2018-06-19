@@ -39,8 +39,8 @@ public class Road {
 				Coordinates mannhatten = shapeCoordinates.get(i).subtractAbs(shapeCoordinates.get(i + 1));
 				length = (float) Math.sqrt(Math.pow(mannhatten.getX(), 2) + Math.pow(mannhatten.getY(), 2)) + texture.getWidth();
 
-				int x = (int) (shapeCoordinates.get(i + 1).getX() - shapeCoordinates.get(i).getX());
-				int y = (int) (shapeCoordinates.get(i + 1).getY() - shapeCoordinates.get(i).getY());
+				int x = (int) (shapeCoordinates.get(i + 1).getX() - shapeCoordinates.get(i).getX() + edge.getLane() * texture.getWidth());
+				int y = (int) (shapeCoordinates.get(i + 1).getY() - shapeCoordinates.get(i).getY() + edge.getLane() * texture.getHeight());
 
 				angle = (float) Math.toDegrees(Math.atan2(y, x));
 
@@ -55,8 +55,8 @@ public class Road {
 	private void createSingleTextureRegion(Edge edge) {
 		length = (float) edge.getLength() + texture.getWidth();
 
-		int x = (int) (edge.getTo().getX() - edge.getFrom().getX());
-		int y = (int) (edge.getTo().getY() - edge.getFrom().getY());
+		int x = (int) (edge.getTo().getX() - edge.getFrom().getX() + edge.getLane() * texture.getWidth());
+		int y = (int) (edge.getTo().getY() - edge.getFrom().getY()) + edge.getLane() * texture.getHeight();
 
 		angle = (float) Math.toDegrees(Math.atan2(y, x));
 
