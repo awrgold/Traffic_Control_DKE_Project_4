@@ -245,7 +245,9 @@ public abstract class Vehicle implements TrafficObject {
 		float[] newDistances = new float[capacity];
 		int[] newEdgeIndices = new int[capacity];
 		
-		for(int i = 0; i < currentCapacity; i++) {
+		int sizeToCopy = Math.min(currentCapacity, capacity);
+		
+		for(int i = 0; i < sizeToCopy; i++) {
 			newSpeeds[i] = speeds[i];
 			newDistances[i] = distancesTraveledOnEdge[i];
 			newEdgeIndices[i] = edgeIndices[i];

@@ -1,15 +1,10 @@
 package com.mygdx.sim.GameObjects.data;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 import com.badlogic.gdx.math.Rectangle;
-import com.mygdx.sim.GameObjects.Intersection;
-import com.mygdx.sim.GameObjects.IntersectionSingle;
-import com.mygdx.sim.GameObjects.Stoplight;
-import com.mygdx.sim.GameObjects.TrafficManager;
 import com.mygdx.sim.GameObjects.trafficObject.vehicle.Vehicle;
 
 public class Map {
@@ -20,7 +15,6 @@ public class Map {
 	
 	private List<Node> destinations = new ArrayList<Node>();
 	private List<Node> intersections = new ArrayList<Node>();
-	private List<IntersectionSingle> intersectionObjects;
 	
 	// Map padding
 	private int mapPadding = 200;
@@ -148,10 +142,6 @@ public class Map {
 
 	public List<Node> getIntersections(){
 		return this.intersections;
-	}
-
-	public List<IntersectionSingle> getIntersectionObjects(){
-		return this.intersectionObjects;
 	}
 
 	public HashMap<Edge, ArrayList<ArrayList<Vehicle>>> getLocationCache() {

@@ -12,6 +12,9 @@ public class Edge implements Comparable<Edge> {
     private int numLanes;
     private int lane;
     
+    private static int lastGivenId = 0;
+    private int id;
+    
     // UI
     private List<Coordinates> shapeCoordinates = null;
 
@@ -28,6 +31,8 @@ public class Edge implements Comparable<Edge> {
         
         this.speedLimit = speedLimit;
         this.weight = (getLength()/getSpeedLimit());
+        
+        this.id = lastGivenId++;
     }
 
     public Edge(Node from, Node to, int speedLimit, int lane, int numLanes, List<Coordinates> shapeCoordinates){
@@ -43,6 +48,22 @@ public class Edge implements Comparable<Edge> {
         this.shapeCoordinates = shapeCoordinates;
         
         this.weight = (getLength()/getSpeedLimit());
+    }
+    
+    public int hashCode() {
+    	return id;
+    }
+    
+    public boolean equals(Object o) {
+    	if(!(o instanceof Edge))
+    		return false;
+    	
+    	Edge edge2 = (Edge) o;
+    	
+    	if(this.id == edge2.id)
+    		return true;
+    	
+    	return false;
     }
 
     public Node getFrom(){

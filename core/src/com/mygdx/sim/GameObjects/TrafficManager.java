@@ -385,7 +385,7 @@ public class TrafficManager {
 		int r = (int)Math.round(d*nodes.size());
 		if(DEBUG){
             System.out.println("Random urban center index: " + r);
-            System.out.println("Node " + nodes.get(r).getNodeID() + " is chosen as an urban center.");
+            System.out.println("Node " + nodes.get(r).getId() + " is chosen as an urban center.");
         }
 
         // randomly choose a node to set as an urban center, and update the weights involved
@@ -409,7 +409,7 @@ public class TrafficManager {
 			if (!n.isHasWeight()){
 				n.setNodePriorityWeight(weight);
 				if(DEBUG){
-					System.out.println("Weight of node " + n.getNodeID() + " = " + weight);
+					System.out.println("Weight of node " + n.getId() + " = " + weight);
 				}
 				setNeighborWeights(n, weight-1);
 			}
