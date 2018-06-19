@@ -109,7 +109,7 @@ public class Node implements Comparable<Node> {
 	}
 
 	public String toString() {
-		return "[Node@" + location + "]";
+		return "[Node " + id + " @" + location + "]";
 	}
 
 	public void setPreviousNode(Node previousNode) {

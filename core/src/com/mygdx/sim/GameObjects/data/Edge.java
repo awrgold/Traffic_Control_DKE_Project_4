@@ -58,6 +58,10 @@ public class Edge implements Comparable<Edge> {
     	return id;
     }
     
+    public int getId() {
+    	return id;
+    }
+    
     public boolean equals(Object o) {
     	if(!(o instanceof Edge))
     		return false;
@@ -178,7 +182,7 @@ public class Edge implements Comparable<Edge> {
     }
     
     public String toString() {
-    	return ("["+from+","+to+"]");
+    	return ("[Edge " + id + ":"+from+","+to+"]");
     }
 
     public int compareTo(Edge edge) {
