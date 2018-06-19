@@ -32,12 +32,8 @@ public abstract class Vehicle implements TrafficObject {
 	protected String spriteName;
 	private Sprite sprite;
 
-	// The max acceleration factor for IDM
-	private double maxAcceleration = 1.4;
 	// Vehicle path
 	List<Edge> edgePath;
-	// The distance a car with IDM will stay away from the car in front of it
-	private double safetyHeadway = 1.5;
 
 	// The timesteps when this vehicle begins and ends its journey.
 	final int startTimestep;
@@ -129,14 +125,6 @@ public abstract class Vehicle implements TrafficObject {
 
 	public DriverModel getDriverModel() {
 		return driverModel;
-	}
-
-	public double getMaxAcceleration() {
-		return maxAcceleration;
-	}
-
-	public double getSafetyHeadway() {
-		return safetyHeadway;
 	}
 
 	public int getTripDuration(){
