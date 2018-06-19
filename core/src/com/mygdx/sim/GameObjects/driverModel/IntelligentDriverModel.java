@@ -10,11 +10,9 @@ public class IntelligentDriverModel implements DriverModel{
 	private final static double LINEAR_JAM_DISTANCE = 2.0;
 	private final static double NON_LINEAR_JAM_DISTANCE = 3.0;
 	
-	// The max acceleration factor for IDM
-	private double maxAcceleration = 1.4;
+	private double maximumAcceleration = 1.4;
 
-	// The distance a car with IDM will stay away from the car in front of it
-	private double safetyHeadway = 1.5;
+	private double safetyTimeHeadway = 1.5;
 	
 	public double determineAcceleration(TrafficManager mgr, Vehicle vehicle, int timestep) {
 		if(timestep == 0) 
@@ -22,8 +20,6 @@ public class IntelligentDriverModel implements DriverModel{
 		
 		// Begin setup
 		int desiredSpeed = vehicle.getMaxSpeed(timestep);
-		double maximumAcceleration = maxAcceleration;
-		double safetyTimeHeadway = safetyHeadway;
 		
 		double vehicleLength = vehicle.getLength();
 		

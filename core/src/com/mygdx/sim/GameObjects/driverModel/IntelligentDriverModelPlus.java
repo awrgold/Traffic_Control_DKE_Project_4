@@ -10,14 +10,16 @@ public class IntelligentDriverModelPlus implements DriverModel{
 	private final static double LINEAR_JAM_DISTANCE = 2.0;
 	private final static double NON_LINEAR_JAM_DISTANCE = 3.0;	
 	
+	private double maximumAcceleration = 1.4;
+
+	private double safetyTimeHeadway = 1.5;
+	
 	public double determineAcceleration(TrafficManager mgr, Vehicle vehicle, int timestep) {
 		if(timestep == 0) 
 			return 0;
 		
 		// Begin setup
 		int desiredSpeed = vehicle.getMaxSpeed(timestep);
-		double maximumAcceleration = vehicle.getMaxAcceleration();
-		double safetyTimeHeadway = vehicle.getSafetyHeadway();
 		
 		double vehicleLength = vehicle.getLength();
 		
