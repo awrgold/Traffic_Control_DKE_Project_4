@@ -26,6 +26,7 @@ public class TrafficManager {
 
 	// Turn on all print statements
 	private static boolean DEBUG = true;
+	private static boolean DEBUG2 = false;
 
 	// Duration of the simulation (hours, minutes, seconds)
 	private final static int simulationLengthInHours = 1;
@@ -45,7 +46,7 @@ public class TrafficManager {
 	public final static int numUrbanCenters = 5;
 	public final static double mean = 0.2;
 	public final static double lambda = 1.0;
-	public static double[] lambdaPerHour;
+	public static double[] arrivalRates;
 
 	private Map map;
 	private List<TrafficObject> trafficObjects;
@@ -310,6 +311,8 @@ public class TrafficManager {
 	 */
 	private static List createCars(List<Node> destinations, Map map){
 		List cars = new ArrayList();
+
+		int previousArrivalTime = 0;
 		for (int i = 0; i < vehicleCount; i++) {
 
 			// This utilizes an exponential distribution prioritizing nodes at the start of the list
@@ -322,18 +325,22 @@ public class TrafficManager {
 			}
 			// Build each car with their given destination and a randomly chosen spawn time
 			// TODO: Make cars arrive via rush hour and not uniformly.
-			int r = (int)(Math.round(Math.random()*getMaximumTimesteps()));
-
-//			for (int j = 0; j < simulationLengthInHours; j++) {
-//				lambdaPerHour[j] = generateArrivalRateByTime(j);
-//			}
+//			int r = (int)(Math.round(Math.random()*getMaximumTimesteps()));
+//
+//			// Get the arrival rate per hour
+//			arrivalRates = generateArrivalRates();
 
 			/**
 			 * Generate cars
 			 * StartTimeStep: when the car spawns
 			 * Need to give it a timestep based on a rush-hour based model
 			 */
-			Car car = new Car.Builder(start, end, map).setStartTimestep(r).build();
+
+			previousArrivalTime = Math.abs(generateNextArrivalTime(previousArrivalTime));
+			System.out.println("!!! Next arrival time: " + previousArrivalTime);
+
+			Car car = new Car.Builder(start, end, map).setStartTimestep(previousArrivalTime).build();
+
 
 			while(car.getEdgePath() == null) {
 				start = destinations.get((int) (Math.floor(drawRandomExponential(lambda) * destinations.size())));
@@ -343,30 +350,47 @@ public class TrafficManager {
 			cars.add(i, car);
 			car.setTimeLimit(determineTimeLimit(car));
 		}
+
 		return cars;
 	}
 
-	/**
-	 * Returns a random timestep that mimics rush hour generations
-	 * @param lambdas - the arrival rates per hour
-	 * @return timestep that the car will arrive at
-	 */
-	public static int getArrivalByTime(double[] lambdas){
-		int timestep = 0;
-		for (int i = 0; i < lambdas.length; i++){
+	public static double[] generateArrivalRates(){
+		double[] arrivalRates = new double[getMaximumTimesteps()];
 
+		for (int i = 0; i < getMaximumTimesteps(); i++) {
+			double d = (2*(Math.sin(i/5)-(i/20)-Math.cos(i/2)+3.208));
+			// Normalize to the range between 0 and maxTimesteps.
+			arrivalRates[i] = (d)/(getMaximumTimesteps());
 		}
-
-		return timestep;
+		return arrivalRates;
 	}
 
-	public static int[] generateHourlyArrivalRates(){
-		int[] arrivalRates = new int[simulationLengthInHours];
-		for (int i = 0; i < simulationLengthInHours; i++) {
+	public static int generateNextArrivalTime(int i){
 
+		double u = Math.random();
+
+		/**
+		 * our PDF for rush hour: (2*(Math.sin((i)/5)-((i)/20)-Math.cos((i)/2)+3.208))
+		 * inverse transform F(x) = 2 * (-5 * Math.cos(0.2*u) - (0.025 * Math.pow(u, 2)) - (2 * Math.sin(0.5*u) + (3.208 * u))) + 10
+		 * generate a uniform random variate U~U(0,1) and plug into our CDF
+		 */
+
+		double d = (2 * (-5 * Math.cos(0.2*u) - (0.025 * Math.pow(u, 2)) - (2 * Math.sin(0.5*u) + (3.208 * u))) + 10);
+		double f = Math.abs(d-2.27853);
+
+		while (f < 0 || f > 1){
+			d = (2 * (-5 * Math.cos(0.2*u) - (0.025 * Math.pow(u, 2)) - (2 * Math.sin(0.5*u) + (3.208 * u))) + 10);
 		}
 
+		f = Math.abs(d-2.27853);
 
+		if (DEBUG2){
+			System.out.println("Random variate from CDF: " + d);
+			System.out.println("Next arrival time before rounding: " + (f*getMaximumTimesteps()));
+			System.out.println("Next arrival time after rounding: " + Math.round(f*getMaximumTimesteps()));
+			System.out.println("Next arrival time after casting: " + (int) Math.round(f*getMaximumTimesteps()));
+		}
+		return (int) Math.round(f*getMaximumTimesteps());
 	}
 
 	// TODO: Make this robust - right now just arbitrarily calculating a time limit, not based on something realistic
@@ -394,12 +418,6 @@ public class TrafficManager {
 	public static int determineTimeTaken(Vehicle car){
 		return car.getEndTimestep()-car.getStartTimestep();
 	}
-
-	public static int generateArrivalRateByTime(int hour){
-
-	}
-
-
 
 	/**
 	 * The idea is to create priority neighborhoods such as urban/suburban centers
@@ -556,6 +574,10 @@ public class TrafficManager {
 
 	public static double getDurationOfTimestepInSeconds() {
 		return 1. / TIMESTEPS_PER_SECOND;
+	}
+
+	public static int getTimestepAtTime(Time time){
+    	return (TIMESTEPS_PER_SECOND * time.getSeconds()) + (60 * time.getMinutes()) + (60 * time.getHours());
 	}
 
 	public static int getMaximumTimesteps() {

@@ -40,7 +40,6 @@ public class IntelligentDriverModel implements DriverModel{
 		double desiredGap = LINEAR_JAM_DISTANCE
 				+ vehicleLength
 				+ NON_LINEAR_JAM_DISTANCE*Math.sqrt(currentSpeed/desiredSpeed)
-				+ safetyHeadway
 				+ currentSpeed*approachingRate/(2*Math.sqrt(maximumAcceleration*deceleration));
 		
 		

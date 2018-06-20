@@ -38,8 +38,6 @@ public class Node implements Comparable<Node> {
         this.id = lastGivenId++;
 	}
 
-	public Node(){}
-
 	public Node(Coordinates coords) {
 		location = coords;
 	}
