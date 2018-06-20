@@ -11,12 +11,14 @@ import java.util.Random;
 import com.mygdx.sim.GameObjects.data.DistanceAndSpeed;
 import com.mygdx.sim.GameObjects.data.DistanceAndTrafficObject;
 import com.mygdx.sim.GameObjects.data.Edge;
+import com.mygdx.sim.GameObjects.data.Location;
 import com.mygdx.sim.GameObjects.data.Map;
 import com.mygdx.sim.GameObjects.data.Node;
 import com.mygdx.sim.GameObjects.data.SortNode;
 import com.mygdx.sim.GameObjects.data.Util;
 import com.mygdx.sim.GameObjects.driverModel.IntelligentDriverModel;
 import com.mygdx.sim.GameObjects.driverModel.SimpleDriverModel;
+import com.mygdx.sim.GameObjects.trafficObject.TestTrafficObject;
 import com.mygdx.sim.GameObjects.trafficObject.TrafficObject;
 import com.mygdx.sim.GameObjects.trafficObject.TrafficObjectState;
 import com.mygdx.sim.GameObjects.trafficObject.vehicle.Car;
@@ -576,10 +578,15 @@ public class TrafficManager {
 
 		Car car3 = new Car.Builder(node1, node3, map).setDriverModel(new IntelligentDriverModel()).setInitialSpeed(20).build();
 		car3.setEdgePath(Arrays.asList(edge1, edge2));
+		
+		TestTrafficObject blocker = new TestTrafficObject(new Location(edge2, 300));
 
 		List cars = Arrays.asList(car1, car2, car3);
 
-		return new TrafficManager(map, cars, new ArrayList<TrafficObject>());
+		List<TrafficObject> staticTrafficObjects = new ArrayList<TrafficObject>();
+		staticTrafficObjects.add(blocker);
+		
+		return new TrafficManager(map, cars, staticTrafficObjects);
 	}
 
 	public static TrafficManager testcaseBig(int nodeN, int carsN) {
