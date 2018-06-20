@@ -130,8 +130,8 @@ public class WorldRenderer {
 		// Iterate through all vehicles
 		for (Vehicle vehicle : worldController.getVehicles()) {
 			
-			Coordinates previousCoord = previousTrafficObjectState.get(vehicle).getLocation();
-			Coordinates nextCoord = nextTrafficObjectState.get(vehicle).getLocation();
+			Coordinates previousCoord = previousTrafficObjectState.get(vehicle).getCoordinates();
+			Coordinates nextCoord = nextTrafficObjectState.get(vehicle).getCoordinates();
 
 			float x = (float) (previousCoord.getX() - nextCoord.getX());
 			float y = (float) (previousCoord.getY() - nextCoord.getY());

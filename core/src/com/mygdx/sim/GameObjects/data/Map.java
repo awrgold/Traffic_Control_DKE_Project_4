@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.mygdx.sim.GameObjects.trafficObject.TrafficObject;
 import com.mygdx.sim.GameObjects.trafficObject.vehicle.Vehicle;
 
 public class Map {
@@ -28,6 +29,7 @@ public class Map {
 	private int mapMinY;
 
 	HashMap<Edge, ArrayList<ArrayList<Vehicle>>> locationCache;
+	HashMap<Edge, ArrayList<TrafficObject>> staticTrafficObjectsCache;
 
 	// GUI Map Variables
 	private Rectangle bounds;
@@ -47,6 +49,12 @@ public class Map {
 
 		for (Edge edge : edges) {
 			locationCache.put(edge, new ArrayList<ArrayList<Vehicle>>());
+		}
+		
+		staticTrafficObjectsCache = new HashMap<Edge, ArrayList<TrafficObject>>();
+		
+		for(Edge edge: edges) {
+			staticTrafficObjectsCache.put(edge, new ArrayList<TrafficObject>());
 		}
 	}
 
@@ -146,6 +154,10 @@ public class Map {
 
 	public HashMap<Edge, ArrayList<ArrayList<Vehicle>>> getLocationCache() {
 		return locationCache;
+	}
+	
+	public HashMap<Edge, ArrayList<TrafficObject>> getStaticTrafficObjectsCache(){
+		return staticTrafficObjectsCache;
 	}
 
 	public List<Node> getNodes() {

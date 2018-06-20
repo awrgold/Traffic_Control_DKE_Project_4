@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.mygdx.sim.GameObjects.data.DistanceAndSpeed;
-import com.mygdx.sim.GameObjects.data.DistanceAndVehicle;
+import com.mygdx.sim.GameObjects.data.DistanceAndTrafficObject;
 import com.mygdx.sim.GameObjects.data.Edge;
 import com.mygdx.sim.GameObjects.data.Map;
 import com.mygdx.sim.GameObjects.data.Node;
@@ -28,7 +28,7 @@ public class TrafficManager {
 	private static boolean DEBUG = true;
 
 	// Duration of the simulation (hours, minutes, seconds)
-	private final static Time DURATION = new Time(0, 0, 5);
+	private final static Time DURATION = new Time(1, 0, 0);
 
 	// Sampling frequency. Larger number means higher fidelity of the model, but
 	// also more computation
@@ -54,11 +54,11 @@ public class TrafficManager {
 	private int lastComputedTimestep = 0;
 	private static double aggressionRandomizer;
 
-	public TrafficManager(Map map, List<Vehicle> vehicles) {
+	public TrafficManager(Map map, List<Vehicle> vehicles, List<TrafficObject> trafficObjects) {
 		this.map = map;
 		this.vehicles = vehicles;
 
-		this.trafficObjects = new ArrayList<TrafficObject>(vehicles);
+		this.trafficObjects = trafficObjects;
 
 		for (Vehicle vehicle : vehicles) {
 
@@ -72,6 +72,11 @@ public class TrafficManager {
 				if (!edgePath.get(i + 1).getFrom().equals(edgePath.get(i).getTo()))
 					throw new RuntimeException("EdgePath of vehicle " + this + " implies teleportation");
 
+		}
+		
+		for(TrafficObject to: trafficObjects) {
+			Edge edge = to.getState(0).getLocation().getEdge();
+			map.getStaticTrafficObjectsCache().get(edge).add(to);
 		}
 	}
 
@@ -94,6 +99,9 @@ public class TrafficManager {
 	public HashMap<TrafficObject, TrafficObjectState> getState(int timestep) {
 		HashMap<TrafficObject, TrafficObjectState> state = new HashMap<TrafficObject, TrafficObjectState>();
 
+		for( Vehicle veh : vehicles)
+			state.put(veh, veh.getState(timestep));
+		
 		for (TrafficObject to : trafficObjects)
 			state.put(to, to.getState(timestep));
 
@@ -169,44 +177,49 @@ public class TrafficManager {
 	 *            - timestep at which we are checking
 	 * @return distance and speed of closest vehicle
 	 */
-	public DistanceAndSpeed getDistanceAndSpeedToClosestVehicle(Vehicle vehicle, int timestep) {
+	public DistanceAndSpeed getDistanceAndSpeedToClosestTrafficObject(Vehicle vehicle, int timestep) {
 		Edge edge = vehicle.getEdgeAt(timestep);
 		double distance = -vehicle.getTraveledDistance(timestep);
 
-		DistanceAndVehicle dnv = getClosestVehicle(vehicle, edge, distance, timestep);
+		DistanceAndTrafficObject dnv = getClosestVehicle(vehicle, edge, distance, timestep);
 
 		if (dnv == null)
 			return new DistanceAndSpeed(VIEW_DISTANCE, RIDICULOUS_SPEED);
 
-		Vehicle closest = dnv.getVehicle();
+		TrafficObject closest = dnv.getTrafficObject();
 		double distanceToClosest = dnv.getDistance();
 
 		double speedOfClosest = RIDICULOUS_SPEED;
 
 		if (timestep > 0)
-			speedOfClosest = closest.getSpeedAt(timestep - 1);
+			speedOfClosest = closest.getState(timestep-1).getSpeed();
 
 		return new DistanceAndSpeed(distanceToClosest, speedOfClosest);
 	}
 
-	private DistanceAndVehicle getClosestVehicle(Vehicle vehicle, Edge currentEdge, double distanceUntilNow,
+	private DistanceAndTrafficObject getClosestVehicle(Vehicle vehicle, Edge currentEdge, double distanceUntilNow,
 			int timestep) {
-		List<Vehicle> vehiclesOnCurrentEdge = (List<Vehicle>) map.getLocationCache().get(currentEdge).get(timestep)
-				.clone();
+		List<Vehicle> vehiclesOnCurrentEdge = map.getLocationCache().get(currentEdge).get(timestep);
+		List<TrafficObject> staticTrafficObjectsOnCurrentEdge = map.getStaticTrafficObjectsCache().get(currentEdge);
+		
+		ArrayList<TrafficObject> trafficObjectsOnCurrentEdge = new ArrayList<TrafficObject>();
+		trafficObjectsOnCurrentEdge.addAll(staticTrafficObjectsOnCurrentEdge);
+		trafficObjectsOnCurrentEdge.addAll(vehiclesOnCurrentEdge);
+				
 
-		ArrayList<DistanceAndVehicle> candidates = new ArrayList<DistanceAndVehicle>();
-		for (Vehicle vehicle2 : vehiclesOnCurrentEdge) {
-			double distance = distanceUntilNow + vehicle2.getTraveledDistance(timestep);
-			if (distance - Util.DELTA_EPSILON > 0 && vehicle2.isVisibleToDrivers(timestep))
-				candidates.add(new DistanceAndVehicle(distance, vehicle2));
+		ArrayList<DistanceAndTrafficObject> candidates = new ArrayList<DistanceAndTrafficObject>();
+		for (TrafficObject to : trafficObjectsOnCurrentEdge) {
+			double distance = distanceUntilNow + to.getState(timestep).getLocation().getDistanceOnEdge();
+			if (distance - Util.DELTA_EPSILON > 0 && to.getState(timestep).visibleToDrivers())
+				candidates.add(new DistanceAndTrafficObject(distance, to));
 		}
 
-		DistanceAndVehicle closest = getClosestDistanceAndVehicleFromList(candidates, timestep);
+		DistanceAndTrafficObject closest = getClosestDistanceAndTrafficObjectFromList(candidates, timestep);
 
 		if (closest != null) {
-			Vehicle closestVehicle = closest.getVehicle();
-			double distanceToClosest = (distanceUntilNow + closestVehicle.getTraveledDistance(timestep));
-			return new DistanceAndVehicle(distanceToClosest, closestVehicle);
+			TrafficObject closestVehicle = closest.getTrafficObject();
+			double distanceToClosest = (distanceUntilNow + closestVehicle.getState(timestep).getLocation().getDistanceOnEdge());
+			return new DistanceAndTrafficObject(distanceToClosest, closestVehicle);
 		}
 
 		distanceUntilNow += currentEdge.getLength();
@@ -214,35 +227,36 @@ public class TrafficManager {
 		if ((distanceUntilNow + Util.DELTA_EPSILON) >= VIEW_DISTANCE)
 			return null;
 
-		ArrayList<DistanceAndVehicle> vehiclesFromFollowingEdges = new ArrayList<DistanceAndVehicle>();
+		ArrayList<DistanceAndTrafficObject> vehiclesFromFollowingEdges = new ArrayList<DistanceAndTrafficObject>();
 
 		for (Edge edge2 : currentEdge.getTo().getOutEdges())
 			vehiclesFromFollowingEdges.add(getClosestVehicle(vehicle, edge2, distanceUntilNow, timestep));
 
-		return getClosestDistanceAndVehicleFromList(vehiclesFromFollowingEdges, timestep);
+		return getClosestDistanceAndTrafficObjectFromList(vehiclesFromFollowingEdges, timestep);
 	}
 
-	private DistanceAndVehicle getClosestDistanceAndVehicleFromList(List<DistanceAndVehicle> list, int timestep) {
+	private DistanceAndTrafficObject getClosestDistanceAndTrafficObjectFromList(List<DistanceAndTrafficObject> list, int timestep) {
 
-		Vehicle closestVehicle = null;
+		TrafficObject closestTrafficObject = null;
 		double smallestDistance = VIEW_DISTANCE;
 
-		for (DistanceAndVehicle dnv : list) {
+		for (DistanceAndTrafficObject dnv : list) {
 			if (dnv == null)
 				continue;
-			Vehicle vehicle2 = dnv.getVehicle();
+			
+			TrafficObject vehicle2 = dnv.getTrafficObject();
 
 			double thisDistance = dnv.getDistance();
 
 			if (thisDistance < smallestDistance) {
-				closestVehicle = vehicle2;
+				closestTrafficObject = vehicle2;
 				smallestDistance = thisDistance;
 			}
 		}
-		if (closestVehicle == null)
+		if (closestTrafficObject == null)
 			return null;
 
-		return new DistanceAndVehicle(smallestDistance, closestVehicle);
+		return new DistanceAndTrafficObject(smallestDistance, closestTrafficObject);
 	}
 
 	private static double manhattanDistance(Node a, Node b) {
@@ -278,7 +292,7 @@ public class TrafficManager {
 			System.out.println("Creating neighborhoods with " + destinations.size() + " destinations, and " + numUrbanCenters + " urban centers.");
 		}
 
-		TrafficManager tm = new TrafficManager(map, cars);
+		TrafficManager tm = new TrafficManager(map, cars, new ArrayList<TrafficObject>());
 		return tm;
 	}
 
@@ -505,7 +519,7 @@ public class TrafficManager {
 
         }
 
-        TrafficManager tm = new TrafficManager(map, cars);
+        TrafficManager tm = new TrafficManager(map, cars, new ArrayList<TrafficObject>());
 
         int y = 0;
 
@@ -565,7 +579,7 @@ public class TrafficManager {
 
 		List cars = Arrays.asList(car1, car2, car3);
 
-		return new TrafficManager(map, cars);
+		return new TrafficManager(map, cars, new ArrayList<TrafficObject>());
 	}
 
 	public static TrafficManager testcaseBig(int nodeN, int carsN) {
@@ -590,7 +604,7 @@ public class TrafficManager {
 			cars.add(car);
 		}
 
-		return new TrafficManager(map, cars);
+		return new TrafficManager(map, cars, new ArrayList<TrafficObject>());
 	}
 
 	public static void main(String[] args) {
