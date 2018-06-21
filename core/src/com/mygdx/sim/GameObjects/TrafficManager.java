@@ -38,7 +38,7 @@ public class TrafficManager {
 
 	// Sampling frequency. Larger number means higher fidelity of the model, but
 	// also more computation
-	public final static int TIMESTEPS_PER_SECOND = 1;
+	public final static int TIMESTEPS_PER_SECOND = 4;
 	private final static int VIEW_DISTANCE = 500;
 	private final static int RIDICULOUS_SPEED = 1000;
 
@@ -644,7 +644,7 @@ public class TrafficManager {
 		
 		Map map = new Map(Arrays.asList(node1,node2), Arrays.asList(edge));
 		
-		Car car = new Car.Builder(node1, node2, map).setDriverModel(new IntelligentDriverModelPlus()).build();
+		Car car = new Car.Builder(node1, node2, map).build();
 		
 		TestTrafficObject blocker = new TestTrafficObject(new Location(edge,200));
 		
