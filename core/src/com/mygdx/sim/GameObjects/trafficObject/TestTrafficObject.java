@@ -12,7 +12,7 @@ public class TestTrafficObject implements TrafficObject {
 
 	@Override
 	public TrafficObjectState getState(int timestep) {
-		return new TrafficObjectState(null, location, 0, false, true);
+		return new TrafficObjectState(null, location, 0, false, (timestep < 85));
 	}
 	
 
