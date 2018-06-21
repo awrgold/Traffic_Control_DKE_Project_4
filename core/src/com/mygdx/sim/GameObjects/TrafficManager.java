@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import com.mygdx.sim.GameObjects.Controllers.ControlScheme;
 import com.mygdx.sim.GameObjects.Controllers.LightController;
 import com.mygdx.sim.GameObjects.data.DistanceAndSpeed;
 import com.mygdx.sim.GameObjects.data.DistanceAndTrafficObject;
@@ -56,6 +57,7 @@ public class TrafficManager {
 	private List<Vehicle> vehicles;
 	private static List<Node> intersections = new ArrayList<Node>();
 	private static int urbanCenterWeight = 10;
+	private static ControlScheme scheme = ControlScheme.BASIC;
 
 	private int lastComputedTimestep = 0;
 	private static double aggressionRandomizer;
@@ -151,8 +153,9 @@ public class TrafficManager {
 				// vehicle.computePath(lastComputedTimestep);
 			}
 
-
 			lastComputedTimestep++;
+
+			lightController.update(lastComputedTimestep);
 
 			// Have the vehicles update their locations for the next timestep
 			for (Vehicle vehicle : vehicles)
@@ -283,6 +286,8 @@ public class TrafficManager {
 			System.out.println("Creating neighborhoods with " + destinations.size() + " destinations, and " + numUrbanCenters + " urban centers.");
 		}
 
+		lightController = new LightController(map.getLights());
+		lightController.setScheme(scheme);
 		TrafficManager tm = new TrafficManager(map, cars, new ArrayList<TrafficObject>(), lightController);
 		return tm;
 	}

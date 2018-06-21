@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.mygdx.sim.GameObjects.Stoplight;
 import com.mygdx.sim.GameObjects.trafficObject.TrafficObject;
 import com.mygdx.sim.GameObjects.trafficObject.vehicle.Vehicle;
 
@@ -16,6 +17,7 @@ public class Map {
 	
 	private List<Node> destinations = new ArrayList<Node>();
 	private List<Node> intersections = new ArrayList<Node>();
+	private List<Stoplight> lights = new ArrayList<Stoplight>();
 	
 	// Map padding
 	private int mapPadding = 200;
@@ -170,6 +172,14 @@ public class Map {
 
 	public List<Node> getDestinations() {
 		return destinations;
+	}
+
+	public List<Stoplight> getLights() {
+		return lights;
+	}
+
+	public void setLights(List<Stoplight> lights) {
+		this.lights = lights;
 	}
 
 	public void reset(int minX, int minY, int maxX, int maxY) {

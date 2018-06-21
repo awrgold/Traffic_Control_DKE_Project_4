@@ -4,14 +4,17 @@ package com.mygdx.sim.GameObjects.Controllers;
 import com.mygdx.sim.GameObjects.Stoplight;
 import java.util.List;
 
+import static com.mygdx.sim.GameObjects.Controllers.ControlScheme.BASIC;
+
 public class LightController {
 
     private int interval;
+    private final int FINALINTERVAL = 100;
+    private ControlScheme scheme;
     private List<Stoplight> lights;
-    private ControlScheme controller;
 
-    public LightController(List<Stoplight> lights, int interval){
-        this.interval = interval;
+    public LightController(List<Stoplight> lights){
+        this.lights = lights;
     }
 
     public void setInterval(int interval){
@@ -24,6 +27,13 @@ public class LightController {
 
     public List<Stoplight> getLights(){
         return lights;
+    }
+
+    public void setScheme(ControlScheme scheme){
+        this.scheme = scheme;
+        if (scheme.equals(ControlScheme.BASIC)) {
+            this.interval = FINALINTERVAL;
+        }
     }
 
     public void setLights(List<Stoplight> lights){
@@ -40,5 +50,10 @@ public class LightController {
         }
     }
 
+    public void update(int currentTimestep){
+        if (getTimeRemaining(currentTimestep) == 0){
+            switchLights();
+        }
+    }
 
 }
