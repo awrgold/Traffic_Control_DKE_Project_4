@@ -5,7 +5,6 @@ import java.util.Random;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.mygdx.sim.GameObjects.TrafficManager;
 import com.mygdx.sim.GameObjects.data.Coordinates;
 import com.mygdx.sim.GameObjects.data.Edge;
@@ -43,7 +42,7 @@ public abstract class Vehicle implements TrafficObject {
 	int maxSpeed;
 
 	// The physical length of the vehicle in meters.
-	private float length = 4;
+	private float length = 64;
 
 	/**
 	 * Stores for each timestep, the index in edgesToTravel of the edge
