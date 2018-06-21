@@ -1,6 +1,9 @@
 package com.mygdx.sim.GameObjects.data;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import com.mygdx.sim.GameObjects.Stoplight;
 
 public class Node implements Comparable<Node> {
 
@@ -17,11 +20,8 @@ public class Node implements Comparable<Node> {
 	private boolean isDestination;
 	private String type;
 	private boolean isIntersection = false;
-<<<<<<< Upstream, based on branch 'master' of https://github.com/awrgold/Project_2.2.git
 	private Stoplight stoplight;
 	private List<Stoplight> lights;
-=======
->>>>>>> 10add0f Changes
 	
 	private static int lastGivenId = 0;
 	
@@ -39,6 +39,10 @@ public class Node implements Comparable<Node> {
         this.id = lastGivenId++;
 	}
 
+	public Node(Coordinates coords) {
+		location = coords;
+	}
+
 	public boolean isHasWeight(){
 		return hasWeight;
 	}
@@ -51,7 +55,6 @@ public class Node implements Comparable<Node> {
 		return numLanesAttached;
 	}
 
-<<<<<<< Upstream, based on branch 'master' of https://github.com/awrgold/Project_2.2.git
 	public Stoplight getLight(){
     	return stoplight;
 	}
@@ -63,11 +66,6 @@ public class Node implements Comparable<Node> {
 //	public Node(Coordinates coords) {
 //		this(coords.getX(),coords.getY());
 //	}
-=======
-	public Node(Coordinates coords) {
-		this(coords.getX(),coords.getY());
-	}
->>>>>>> 10add0f Changes
 	
 	public int getId() { return id; }
 	

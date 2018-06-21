@@ -1,213 +1,246 @@
 package com.mygdx.sim.GameObjects.data;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.sim.GameObjects.Stoplight;
+import com.mygdx.sim.GameObjects.trafficObject.TrafficObject;
+import com.mygdx.sim.GameObjects.trafficObject.vehicle.Vehicle;
 
-public class Node implements Comparable<Node> {
+public class Map {
+	private boolean DEBUG = true;
+	
+	private List<Node> nodes = new ArrayList<Node>();
+	private List<Edge> edges = new ArrayList<Edge>();
+	
+	private List<Node> destinations = new ArrayList<Node>();
+	private List<Node> intersections = new ArrayList<Node>();
+	private List<Stoplight> lights = new ArrayList<Stoplight>();
+	
+	// Map padding
+	private int mapPadding = 200;
+	
+	// Maximum map coordinates
+	private int mapMaxX;
+	private int mapMaxY;
+	
+	// Minimum map coordinates
+	private int mapMinX;
+	private int mapMinY;
 
-	private ArrayList<Edge> inEdges = new ArrayList<Edge>();
-	private ArrayList<Edge> outEdges = new ArrayList<Edge>();
-	private Node previousNode;
-	private Coordinates location;
-	private double nodeDistanceWeight;
-	private double nodeDistanceWeightEstimate;
-	private int numLanesAttached;
-	
-	private int nodePriorityWeight = 0;
-	public boolean hasWeight = false;
-	private boolean isDestination;
-	private String type;
-	private boolean isIntersection = false;
-	private Stoplight stoplight;
-	private List<Stoplight> lights;
-	
-	private static int lastGivenId = 0;
-	
-	private int id;
+	HashMap<Edge, ArrayList<ArrayList<Vehicle>>> locationCache;
+	HashMap<Edge, ArrayList<TrafficObject>> staticTrafficObjectsCache;
 
-	public Node(float xCoordinate, float yCoordinate, String type) {
-		location = new Coordinates(xCoordinate, yCoordinate);
-		this.type = type;
+	// GUI Map Variables
+	private Rectangle bounds;
+
+	public Map(List<Node> nodes, List<Edge> edges) {
+		this.nodes = nodes;
+		this.edges = edges;
 		
-		this.id = lastGivenId++;
+		calculateMapDimensions();
+
+		//setIntersections();
+
+		// Temporary hard-coded map bound until we have a save and load feature
+		this.reset(mapMinX, mapMinY, mapMaxX, mapMaxY);
+
+		locationCache = new HashMap<Edge, ArrayList<ArrayList<Vehicle>>>();
+
+		for (Edge edge : edges) {
+			locationCache.put(edge, new ArrayList<ArrayList<Vehicle>>());
+		}
+		
+		staticTrafficObjectsCache = new HashMap<Edge, ArrayList<TrafficObject>>();
+		
+		for(Edge edge: edges) {
+			staticTrafficObjectsCache.put(edge, new ArrayList<TrafficObject>());
+		}
 	}
 
-    public Node(float xCoordinate, float yCoordinate) {
-        location = new Coordinates(xCoordinate, yCoordinate);
-        this.id = lastGivenId++;
+	public ArrayList<Vehicle> getVehiclesAt(Edge edge, int timestep) {
+		return locationCache.get(edge).get(timestep);
 	}
 
-	public Node(Coordinates coords) {
-		location = coords;
+	public void ensureCapacity(int timestep) {
+		for (Edge edge : edges) {
+			ArrayList<ArrayList<Vehicle>> history = locationCache.get(edge);
+
+			while (history.size() <= timestep) {
+				history.add(new ArrayList<Vehicle>());
+			}
+		}
 	}
 
-	public boolean isHasWeight(){
-		return hasWeight;
-	}
 
-	public void setNumLanesAttached(int numLanes){
-		numLanesAttached = numLanes;
-	}
+	/*public void setIntersections() {
+		for(Node node : nodes) {
+			int minLanes = Integer.MAX_VALUE;
+			for (Edge e : node.getInEdges()) {
+				if (e.getNumLanes() < minLanes) {
+					minLanes = e.getNumLanes();
+				}
+			}
 
-	public int getNumLanesAttached(){
-		return numLanesAttached;
-	}
 
-	public Stoplight getLight(){
-    	return stoplight;
-	}
+			// If a node has 3 or more edges connected to it, we consider it large enough to deserve an intersection
+			if(node.getOutgoingNeighbors().size() >= 3 && minLanes >= 3) {
+				node.setIntersection(true);
+			}
+			intersections.add(i);
 
-	public List<Stoplight> getLights(){
-    	return lights;
-	}
+		}
 
-//	public Node(Coordinates coords) {
-//		this(coords.getX(),coords.getY());
-//	}
+		for (Node m : intersections){
+
+			// Here, we place stoplights for each "row" of lanes on the node. The node contains multiple stoplights (current build)
+			for (Edge e : m.getInEdges()){
+				List<Edge> lanes = new ArrayList<Edge>();
+				// Going through the list of lanes attached to the node,
+				for (int i = 0; i < m.getInEdges().size(); i++) {
+					// ... check if the lanes are adjacent (i.e. they have the same "from" node)
+					if (e.getFrom().equals(m.getInEdges().get(i).getFrom())){
+						// if that edge isn't already in the list of lanes, add it
+						if (!lanes.contains(e)) lanes.add(e);
+					}
+				}
+				// Add a light to this node.
+				m.addLight(new Stoplight(lanes, m.getLocation()));
+				if(DEBUG){
+					System.out.println("Stoplight added at: " + m.getLocation() + " with " + e.getNumLanes() + " lanes.");
+				}
+			}
+		}
+	}*/
 	
-	public int getId() { return id; }
+	private void calculateMapDimensions() {
+		mapMaxX = (int)nodes.get(0).getX();
+		mapMaxY = (int)nodes.get(0).getY();
+		
+		mapMinX = mapMaxX;
+		mapMinY = mapMaxY;
+		
+		for(Node node : nodes) {
+			int nodeX = (int)node.getX();
+			int nodeY = (int)node.getY();
+			
+			if(nodeX > mapMaxX) {
+				mapMaxX = nodeX;
+			}
+			
+			if(nodeY > mapMaxY) {
+				mapMaxY = nodeY;
+			}
+			
+			if(nodeX < mapMinX) {
+				mapMinX = nodeX;
+			}
+			
+			if(nodeY < mapMinY) {
+				mapMinY = nodeY;
+			}
+		}
+		
+		mapMaxX += mapPadding;
+		mapMaxY += mapPadding;
+		
+		mapMinX -= mapPadding;
+		mapMinY -= mapPadding;
+	}
+
+	public List<Node> getIntersections(){
+		return this.intersections;
+	}
+
+	public HashMap<Edge, ArrayList<ArrayList<Vehicle>>> getLocationCache() {
+		return locationCache;
+	}
 	
-	public int hashCode() { return id; }
-
-	public Coordinates getLocation() {
-		return location;
+	public HashMap<Edge, ArrayList<TrafficObject>> getStaticTrafficObjectsCache(){
+		return staticTrafficObjectsCache;
 	}
 
-	public void setLocation(Coordinates coords){
-		this.location = coords;
+	public List<Node> getNodes() {
+		return nodes;
 	}
 
-	public float getX() {
-		return location.getX();
+	public List<Edge> getEdges() {
+		return edges;
 	}
 
-	public float getY() {
-		return location.getY();
+	public List<Node> getDestinations() {
+		return destinations;
 	}
 
-	public void addInEdge(Edge toAdd) {
-		inEdges.add(toAdd);
+	public List<Stoplight> getLights() {
+		return lights;
 	}
 
-	public void addOutEdge(Edge toAdd) {
-		outEdges.add(toAdd);
+	public void setLights(List<Stoplight> lights) {
+		this.lights = lights;
 	}
 
-	public ArrayList<Edge> getInEdges() {
-		return inEdges;
+	public void reset(int minX, int minY, int maxX, int maxY) {
+		// Initialise Map Bounds
+		bounds = new Rectangle(minX, minY, maxX - minX, maxY - minY);
 	}
 
-	public ArrayList<Edge> getOutEdges() {
-		return outEdges;
+	public Rectangle getBounds() {
+		return bounds;
 	}
-
+	
 	public String toString() {
-		return "[Node " + id + " @" + location + "]";
+		return "[Map]";
 	}
 
-	public void setPreviousNode(Node previousNode) {
-		this.previousNode = previousNode;
+	/*
+	public static void main(String[] args) {
+		Node node1 = new Node(0,0);
+		Node node2 = new Node(0,10);
+		
+		Edge edge = new Edge(node1,node2,50);
+		
+		Map map = new Map(Arrays.asList(node1,node2),Arrays.asList(edge));
+		
+		System.out.println("Created map");
+		
+		map.ensureCapacity(10);
+		
+		int x = 0;
+	}
+	*/
+
+	public static double euclideanDistance(Node a, Node b){
+		return Math.abs(Math.sqrt(Math.pow((a.getY()-b.getY()), 2) + Math.pow((a.getX() - b.getX()), 2)));
 	}
 
-	public Node getPreviousNode() {
-		return previousNode;
-	}
+	public int getNodeIndex(Node toFind){
+        for (int i = 0; i < nodes.size(); i++){
+            if (nodes.get(i).equals(toFind)) return i;
+        }
+        return -1;
+    }
 
-	public int getNodePriorityWeight() {
-		return nodePriorityWeight;
-	}
-
-	public void setNodePriorityWeight(int nodePriorityWeight) {
-		this.nodePriorityWeight = nodePriorityWeight;
-		hasWeight = true;
-	}
-
-	public void setNodeDistanceWeight(double nodeDistanceWeight) {
-		this.nodeDistanceWeight = nodeDistanceWeight;
-	}
-
-	public double getNodeDistanceWeight() {
-		return nodeDistanceWeight;
-	}
-
-	public void setNodeDistanceWeightEstimate(double nodeDistanceWeightEstimate) {
-		this.nodeDistanceWeightEstimate = nodeDistanceWeightEstimate;
-	}
-
-	public double getNodeDistanceEstimate() {
-		return nodeDistanceWeightEstimate;
-	}
-
-	public boolean equals(Object o) {
-		if (!(o instanceof Node))
-			return false;
-
-		return this.getLocation().equals(((Node) o).getLocation());
-	}
-
-	public ArrayList<Node> getOutgoingNeighbors() {
-		ArrayList<Node> outgoingNeighbors = new ArrayList<Node>();
-
-		for (Edge e : outEdges) {
-			outgoingNeighbors.add(e.getTo());
+    public Node getNode(Node toFind){
+    	for (Node n : getNodes()){
+    		if (n.equals(toFind)) return n;
 		}
-
-		return outgoingNeighbors;
+		return null;
 	}
 
-	public ArrayList<Node> getIncomingNeighbors() {
-		ArrayList<Node> incomingNeighbors = new ArrayList<Node>();
-
-		for (Edge e : inEdges) {
-			incomingNeighbors.add(e.getFrom());
+	public Edge getEdge(Edge toFind){
+    	for (Edge e : getEdges()){
+    		if (e.equals(toFind)) return e;
 		}
-
-		return incomingNeighbors;
+		return null;
 	}
 
-	public ArrayList<Node> getNeighbors(){
-		ArrayList<Node> neighbors = new ArrayList<Node>();
-
-		neighbors.addAll(getOutgoingNeighbors());
-		neighbors.addAll(getIncomingNeighbors());
-
-		return neighbors;
+	public Node getDestination(Node toFind){
+		for (Node n : getDestinations()){
+			if (n.equals(toFind)) return n;
+		}
+		return null;
 	}
-
-	public boolean isDestination() {
-		return isDestination;
-	}
-
-	public void makeDestination() {
-		if (!isDestination) isDestination = true;
-	}
-
-
-	public int compareTo(Node node) {
-		if (this.nodePriorityWeight < node.getNodePriorityWeight())
-			return -1;
-		if (this.nodePriorityWeight > node.getNodePriorityWeight())
-			return 1;
-		return 0;
-	}
-	
-	
-
-    public String getType() {
-        return type;
-    }
-    
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public boolean isIntersection() {
-        return isIntersection;
-    }
-    
-    public void setIntersection(boolean isIntersection) {
-        this.isIntersection = isIntersection;
-    }
 }
