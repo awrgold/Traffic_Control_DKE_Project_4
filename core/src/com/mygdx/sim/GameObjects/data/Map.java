@@ -10,6 +10,8 @@ import com.mygdx.sim.GameObjects.trafficObject.TrafficObject;
 import com.mygdx.sim.GameObjects.trafficObject.vehicle.Vehicle;
 
 public class Map {
+
+	
 	private boolean DEBUG = true;
 	
 	private List<Node> nodes = new ArrayList<Node>();
