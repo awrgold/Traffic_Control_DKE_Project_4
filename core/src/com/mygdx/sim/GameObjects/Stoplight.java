@@ -23,11 +23,6 @@ public class Stoplight {
     private ArrayList<Stoplight> linked;
     private Coordinates location;
     private InvisibleCar v;
-    private int timestepsRemainingUntilChange;
-    private int greenTimer = 30;
-    private int yellowTimer = 10;
-    private int currentTimestep;
-
         /**
          * The stoplight is an array of Enumerable Colors, where position N (# of lanes) is the left-most lane, and position 0 is the right most lane.
          * @param coords: the location of the stoplight in 2D Euclidean space
@@ -42,11 +37,6 @@ public class Stoplight {
 
     public Stoplight(){}
 
-    public void incrementTimestep(){
-        currentTimestep++;
-        updateTimeStepsRemainingUntilChange();
-    }
-
     public void setParent(Node parent){
         this.parent = parent;
     }
@@ -57,26 +47,6 @@ public class Stoplight {
 
     public Edge getLane(){
         return lane;
-    }
-
-    public int getTimestepsRemainingUntilChange() {
-        return timestepsRemainingUntilChange;
-    }
-
-    public void setTimestepsRemainingUntilChange(int timestepsRemainingUntilChange) {
-        this.timestepsRemainingUntilChange = timestepsRemainingUntilChange;
-    }
-
-    public void updateTimeStepsRemainingUntilChange(){
-        if(this.getColor().equals(Color.GREEN) && timestepsRemainingUntilChange > 0){
-            timestepsRemainingUntilChange--;
-        }
-        if(timestepsRemainingUntilChange == 0){
-            switchLight();
-            // TODO: Change sprite so we can see the lights switching
-            if (this.getColor().equals(Color.YELLOW)) timestepsRemainingUntilChange = yellowTimer;
-            if (this.getColor().equals(Color.GREEN)) timestepsRemainingUntilChange = greenTimer;
-        }
     }
 
     public void setLinked(ArrayList<Stoplight> neighbors){

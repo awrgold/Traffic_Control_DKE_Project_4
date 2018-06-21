@@ -16,6 +16,7 @@ import com.mygdx.sim.GameObjects.driverModel.DriverModel;
 import com.mygdx.sim.GameObjects.pathfinding.Pathfinder;
 import com.mygdx.sim.GameObjects.trafficObject.TrafficObject;
 import com.mygdx.sim.GameObjects.trafficObject.TrafficObjectState;
+import com.mygdx.sim.Resources.Resources;
 
 public abstract class Vehicle implements TrafficObject {
 	

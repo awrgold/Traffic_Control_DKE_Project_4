@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import com.mygdx.sim.GameObjects.Controllers.LightController;
 import com.mygdx.sim.GameObjects.data.DistanceAndSpeed;
 import com.mygdx.sim.GameObjects.data.DistanceAndTrafficObject;
 import com.mygdx.sim.GameObjects.data.Edge;
@@ -27,7 +28,7 @@ import com.mygdx.sim.GameObjects.trafficObject.vehicle.Vehicle;
 public class TrafficManager {
 
 	// Turn on all print statements
-	private static boolean DEBUG = true;
+	private static boolean DEBUG = false;
 	private static boolean DEBUG2 = false;
 
 	// Duration of the simulation (hours, minutes, seconds)
@@ -43,24 +44,26 @@ public class TrafficManager {
 	public final static int MAP_X_DIM = 100000;
 	public final static int MAP_Y_DIM = 100000;
 	public final static int GRID_FACTOR = 2;
-	public final static int vehicleCount = 5;
+	public final static int vehicleCount = 1000;
 	public final static int numUrbanCenters = 5;
 	public final static double mean = 0.2;
 	public final static double lambda = 1.0;
 	public static double[] arrivalRates;
+    public static LightController lightController;
 
 	private Map map;
 	private List<TrafficObject> trafficObjects;
 	private List<Vehicle> vehicles;
-	private static List<Intersection> intersections = new ArrayList<Intersection>();
+	private static List<Node> intersections = new ArrayList<Node>();
 	private static int urbanCenterWeight = 10;
 
 	private int lastComputedTimestep = 0;
 	private static double aggressionRandomizer;
 
-	public TrafficManager(Map map, List<Vehicle> vehicles, List<TrafficObject> trafficObjects) {
+	public TrafficManager(Map map, List<Vehicle> vehicles, List<TrafficObject> trafficObjects, LightController lightController) {
 		this.map = map;
 		this.vehicles = vehicles;
+		this.lightController = lightController;
 
 		this.trafficObjects = trafficObjects;
 
@@ -148,15 +151,6 @@ public class TrafficManager {
 				// vehicle.computePath(lastComputedTimestep);
 			}
 
-			// Increment the timestep for light
-			for (Intersection n : map.getIntersections()) {
-				for (Stoplight s : n.getStoplights()){
-					if (s == null) {
-						continue;
-					}
-					s.incrementTimestep();
-				}
-			}
 
 			lastComputedTimestep++;
 
@@ -289,7 +283,7 @@ public class TrafficManager {
 			System.out.println("Creating neighborhoods with " + destinations.size() + " destinations, and " + numUrbanCenters + " urban centers.");
 		}
 
-		TrafficManager tm = new TrafficManager(map, cars, new ArrayList<TrafficObject>());
+		TrafficManager tm = new TrafficManager(map, cars, new ArrayList<TrafficObject>(), lightController);
 		return tm;
 	}
 
@@ -327,7 +321,7 @@ public class TrafficManager {
 	private static List createCars(List<Node> destinations, Map map){
 		List cars = new ArrayList();
 
-		int previousArrivalTime = 0;
+		int previousArrivalTime = 1;
 		for (int i = 0; i < vehicleCount; i++) {
 
 			// This utilizes an exponential distribution prioritizing nodes at the start of the list
@@ -340,9 +334,9 @@ public class TrafficManager {
 			}
 			// Build each car with their given destination and a randomly chosen spawn time
 			// TODO: Make cars arrive via rush hour and not uniformly.
-//			int r = (int)(Math.round(Math.random()*getMaximumTimesteps()));
-//
-//			// Get the arrival rate per hour
+			int r = (int)(Math.round(Math.random()*getMaximumTimesteps()));
+
+			// Get the arrival rate per hour
 //			arrivalRates = generateArrivalRates();
 
 			/**
@@ -351,10 +345,10 @@ public class TrafficManager {
 			 * Need to give it a timestep based on a rush-hour based model
 			 */
 
-			previousArrivalTime = Math.abs(generateNextArrivalTime(previousArrivalTime));
-			System.out.println("!!! Next arrival time: " + previousArrivalTime);
+//			previousArrivalTime = Math.abs(generateNextPoissonArrival(previousArrivalTime));
+//			System.out.println("!!! Next arrival time: " + previousArrivalTime);
 
-			Car car = new Car.Builder(start, end, map).setStartTimestep(previousArrivalTime).build();
+			Car car = new Car.Builder(start, end, map).setStartTimestep(r).build();
 
 
 			while(car.getEdgePath() == null) {
@@ -362,22 +356,12 @@ public class TrafficManager {
 				end = destinations.get((int) (Math.floor(drawRandomExponential(lambda) * destinations.size())));
 				car = new Car.Builder(start, end, map).setDriverModel(new IntelligentDriverModel()).build();
 			}
+
 			cars.add(i, car);
 			car.setTimeLimit(determineTimeLimit(car));
 		}
 
 		return cars;
-	}
-
-	public static double[] generateArrivalRates(){
-		double[] arrivalRates = new double[getMaximumTimesteps()];
-
-		for (int i = 0; i < getMaximumTimesteps(); i++) {
-			double d = (2*(Math.sin(i/5)-(i/20)-Math.cos(i/2)+3.208));
-			// Normalize to the range between 0 and maxTimesteps.
-			arrivalRates[i] = (d)/(getMaximumTimesteps());
-		}
-		return arrivalRates;
 	}
 
 	public static int generateNextArrivalTime(int i){
@@ -390,22 +374,23 @@ public class TrafficManager {
 		 * generate a uniform random variate U~U(0,1) and plug into our CDF
 		 */
 
+//		double dd = Math.abs(2*(Math.sin((i)/5)-((i)/20)-Math.cos((i)/2)+3.208));
 		double d = (2 * (-5 * Math.cos(0.2*u) - (0.025 * Math.pow(u, 2)) - (2 * Math.sin(0.5*u) + (3.208 * u))) + 10);
-		double f = Math.abs(d-2.27853);
+//		double f = Math.abs(d-2.27853);
 
-		while (f < 0 || f > 1){
-			d = (2 * (-5 * Math.cos(0.2*u) - (0.025 * Math.pow(u, 2)) - (2 * Math.sin(0.5*u) + (3.208 * u))) + 10);
-		}
+//		while (f < 0 || f > 1){
+//			d = (2 * (-5 * Math.cos(0.2*u) - (0.025 * Math.pow(u, 2)) - (2 * Math.sin(0.5*u) + (3.208 * u))) + 10);
+//		}
 
-		f = Math.abs(d-2.27853);
+		d = Math.abs(d-2.27853);
 
 		if (DEBUG2){
 			System.out.println("Random variate from CDF: " + d);
-			System.out.println("Next arrival time before rounding: " + (f*getMaximumTimesteps()));
-			System.out.println("Next arrival time after rounding: " + Math.round(f*getMaximumTimesteps()));
-			System.out.println("Next arrival time after casting: " + (int) Math.round(f*getMaximumTimesteps()));
+			System.out.println("Next arrival time before rounding: " + (d*getMaximumTimesteps()));
+			System.out.println("Next arrival time after rounding: " + Math.round(d*getMaximumTimesteps()));
+			System.out.println("Next arrival time after casting: " + (int) Math.round(d*getMaximumTimesteps()));
 		}
-		return (int) Math.round(f*getMaximumTimesteps());
+		return (int) Math.round(d*getMaximumTimesteps());
 	}
 
 	// TODO: Make this robust - right now just arbitrarily calculating a time limit, not based on something realistic
@@ -424,15 +409,11 @@ public class TrafficManager {
 
 		if(DEBUG){
 			System.out.println("Determined time limit for car " + car.toString() + " in [" + timeLimit + "] timesteps.");
-			System.out.println("Actual time taken for car + " + car.toString() + " in [" + determineTimeTaken(car) + "] timesteps.");
+			System.out.println("Actual time taken for car + " + car.toString() + " in [" + car.getEndTimestep() + "] timesteps.");
 		}
 		return timeLimit;
 	}
 
-	// TODO: Doesn't work, EndTimeStep is always MAX_VALUE. Look at Vehicle class to fix.
-	public static int determineTimeTaken(Vehicle car){
-		return car.getEndTimestep()-car.getStartTimestep();
-	}
 
 	/**
 	 * The idea is to create priority neighborhoods such as urban/suburban centers
@@ -577,7 +558,7 @@ public class TrafficManager {
 
         }
 
-        TrafficManager tm = new TrafficManager(map, cars, new ArrayList<TrafficObject>());
+        TrafficManager tm = new TrafficManager(map, cars, new ArrayList<TrafficObject>(), lightController);
 
         int y = 0;
 
@@ -646,7 +627,7 @@ public class TrafficManager {
 		List<TrafficObject> staticTrafficObjects = new ArrayList<TrafficObject>();
 		staticTrafficObjects.add(blocker);
 		
-		return new TrafficManager(map, cars, staticTrafficObjects);
+		return new TrafficManager(map, cars, staticTrafficObjects, lightController);
 	}
 
 	public static TrafficManager testcaseBig(int nodeN, int carsN) {
@@ -671,7 +652,7 @@ public class TrafficManager {
 			cars.add(car);
 		}
 
-		return new TrafficManager(map, cars, new ArrayList<TrafficObject>());
+		return new TrafficManager(map, cars, new ArrayList<TrafficObject>(), lightController);
 	}
 
 	public static void main(String[] args) {

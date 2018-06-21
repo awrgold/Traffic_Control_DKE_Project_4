@@ -148,8 +148,7 @@ public class Map {
 		mapMinY -= mapPadding;
 	}
 
-
-	public List<Intersection> getIntersections(){
+	public List<Node> getIntersections(){
 		return this.intersections;
 	}
 
@@ -176,7 +175,6 @@ public class Map {
 	public void reset(int minX, int minY, int maxX, int maxY) {
 		// Initialise Map Bounds
 		bounds = new Rectangle(minX, minY, maxX - minX, maxY - minY);
-
 	}
 
 	public Rectangle getBounds() {
