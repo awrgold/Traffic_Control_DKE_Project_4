@@ -53,6 +53,8 @@ public abstract class Vehicle implements TrafficObject {
 	 * the edge where this vehicle is located at timestep t.
 	 */
 	int[] edgeIndices = new int[0];
+	
+	double[] accelerations = new double[0];
 
 	/**
 	 * Stores for each timestep, the distance that this vehicle has traveled
@@ -248,6 +250,7 @@ public abstract class Vehicle implements TrafficObject {
 		
 		float[] newSpeeds = new float[capacity];
 		float[] newDistances = new float[capacity];
+		double[] newAccelerations = new double[capacity];
 		int[] newEdgeIndices = new int[capacity];
 		
 		int sizeToCopy = Math.min(currentCapacity, capacity);
@@ -256,17 +259,20 @@ public abstract class Vehicle implements TrafficObject {
 			newSpeeds[i] = speeds[i];
 			newDistances[i] = distancesTraveledOnEdge[i];
 			newEdgeIndices[i] = edgeIndices[i];
+			newAccelerations[i] = accelerations[i];
 		}
 		
 		for(int i = currentCapacity; i < capacity; i++) {
 			newSpeeds[i] = -1;
 			newDistances[i] = -1;
 			newEdgeIndices[i] = -1;
+			newAccelerations[i] = -1;
 		}
 		
 		speeds = newSpeeds;
 		distancesTraveledOnEdge = newDistances;
 		edgeIndices = newEdgeIndices;
+		accelerations = newAccelerations;
 	}
 
 	private void initialize() {
@@ -275,6 +281,7 @@ public abstract class Vehicle implements TrafficObject {
 		speeds[0] = 0;
 		edgeIndices[0] = 0;
 		distancesTraveledOnEdge[0] = 0;
+		accelerations[0] = 0;
 	}
 
 	public String toString() {
@@ -301,6 +308,8 @@ public abstract class Vehicle implements TrafficObject {
 		if(timestep == 0)
 			return;
 		
+		accelerations[timestep] = acceleration;
+		
 		if(speeds[timestep] != -1) {
 			System.out.println("You're trying to set a speed that has already been set. You're doing something wrong.");
 			return;
@@ -308,7 +317,9 @@ public abstract class Vehicle implements TrafficObject {
 		
 		double previousSpeed = speeds[timestep-1];
 		
-		double newSpeed = Math.max(previousSpeed + acceleration / TrafficManager.TIMESTEPS_PER_SECOND,0);
+		double accelerationPerTimestep = acceleration / TrafficManager.TIMESTEPS_PER_SECOND;
+		
+		double newSpeed = Math.max(previousSpeed + (acceleration / TrafficManager.TIMESTEPS_PER_SECOND),0);
 		
 		speeds[timestep] = ((float) newSpeed);
 	}
