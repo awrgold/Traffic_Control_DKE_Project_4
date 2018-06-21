@@ -21,7 +21,7 @@ public class Edge implements Comparable<Edge> {
     private List<Coordinates> shapeCoordinates = null;
 
     public Edge(Node from, Node to){
-        this(from,to,50);
+        this(from,to,15);
     }
     
     public Edge(Node from, Node to, int speedLimit){

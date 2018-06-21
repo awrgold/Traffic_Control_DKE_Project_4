@@ -15,7 +15,7 @@ import com.mygdx.sim.Resources.Resources;
 public class Car extends Vehicle {
 	
 	private final static String SPRITE_NAME = "car1_red";
-	private final static int MAX_SPEED = 150;
+	private final static int MAX_SPEED = 50;
 	private final static DriverModel DRIVER_MODEL = new IntelligentDriverModelPlus();
 	
 	public static class Builder {
