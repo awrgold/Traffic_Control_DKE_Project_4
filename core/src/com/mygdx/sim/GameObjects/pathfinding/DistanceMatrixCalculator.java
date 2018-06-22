@@ -29,8 +29,33 @@ public class DistanceMatrixCalculator {
 		astar = new AStarPathfinder(graph);
 		
 		crawl();
+		
+		verify();
 	}
 	
+	private void verify() {
+		for(int i = 0; i < graph.getNodes().size(); i++) {
+			Node firstNode = graph.getNodes().get(i);
+			for(int j = 0; j < graph.getNodes().size(); j++) {
+				Node secondNode = graph.getNodes().get(j);
+				int nodeID = secondNode.getId();
+				
+				boolean found = false;
+				
+				for(Edge edge: firstNode.getOutEdges()) {
+					int edgeID = edge.getId();
+					
+					if(distances[edgeID][nodeID] < Integer.MAX_VALUE)
+						found=true;
+				}
+				
+				if(!found)
+					System.out.println("There seems to be no connection from node " + i + " to " + j);
+					
+			}
+		}
+	}
+
 	private List<Edge> getEdges() { return graph.getEdges(); }
 	private List<Node> getNodes() { return graph.getNodes(); }
 	

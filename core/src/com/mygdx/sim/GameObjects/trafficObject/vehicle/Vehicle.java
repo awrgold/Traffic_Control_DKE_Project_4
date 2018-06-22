@@ -115,7 +115,12 @@ public abstract class Vehicle implements TrafficObject {
 		speeds[0] = initialSpeed;
 		tripDuration = 0;
 		
-		edgeIndices[0] = pf.selectEdge(startNode, goalNode).getId();
+		Edge firstEdge = pf.selectEdge(startNode, goalNode);
+		
+		if(firstEdge != null)
+			edgeIndices[0] = pf.selectEdge(startNode, goalNode).getId();
+		else
+			throw new RuntimeException("Vehicle " + id + " failed to find a path from " + startNode.getId() + " to " + goalNode.getId());
 
 		// Find path
 //		computePath(0);
