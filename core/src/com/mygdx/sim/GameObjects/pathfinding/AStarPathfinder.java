@@ -1,9 +1,6 @@
 package com.mygdx.sim.GameObjects.pathfinding;
 
 import static java.lang.Double.MAX_VALUE;
-
-import java.util.ArrayList;
-import java.util.List;
 import static java.lang.Double.MIN_VALUE;
 
 import java.util.ArrayList;
@@ -86,8 +83,9 @@ public class AStarPathfinder extends Pathfinder {
 				}
 			}
 		}
-		
-		throw new NullPointerException("No valid A* path found");
+		System.out.println((new Random()).nextInt(graph.getDestinations().size()));
+		vehicle.setGoalNode(graph.getDestinations().get((new Random()).nextInt(graph.getDestinations().size())));
+		return searchPath(nodes, vehicle);
 	}
 
 	public List<Edge> createPath(Node node) {
