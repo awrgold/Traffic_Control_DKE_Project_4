@@ -64,7 +64,6 @@ public class DynamicPathfinder {
 		Edge shouldBeNull = test.selectEdge(c, e);
 		Edge shouldBe4 = test.selectEdge(c, b);
 		
-		
 		System.out.println("stop");
 	}
 

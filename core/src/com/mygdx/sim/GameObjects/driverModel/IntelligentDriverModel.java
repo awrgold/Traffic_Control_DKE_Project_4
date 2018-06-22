@@ -23,7 +23,7 @@ public class IntelligentDriverModel implements DriverModel{
 		
 		double vehicleLength = vehicle.getLength();
 		
-		double currentSpeed = vehicle.getSpeedAt(timestep-1);
+		double currentSpeed = vehicle.getSpeed(timestep-1);
 		
 		double deceleration = 3;
 		

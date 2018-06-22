@@ -138,7 +138,7 @@ public class TrafficManager {
 				System.out.println(lastComputedTimestep);
 
 			for (Vehicle vehicle : vehicles)
-				map.getLocationCache().get(vehicle.getEdgeAt(lastComputedTimestep)).get(lastComputedTimestep)
+				map.getLocationCache().get(vehicle.getEdge(lastComputedTimestep)).get(lastComputedTimestep)
 						.add(vehicle);
 
 			// Set accelerations for the current timestep
@@ -172,7 +172,7 @@ public class TrafficManager {
 	 * @return distance and speed of closest vehicle
 	 */
 	public DistanceAndSpeed getDistanceAndSpeedToClosestTrafficObject(Vehicle vehicle, int timestep) {
-		Edge edge = vehicle.getEdgeAt(timestep);
+		Edge edge = vehicle.getEdge(timestep);
 		double distance = -vehicle.getTraveledDistance(timestep);
 
 		DistanceAndTrafficObject dnv = getClosestVehicle(vehicle, edge, distance, timestep);
@@ -186,7 +186,7 @@ public class TrafficManager {
 		double speedOfClosest = RIDICULOUS_SPEED;
 
 		if (timestep > 0)
-			speedOfClosest = closest.getState(timestep-1).getSpeed();
+			speedOfClosest = closest.getSpeed(timestep-1);
 
 		return new DistanceAndSpeed(distanceToClosest, speedOfClosest);
 	}
@@ -203,8 +203,8 @@ public class TrafficManager {
 
 		ArrayList<DistanceAndTrafficObject> candidates = new ArrayList<DistanceAndTrafficObject>();
 		for (TrafficObject to : trafficObjectsOnCurrentEdge) {
-			double distance = distanceUntilNow + to.getState(timestep).getLocation().getDistanceOnEdge();
-			if (distance - Util.DELTA_EPSILON > 0 && to.getState(timestep).visibleToDrivers())
+			double distance = distanceUntilNow + to.getDistanceOnEdge(timestep);
+			if (distance - Util.DELTA_EPSILON > 0 && to.isVisibleToDrivers(timestep))
 				candidates.add(new DistanceAndTrafficObject(distance, to));
 		}
 
@@ -212,7 +212,7 @@ public class TrafficManager {
 
 		if (closest != null) {
 			TrafficObject closestVehicle = closest.getTrafficObject();
-			double distanceToClosest = (distanceUntilNow + closestVehicle.getState(timestep).getLocation().getDistanceOnEdge());
+			double distanceToClosest = (distanceUntilNow + closestVehicle.getDistanceOnEdge(timestep));
 			return new DistanceAndTrafficObject(distanceToClosest, closestVehicle);
 		}
 
@@ -680,7 +680,7 @@ public class TrafficManager {
 	}
 
 	public static void main(String[] args) {
-		TrafficManager tm = testcaseBlocker();
+		TrafficManager tm = testcaseBig(1000,1000);
 
 		System.out.println("Created test case");
 
