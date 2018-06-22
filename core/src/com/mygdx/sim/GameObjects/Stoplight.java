@@ -8,10 +8,6 @@ import com.mygdx.sim.GameObjects.data.Location;
 import com.mygdx.sim.GameObjects.data.Node;
 import com.mygdx.sim.GameObjects.trafficObject.InvisibleCar;
 
-enum LightState {
-	GREEN, RED
-}
-
 public class Stoplight {
 
 	// Timer

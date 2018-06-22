@@ -9,10 +9,11 @@ import com.mygdx.sim.GameObjects.TrafficManager;
 import com.mygdx.sim.GameObjects.data.Edge;
 import com.mygdx.sim.GameObjects.data.Map;
 import com.mygdx.sim.GameObjects.data.Node;
-import com.mygdx.sim.GameObjects.roads.Road;
 import com.mygdx.sim.GameObjects.trafficObject.TrafficObject;
 import com.mygdx.sim.GameObjects.trafficObject.TrafficObjectState;
 import com.mygdx.sim.GameObjects.trafficObject.vehicle.Vehicle;
+import com.mygdx.sim.World.Components.Road;
+import com.mygdx.sim.World.Components.TrafficLight;
 
 public class WorldController {
 
@@ -110,6 +111,10 @@ public class WorldController {
 
 	public List<Road> getRoads() {
 		return worldGenerator.getRoads();
+	}
+	
+	public List<TrafficLight> getTrafficLights() {
+		return worldGenerator.getTrafficLights();
 	}
 	
 	public WorldState getWorldState() {

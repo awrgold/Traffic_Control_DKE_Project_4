@@ -1,4 +1,4 @@
-package com.mygdx.sim.GameObjects.roads;
+package com.mygdx.sim.World.Components;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
