@@ -1,4 +1,4 @@
-package com.mygdx.sim.GameObjects.trafficObject;
+package com.mygdx.sim.GameObjects.pathfinding;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,10 +7,8 @@ import java.util.List;
 import com.mygdx.sim.GameObjects.data.Edge;
 import com.mygdx.sim.GameObjects.data.Map;
 import com.mygdx.sim.GameObjects.data.Node;
-import com.mygdx.sim.GameObjects.pathfinding.AStarPathfinder;
-import com.mygdx.sim.GameObjects.pathfinding.Pathfinder;
 
-public class EvenMoreSpecialPathfinder {
+public class DistanceMatrixCalculator {
 	
 	//Edge - Node
 	float[][] distances;
@@ -19,7 +17,7 @@ public class EvenMoreSpecialPathfinder {
 	
 	Pathfinder astar;
 	
-	public EvenMoreSpecialPathfinder(Map graph) {
+	public DistanceMatrixCalculator(Map graph) {
 		this.graph = graph;
 		
 		distances = new float[graph.getEdges().size()][graph.getNodes().size()];
@@ -57,6 +55,8 @@ public class EvenMoreSpecialPathfinder {
 			distances[edgeId][toNodeId] = distance;
 	}
 	
+	public float[][] getDistances(){ return distances; }
+	
 	public static void main(String[] args) {
 		Node a = new Node(0,0);
 		Node b = new Node(100,0);
@@ -77,7 +77,7 @@ public class EvenMoreSpecialPathfinder {
 		
 		Map map = new Map(nodes,edges);
 		
-		EvenMoreSpecialPathfinder test = new EvenMoreSpecialPathfinder(map);
+		DistanceMatrixCalculator test = new DistanceMatrixCalculator(map);
 		
 		System.out.println("stop");
 	}
