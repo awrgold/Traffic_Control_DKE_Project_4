@@ -122,10 +122,11 @@ public class Map {
 
 	public void setDestinations(){
 		for (Node n : nodes){
-			if (!n.getXmlID().contains("eastG") && !n.getXmlID().contains("westG") && !n.getXmlID().contains("northG") && n.getXmlID().contains("southG")){
-				spawnPoints.add(n);
+			if (n.getXmlID().contains("eastG") || n.getXmlID().contains("westG") || n.getXmlID().contains("northG") || n.getXmlID().contains("southG")){
+				destinations.add(n);
 			}
 		}
+		System.out.println("There are " + destinations.size() + " elements in destinations");
 	}
 
 	public void checkIDs(){
