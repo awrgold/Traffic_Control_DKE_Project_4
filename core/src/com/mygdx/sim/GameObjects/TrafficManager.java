@@ -275,10 +275,8 @@ public class TrafficManager {
 		Collections.sort(nodeList, new SortNode());
 		List<Edge> edgeList = new ArrayList<Edge>(edgeMap.values());
 		Map map = new Map(nodeList, edgeList);
-		// TODO: Redo intersections
-		intersections = map.getIntersections();
 
-		List<Node> destinations = createSpawnPoints(map);
+		List<Node> destinations = map.getSpawnPoints();
 		List cars = createCars(destinations, map);
 		createNeighborhoods(destinations, numUrbanCenters);
 
@@ -330,20 +328,15 @@ public class TrafficManager {
 		int previousArrivalTime = 1;
 		for (int i = 0; i < vehicleCount; i++) {
 
-			// This utilizes an exponential distribution prioritizing nodes at the start of the list
-			// Nodes at the start of the list are higher priority than those at the end
-			Collections.sort(destinations, new SortNode());
-			Node start = destinations.get((int) (Math.floor(drawRandomExponential(lambda) * destinations.size())));
-			Node end = destinations.get((int) (Math.floor(drawRandomExponential(lambda) * destinations.size())));
-			while (start == end) {
-				end = destinations.get((int) (Math.floor(drawRandomExponential(lambda) * destinations.size())));
-			}
-			// Build each car with their given destination and a randomly chosen spawn time
-			// TODO: Make cars arrive via rush hour and not uniformly.
-			int r = (int)(Math.round(Math.random()*getMaximumTimesteps()));
+//			Collections.sort(destinations, new SortNode());
 
-			// Get the arrival rate per hour
-//			arrivalRates = generateArrivalRates();
+			Node start = destinations.get((int) (Math.floor(Math.random() * destinations.size())));
+			Node end = destinations.get((int) (Math.floor(Math.random() * destinations.size())));
+
+			// Ensures that cars coming from a direction can't have the same nodes as a goal
+			while (start.getXmlID().charAt(0) == end.getXmlID().charAt(0)) {
+				end = destinations.get((int) (Math.floor(Math.random() * destinations.size())));
+			}
 
 			/**
 			 * Generate cars
@@ -354,12 +347,21 @@ public class TrafficManager {
 //			previousArrivalTime = Math.abs(generateNextPoissonArrival(previousArrivalTime));
 //			System.out.println("!!! Next arrival time: " + previousArrivalTime);
 
+			// Build each car with their given destination and a randomly chosen spawn time
+			// TODO: Make cars arrive via rush hour and not uniformly.
+			int r = (int)(Math.round(Math.random()*getMaximumTimesteps()));
 			Car car = new Car.Builder(start, end, map).setStartTimestep(r).build();
 
-
+			// if A* can't compute a path
 			while(car.getEdgePath() == null) {
-				start = destinations.get((int) (Math.floor(drawRandomExponential(lambda) * destinations.size())));
-				end = destinations.get((int) (Math.floor(drawRandomExponential(lambda) * destinations.size())));
+
+				start = destinations.get((int) (Math.floor(Math.random() * destinations.size())));
+				end = destinations.get((int) (Math.floor(Math.random() * destinations.size())));
+
+				// Ensures that cars coming from a direction can't have the same nodes as a goal
+				while (start.getXmlID().charAt(0) == end.getXmlID().charAt(0)) {
+					end = destinations.get((int) (Math.floor(Math.random() * destinations.size())));
+				}
 				car = new Car.Builder(start, end, map).setDriverModel(new IntelligentDriverModel()).build();
 			}
 

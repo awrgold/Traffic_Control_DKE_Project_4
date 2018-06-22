@@ -87,14 +87,14 @@
     <node id="gneJ35" x="220.00" y="40.00" type="priority"/>
     <node id="gneJ36" x="-110.00" y="40.00" type="priority"/>
     <node id="gneJ37" x="20.00" y="-90.00" type="priority"/>
-    <node id="gneJ38" x="800.00" y="50.00" type="dead_end"/>
-    <node id="gneJ39" x="800.00" y="60.00" type="dead_end"/>
+    <node id="eastG1" x="800.00" y="50.00" type="dead_end"/>
+    <node id="eastG2" x="800.00" y="60.00" type="dead_end"/>
     <node id="gneJ4" x="70.00" y="-100.00" type="priority"/>
-    <node id="gneJ40" x="800.00" y="70.00" type="dead_end"/>
-    <node id="gneJ44" x="-620.00" y="100.00" type="dead_end"/>
+    <node id="eastG3" x="800.00" y="70.00" type="dead_end"/>
+    <node id="westG1" x="-620.00" y="100.00" type="dead_end"/>
     <node id="gneJ45" x="-120.00" y="90.00" type="dead_end"/>
-    <node id="gneJ46" x="-620.00" y="90.00" type="dead_end"/>
-    <node id="gneJ47" x="-620.00" y="80.00" type="dead_end"/>
+    <node id="westG2" x="-620.00" y="90.00" type="dead_end"/>
+    <node id="westG3" x="-620.00" y="80.00" type="dead_end"/>
     <node id="gneJ5" x="70.00" y="250.00" type="priority"/>
     <node id="gneJ52" x="-200.00" y="70.00" type="priority"/>
     <node id="gneJ54" x="-200.00" y="60.00" type="priority"/>
@@ -103,16 +103,16 @@
     <node id="gneJ6" x="80.00" y="-100.00" type="priority"/>
     <node id="gneJ60" x="310.00" y="90.00" type="priority"/>
     <node id="gneJ62" x="310.00" y="100.00" type="priority"/>
-    <node id="gneJ63" x="30.00" y="-570.00" type="dead_end"/>
-    <node id="gneJ64" x="40.00" y="-570.00" type="dead_end"/>
-    <node id="gneJ65" x="50.00" y="-570.00" type="dead_end"/>
+    <node id="southG1" x="30.00" y="-570.00" type="dead_end"/>
+    <node id="southG2" x="40.00" y="-570.00" type="dead_end"/>
+    <node id="southG3" x="50.00" y="-570.00" type="dead_end"/>
     <node id="gneJ67" x="60.00" y="-180.00" type="priority"/>
     <node id="gneJ69" x="70.00" y="-180.00" type="priority"/>
     <node id="gneJ7" x="80.00" y="250.00" type="priority"/>
     <node id="gneJ71" x="80.00" y="-180.00" type="priority"/>
-    <node id="gneJ73" x="80.00" y="780.00" type="dead_end"/>
-    <node id="gneJ74" x="70.00" y="780.00" type="dead_end"/>
-    <node id="gneJ75" x="60.00" y="780.00" type="dead_end"/>
+    <node id="northG1" x="80.00" y="780.00" type="dead_end"/>
+    <node id="northG2" x="70.00" y="780.00" type="dead_end"/>
+    <node id="northG3" x="60.00" y="780.00" type="dead_end"/>
     <node id="gneJ77" x="50.00" y="330.00" type="priority"/>
     <node id="gneJ79" x="40.00" y="330.00" type="priority"/>
     <node id="gneJ8" x="50.00" y="250.00" type="priority"/>

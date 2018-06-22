@@ -16,6 +16,7 @@ public class Map {
 	
 	private List<Node> nodes = new ArrayList<Node>();
 	private List<Edge> edges = new ArrayList<Edge>();
+	private List<Node> spawnPoints = new ArrayList<Node>();
 	
 	private List<Node> destinations = new ArrayList<Node>();
 	private List<Node> intersections = new ArrayList<Node>();
@@ -66,6 +67,7 @@ public class Map {
 
 		this.nodes = tempNodes;
 		this.edges = tempEdges;
+		setSpawnPoints();
 		
 		calculateMapDimensions();
 
@@ -101,6 +103,26 @@ public class Map {
 
 			while (history.size() <= timestep) {
 				history.add(new ArrayList<Vehicle>());
+			}
+		}
+	}
+
+	public List<Node> getSpawnPoints(){
+		return spawnPoints;
+	}
+
+	public void setSpawnPoints(){
+		for (Node n : nodes){
+			if (n.getXmlID().contains("east") || n.getXmlID().contains("west") || n.getXmlID().contains("north") || n.getXmlID().contains("south")){
+				spawnPoints.add(n);
+			}
+		}
+	}
+
+	public void setDestinations(){
+		for (Node n : nodes){
+			if (!n.getXmlID().contains("eastG") && !n.getXmlID().contains("westG") && !n.getXmlID().contains("northG") && n.getXmlID().contains("southG")){
+				spawnPoints.add(n);
 			}
 		}
 	}
@@ -197,23 +219,6 @@ public class Map {
 	public String toString() {
 		return "[Map]";
 	}
-
-	/*
-	public static void main(String[] args) {
-		Node node1 = new Node(0,0);
-		Node node2 = new Node(0,10);
-		
-		Edge edge = new Edge(node1,node2,50);
-		
-		Map map = new Map(Arrays.asList(node1,node2),Arrays.asList(edge));
-		
-		System.out.println("Created map");
-		
-		map.ensureCapacity(10);
-		
-		int x = 0;
-	}
-	*/
 
 	public static double euclideanDistance(Node a, Node b){
 		return Math.abs(Math.sqrt(Math.pow((a.getY()-b.getY()), 2) + Math.pow((a.getX() - b.getX()), 2)));

@@ -26,6 +26,7 @@ public class MapReader {
 
 	private HashMap<String, Node> nodeMap = null;
 	private HashMap<String, Edge> edgeMap = null;
+	private List<Node> spawnPoints = new ArrayList<Node>();
 
 	public HashMap<String, Node> getNodes() {
 		return nodeMap;
@@ -83,7 +84,7 @@ public class MapReader {
 				float nodeY = Float.parseFloat(xmlElement.getAttributes().getNamedItem("y").getTextContent()) * MAPMULTIPLIER;
 				String nodeType = xmlElement.getAttributes().getNamedItem("type").getTextContent();
 
-				Node node = new Node(nodeX, nodeY, nodeType);
+				Node node = new Node(nodeX, nodeY, nodeType, nodeID);
 				nodeMap.put(nodeID, node);
 			}
 
@@ -199,6 +200,14 @@ public class MapReader {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void addSpawn(Node node){
+		spawnPoints.add(node);
+	}
+
+	public List<Node> getSpawnPoints(){
+		return spawnPoints;
 	}
 
 	public void printAll(HashMap<String, Node> nodeMap, HashMap<String, Edge> edgeMap) {

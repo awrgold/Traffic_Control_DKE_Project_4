@@ -19,16 +19,17 @@ public class Node implements Comparable<Node> {
 	public boolean hasWeight = false;
 	private boolean isDestination;
 	private String type;
+	private String xmlID;
 	private boolean isIntersection = false;
 	
 	private static int lastGivenId = 0;
 	
 	private int id;
 
-	public Node(float xCoordinate, float yCoordinate, String type) {
+	public Node(float xCoordinate, float yCoordinate, String type, String xmlID) {
 		location = new Coordinates(xCoordinate, yCoordinate);
 		this.type = type;
-		
+		this.xmlID = xmlID;
 		this.id = lastGivenId++;
 	}
 
@@ -43,6 +44,10 @@ public class Node implements Comparable<Node> {
 
 	public boolean isHasWeight(){
 		return hasWeight;
+	}
+
+	public String getXmlID() {
+		return xmlID;
 	}
 
 	public void setNumLanesAttached(int numLanes){
