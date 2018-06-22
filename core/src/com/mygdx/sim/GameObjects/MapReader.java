@@ -204,13 +204,13 @@ public class MapReader {
 	public void printAll(HashMap<String, Node> nodeMap, HashMap<String, Edge> edgeMap) {
 		int counter = 0;
 		for (Node n : nodeMap.values()) {
-			System.out.println("Node " + counter + " is at X: " + n.getX() + " Y: " + n.getY());
+			System.out.println("Node " + n.getId() + " is at X: " + n.getX() + " Y: " + n.getY());
 			counter++;
 		}
 
 		counter = 0;
 		for (Edge edge : edgeMap.values()) {
-			System.out.println("Edge " + counter + " is from: " + edge.getFrom() + " to: " + edge.getTo() + " to edges: " + edge.getToEdges().size());
+			System.out.println("Edge " + edge.getId() + " is from: " + edge.getFrom() + " to: " + edge.getTo() + " to edges: " + edge.getToEdges().size());
 			counter++;
 		}
 	}
