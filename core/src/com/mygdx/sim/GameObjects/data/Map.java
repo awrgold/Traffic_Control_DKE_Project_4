@@ -39,8 +39,33 @@ public class Map {
 	private Rectangle bounds;
 
 	public Map(List<Node> nodes, List<Edge> edges) {
-		this.nodes = nodes;
-		this.edges = edges;
+
+		List<Node> tempNodes = new ArrayList<Node>();
+		List<Edge> tempEdges = new ArrayList<Edge>();
+
+		// Put the nodes and edges in the correct index based on their ID
+		for (int i = 0; i < nodes.size(); i++) {
+			tempNodes.add(null);
+		}
+		for (int i = 0; i < edges.size(); i++){
+			tempEdges.add(null);
+		}
+
+		for (Node n : nodes){
+			tempNodes.set(n.getId(), n);
+			if (DEBUG){
+				System.out.println("Node " + n.getId() + " placed at " + tempNodes.get(n.getId()).getId());
+			}
+		}
+		for (Edge e : edges) {
+			tempEdges.set(e.getId(), e);
+			if (DEBUG){
+				System.out.println("Edge " + e.getId() + " placed at " + tempEdges.get(e.getId()).getId());
+			}
+		}
+
+		this.nodes = tempNodes;
+		this.edges = tempEdges;
 		
 		calculateMapDimensions();
 
@@ -60,6 +85,10 @@ public class Map {
 		for(Edge edge: edges) {
 			staticTrafficObjectsCache.put(edge, new ArrayList<TrafficObject>());
 		}
+
+		// throw new runtime exception if ID doesn't match index
+		checkIDs();
+
 	}
 
 	public ArrayList<Vehicle> getVehiclesAt(Edge edge, int timestep) {
@@ -76,46 +105,18 @@ public class Map {
 		}
 	}
 
-
-	/*public void setIntersections() {
-		for(Node node : nodes) {
-			int minLanes = Integer.MAX_VALUE;
-			for (Edge e : node.getInEdges()) {
-				if (e.getNumLanes() < minLanes) {
-					minLanes = e.getNumLanes();
-				}
-			}
-
-
-			// If a node has 3 or more edges connected to it, we consider it large enough to deserve an intersection
-			if(node.getOutgoingNeighbors().size() >= 3 && minLanes >= 3) {
-				node.setIntersection(true);
-			}
-			intersections.add(i);
-
-		}
-
-		for (Node m : intersections){
-
-			// Here, we place stoplights for each "row" of lanes on the node. The node contains multiple stoplights (current build)
-			for (Edge e : m.getInEdges()){
-				List<Edge> lanes = new ArrayList<Edge>();
-				// Going through the list of lanes attached to the node,
-				for (int i = 0; i < m.getInEdges().size(); i++) {
-					// ... check if the lanes are adjacent (i.e. they have the same "from" node)
-					if (e.getFrom().equals(m.getInEdges().get(i).getFrom())){
-						// if that edge isn't already in the list of lanes, add it
-						if (!lanes.contains(e)) lanes.add(e);
-					}
-				}
-				// Add a light to this node.
-				m.addLight(new Stoplight(lanes, m.getLocation()));
-				if(DEBUG){
-					System.out.println("Stoplight added at: " + m.getLocation() + " with " + e.getNumLanes() + " lanes.");
-				}
+	public void checkIDs(){
+		for (int i = 0; i < nodes.size(); i++) {
+			if (i != nodes.get(i).getId()){
+				throw new RuntimeException("YO NODE ID AIN'T THE SAME AS THE INDEX ID LIL NIGGA!");
 			}
 		}
-	}*/
+		for (int i = 0; i < edges.size(); i++) {
+			if (i != edges.get(i).getId()){
+				throw new RuntimeException("YO EDGE ID AIN'T THE SAME AS THE INDEX ID LIL NIGGA!");
+			}
+		}
+	}
 	
 	private void calculateMapDimensions() {
 		mapMaxX = (int)nodes.get(0).getX();

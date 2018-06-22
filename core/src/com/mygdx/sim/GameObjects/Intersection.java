@@ -40,21 +40,21 @@ public class Intersection {
         return points;
     }
 
-    public void initializeLinked(){
-        for (ArrayList<Edge> edges : getRoads()){
-            ArrayList<Stoplight> toSet = new ArrayList<Stoplight>();
-            for (Edge e : edges){
-                toSet.add(e.getTo().getLight());
-            }
-            for (Stoplight s : toSet){
-                for (Stoplight t : toSet){
-                    if (!s.equals(t)){
-                        s.addLinked(t);
-                    }
-                }
-            }
-        }
-    }
+//    public void initializeLinked(){
+//        for (ArrayList<Edge> edges : getRoads()){
+//            ArrayList<Stoplight> toSet = new ArrayList<Stoplight>();
+//            for (Edge e : edges){
+//                toSet.add(e.getTo().getLight());
+//            }
+//            for (Stoplight s : toSet){
+//                for (Stoplight t : toSet){
+//                    if (!s.equals(t)){
+//                        s.addLinked(t);
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     public ArrayList<Stoplight> getStoplights(){
         return stoplights;

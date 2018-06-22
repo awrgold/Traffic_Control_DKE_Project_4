@@ -32,6 +32,7 @@ public class Edge implements Comparable<Edge> {
 
     public Edge(Node from, Node to){
         this(from,to,50);
+        id = lastGivenId++;
     }
     
     public Edge(Node from, Node to, int speedLimit){
@@ -62,6 +63,7 @@ public class Edge implements Comparable<Edge> {
         this.weight = (getLength()/getSpeedLimit());
         
         this.toEdges = new ArrayList<Edge>();
+        this.id = lastGivenId++;
     }
     
     public int hashCode() {
