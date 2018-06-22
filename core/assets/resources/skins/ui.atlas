@@ -70,3 +70,24 @@ node-intersection
 	orig: 0, 0
 	offset: 0, 0
 	index: -1
+trafficlight-green
+	rotate: false
+	xy: 144, 0
+	size: 16, 16
+	orig: 0, 0
+	offset: 0, 0
+	index: -1
+trafficlight-yellow
+	rotate: false
+	xy: 160, 0
+	size: 16, 16
+	orig: 0, 0
+	offset: 0, 0
+	index: -1
+trafficlight-red
+	rotate: false
+	xy: 176, 0
+	size: 16, 16
+	orig: 0, 0
+	offset: 0, 0
+	index: -1
