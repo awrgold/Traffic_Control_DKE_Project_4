@@ -32,7 +32,6 @@ public class Edge implements Comparable<Edge> {
 
     public Edge(Node from, Node to){
         this(from,to,50);
-        id = lastGivenId++;
     }
     
     public Edge(Node from, Node to, int speedLimit){
