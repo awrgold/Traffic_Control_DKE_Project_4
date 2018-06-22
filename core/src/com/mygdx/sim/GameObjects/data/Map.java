@@ -114,10 +114,7 @@ public class Map {
 
 	public void setSpawnPoints(){
 		for (Node n : nodes){
-			if (n.getXmlID().contains("east2") || n.getXmlID().contains("east3")
-					|| n.getXmlID().contains("west2") || n.getXmlID().contains("west3")
-					|| n.getXmlID().contains("north1") || n.getXmlID().contains("north2")
-					|| n.getXmlID().contains("south2") || n.getXmlID().contains("south3")){
+			if (n.getXmlID().contains("east") || n.getXmlID().contains("west") || n.getXmlID().contains("north") || n.getXmlID().contains("south")){
 				spawnPoints.add(n);
 			}
 		}
