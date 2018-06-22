@@ -278,7 +278,7 @@ public class TrafficManager {
 
 		List<Node> destinations = map.getSpawnPoints();
 		List cars = createCars(destinations, map);
-		createNeighborhoods(destinations, numUrbanCenters);
+		// createNeighborhoods(destinations, numUrbanCenters);
 
 		if(DEBUG){
 			System.out.println("Destination list size: " + destinations.size());
