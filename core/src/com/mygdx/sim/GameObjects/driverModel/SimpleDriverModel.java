@@ -25,7 +25,7 @@ public class SimpleDriverModel implements DriverModel{
 		if (timestep==0)
 			return 0;
 		
-		if(vehicle.getSpeedAt(timestep-1) < speed)
+		if(vehicle.getSpeed(timestep-1) < speed)
 			return speed/5;
 		
 		return 0;

@@ -117,9 +117,9 @@ public abstract class Vehicle implements TrafficObject {
 	}
 
 	public TrafficObjectState getState(int timestep) {
-		Coordinates coordinates = this.getLocationCoordinates(timestep);
+		Coordinates coordinates = this.getCoordinates(timestep);
 		Location location = this.getLocation(timestep);
-		float speed = this.getSpeedAt(timestep);
+		float speed = this.getSpeed(timestep);
 		boolean vizualize = this.isVisibleInVisualization(timestep);
 		boolean visibleToDrivers = this.isVisibleToDrivers(timestep);
 
@@ -127,8 +127,10 @@ public abstract class Vehicle implements TrafficObject {
 	}
 	
 	public Location getLocation(int timestep) {
-		return new Location(this.getEdgeAt(timestep),this.getTraveledDistance(timestep));
+		return new Location(this.getEdge(timestep),this.getTraveledDistance(timestep));
 	}
+	
+	
 
 	public DriverModel getDriverModel() {
 		return driverModel;
@@ -147,7 +149,7 @@ public abstract class Vehicle implements TrafficObject {
 	}
 
 	public int getMaxSpeed(int timestep) {
-		return (int) Math.min(maxSpeed, getEdgeAt(timestep).getSpeedLimit());
+		return (int) Math.min(maxSpeed, getEdge(timestep).getSpeedLimit());
 	}
 
 	public float getTraveledDistance(int timestep) {
@@ -158,7 +160,7 @@ public abstract class Vehicle implements TrafficObject {
 		return edgePath;
 	}
 
-	public float getSpeedAt(int timestep){
+	public float getSpeed(int timestep){
 		return speeds[timestep];
 	}
 
@@ -178,10 +180,14 @@ public abstract class Vehicle implements TrafficObject {
 		this.goalNode = goalNode;
 	}
 
-	public Coordinates getLocationCoordinates(int timestep) {
-		Edge edge = getEdgeAt(timestep);
+	public Coordinates getCoordinates(int timestep) {
+		Edge edge = getEdge(timestep);
 		float distance = distancesTraveledOnEdge[timestep];
 		return edge.getLocationIfTraveledDistance(distance);
+	}
+	
+	public float getDistanceOnEdge(int timestep) {
+		return distancesTraveledOnEdge[timestep];
 	}
 
 	public void setTimeLimit(int timeLimit){
@@ -356,7 +362,7 @@ public abstract class Vehicle implements TrafficObject {
 			distanceTraveledOnEdge += speed;
 			
 			// Get the length of the current edge
-			float currentEdgeLength = getEdgeAt(timestep-1).getLength();
+			float currentEdgeLength = getEdge(timestep-1).getLength();
 			
 			// Check if we have reached the end of the edge we were on in the last timestep. 
 			// If yes, we need to move to the next edge.		
@@ -392,7 +398,7 @@ public abstract class Vehicle implements TrafficObject {
 	/**
 	 * Returns the Edge that this vehicle is located on at the given timestep.
 	 */
-	public Edge getEdgeAt(int timestep) {		
+	public Edge getEdge(int timestep) {		
 		return edgePath.get(edgeIndices[timestep]);
 	}
 	
