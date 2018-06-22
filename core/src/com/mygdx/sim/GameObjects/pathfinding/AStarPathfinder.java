@@ -83,7 +83,13 @@ public class AStarPathfinder extends Pathfinder {
 				}
 			}
 		}
-		vehicle.setGoalNode(graph.getDestinations().get((new Random()).nextInt(graph.getDestinations().size())));
+		
+		Node newGoal = graph.getDestinations().get((new Random()).nextInt(graph.getDestinations().size()));
+		while(vehicle.getStartNode() == newGoal) {
+			newGoal = graph.getDestinations().get((new Random()).nextInt(graph.getDestinations().size()));
+		}
+		
+		vehicle.setGoalNode(newGoal);
 		return searchPath(nodes, vehicle);
 	}
 
