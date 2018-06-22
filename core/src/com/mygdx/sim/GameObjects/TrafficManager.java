@@ -352,17 +352,26 @@ public class TrafficManager {
 			int r = (int)(Math.round(Math.random()*getMaximumTimesteps()));
 			Car car = new Car.Builder(start, end, map).setStartTimestep(r).build();
 
+			while (start.getSpawntimes().contains(r)){
+				r = (int)(Math.round(Math.random()*getMaximumTimesteps()));
+				car = new Car.Builder(start, end, map).setStartTimestep(r).build();
+			}
+
+			start.getSpawntimes().add(r);
+
+
 			// if A* can't compute a path
 			while(car.getEdgePath() == null) {
 
 				start = destinations.get((int) (Math.floor(Math.random() * destinations.size())));
 				end = destinations.get((int) (Math.floor(Math.random() * destinations.size())));
+				r = (int)(Math.round(Math.random()*getMaximumTimesteps()));
 
 				// Ensures that cars coming from a direction can't have the same nodes as a goal
 				while (start.getXmlID().charAt(0) == end.getXmlID().charAt(0)) {
 					end = destinations.get((int) (Math.floor(Math.random() * destinations.size())));
 				}
-				car = new Car.Builder(start, end, map).setDriverModel(new IntelligentDriverModel()).build();
+				car = new Car.Builder(start, end, map).setDriverModel(new IntelligentDriverModel()).setStartTimestep(r).build();
 			}
 
 			cars.add(i, car);

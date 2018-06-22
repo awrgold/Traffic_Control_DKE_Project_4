@@ -21,6 +21,7 @@ public class Node implements Comparable<Node> {
 	private String type;
 	private String xmlID;
 	private boolean isIntersection = false;
+
 	private List<Integer> spawntimes = new ArrayList<Integer>();
 	
 	private static int lastGivenId = 0;
@@ -188,8 +189,14 @@ public class Node implements Comparable<Node> {
 			return 1;
 		return 0;
 	}
-	
-	
+
+	public List<Integer> getSpawntimes() {
+		return spawntimes;
+	}
+
+	public void setSpawntimes(List<Integer> spawntimes) {
+		this.spawntimes = spawntimes;
+	}
 
     public String getType() {
         return type;
