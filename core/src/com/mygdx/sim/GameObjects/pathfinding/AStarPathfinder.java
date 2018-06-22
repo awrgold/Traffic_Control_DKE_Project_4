@@ -83,14 +83,7 @@ public class AStarPathfinder extends Pathfinder {
 				}
 			}
 		}
-		
-		Node newGoal = graph.getDestinations().get((new Random()).nextInt(graph.getDestinations().size()));
-		while(vehicle.getStartNode() == newGoal) {
-			newGoal = graph.getDestinations().get((new Random()).nextInt(graph.getDestinations().size()));
-		}
-		
-		vehicle.setGoalNode(newGoal);
-		return searchPath(nodes, vehicle);
+		return null;
 	}
 
 	public List<Edge> createPath(Node node) {

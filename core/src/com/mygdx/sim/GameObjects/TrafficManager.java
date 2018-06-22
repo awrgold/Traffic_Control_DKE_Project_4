@@ -46,7 +46,7 @@ public class TrafficManager {
 	public final static int MAP_X_DIM = 100000;
 	public final static int MAP_Y_DIM = 100000;
 	public final static int GRID_FACTOR = 2;
-	public final static int vehicleCount = 1000;
+	public final static int vehicleCount = 100;
 	public final static int numUrbanCenters = 5;
 	public final static double mean = 0.2;
 	public final static double lambda = 1.0;
