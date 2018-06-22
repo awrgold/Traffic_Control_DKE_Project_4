@@ -68,6 +68,7 @@ public class Map {
 		this.nodes = tempNodes;
 		this.edges = tempEdges;
 		setSpawnPoints();
+		setDestinations();
 		
 		calculateMapDimensions();
 
