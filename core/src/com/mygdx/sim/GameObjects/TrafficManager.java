@@ -19,6 +19,7 @@ import com.mygdx.sim.GameObjects.data.Node;
 import com.mygdx.sim.GameObjects.data.SortNode;
 import com.mygdx.sim.GameObjects.data.Util;
 import com.mygdx.sim.GameObjects.driverModel.IntelligentDriverModel;
+import com.mygdx.sim.GameObjects.driverModel.IntelligentDriverModelPlus;
 import com.mygdx.sim.GameObjects.driverModel.SimpleDriverModel;
 import com.mygdx.sim.GameObjects.trafficObject.TestTrafficObject;
 import com.mygdx.sim.GameObjects.trafficObject.TrafficObject;
@@ -37,7 +38,7 @@ public class TrafficManager {
 
 	// Sampling frequency. Larger number means higher fidelity of the model, but
 	// also more computation
-	public final static int TIMESTEPS_PER_SECOND = 1;
+	public final static int TIMESTEPS_PER_SECOND = 4;
 	private final static int VIEW_DISTANCE = 500;
 	private final static int RIDICULOUS_SPEED = 1000;
 
@@ -155,7 +156,7 @@ public class TrafficManager {
 
 			lastComputedTimestep++;
 
-			lightController.update(lastComputedTimestep);
+//			lightController.update(lastComputedTimestep);
 
 			// Have the vehicles update their locations for the next timestep
 			for (Vehicle vehicle : vehicles)
@@ -634,6 +635,24 @@ public class TrafficManager {
 		
 		return new TrafficManager(map, cars, staticTrafficObjects, lightController);
 	}
+	
+	public static TrafficManager testcaseBlocker() {
+		Node node1 = new Node(0,0);
+		Node node2 = new Node(500,0);
+		
+		Edge edge = new Edge(node1,node2);
+		
+		Map map = new Map(Arrays.asList(node1,node2), Arrays.asList(edge));
+		
+		Car car = new Car.Builder(node1, node2, map).build();
+		
+		TestTrafficObject blocker = new TestTrafficObject(new Location(edge,200));
+		
+		List cars = Arrays.asList(car);
+		List blockers = Arrays.asList(blocker);
+		
+		return new TrafficManager(map, cars, blockers, null);
+	}
 
 	public static TrafficManager testcaseBig(int nodeN, int carsN) {
 		ArrayList<Node> nodes = new ArrayList<Node>();
@@ -661,7 +680,7 @@ public class TrafficManager {
 	}
 
 	public static void main(String[] args) {
-		TrafficManager tm = testcase1();
+		TrafficManager tm = testcaseBlocker();
 
 		System.out.println("Created test case");
 
