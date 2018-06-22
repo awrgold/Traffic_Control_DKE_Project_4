@@ -87,7 +87,7 @@ public class AStarPathfinder extends Pathfinder {
 			}
 		}
 		
-		return null;
+		throw new NullPointerException("No valid A* path found");
 	}
 
 	public List<Edge> createPath(Node node) {

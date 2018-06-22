@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 6/22/2018 12:05:09 PM by Netedit Version 0.32.0
+<!-- generated on 6/22/2018 12:32:13 PM by Netedit Version 0.32.0
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
@@ -21,6 +21,9 @@
 <nodes version="0.27" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/nodes_file.xsd">
     <location netOffset="0.00,0.00" convBoundary="-620.00,-570.00,800.00,780.00" origBoundary="10000000000.00,10000000000.00,-10000000000.00,-10000000000.00" projParameter="!"/>
 
+    <node id="east1" x="800.00" y="80.00" type="dead_end"/>
+    <node id="east2" x="800.00" y="90.00" type="dead_end"/>
+    <node id="east3" x="800.00" y="100.00" type="dead_end"/>
     <node id="gneJ10" x="40.00" y="250.00" type="priority"/>
     <node id="gneJ102" x="280.00" y="80.00" type="priority"/>
     <node id="gneJ103" x="280.00" y="90.00" type="priority"/>
@@ -93,38 +96,26 @@
     <node id="gneJ46" x="-620.00" y="90.00" type="dead_end"/>
     <node id="gneJ47" x="-620.00" y="80.00" type="dead_end"/>
     <node id="gneJ5" x="70.00" y="250.00" type="priority"/>
-    <node id="gneJ51" x="-620.00" y="70.00" type="dead_end"/>
     <node id="gneJ52" x="-200.00" y="70.00" type="priority"/>
-    <node id="gneJ53" x="-620.00" y="60.00" type="dead_end"/>
     <node id="gneJ54" x="-200.00" y="60.00" type="priority"/>
-    <node id="gneJ55" x="-620.00" y="50.00" type="dead_end"/>
     <node id="gneJ56" x="-200.00" y="50.00" type="priority"/>
-    <node id="gneJ57" x="800.00" y="80.00" type="dead_end"/>
     <node id="gneJ58" x="310.00" y="80.00" type="priority"/>
-    <node id="gneJ59" x="800.00" y="90.00" type="dead_end"/>
     <node id="gneJ6" x="80.00" y="-100.00" type="priority"/>
     <node id="gneJ60" x="310.00" y="90.00" type="priority"/>
-    <node id="gneJ61" x="800.00" y="100.00" type="dead_end"/>
     <node id="gneJ62" x="310.00" y="100.00" type="priority"/>
     <node id="gneJ63" x="30.00" y="-570.00" type="dead_end"/>
     <node id="gneJ64" x="40.00" y="-570.00" type="dead_end"/>
     <node id="gneJ65" x="50.00" y="-570.00" type="dead_end"/>
-    <node id="gneJ66" x="60.00" y="-570.00" type="dead_end"/>
     <node id="gneJ67" x="60.00" y="-180.00" type="priority"/>
-    <node id="gneJ68" x="70.00" y="-570.00" type="dead_end"/>
     <node id="gneJ69" x="70.00" y="-180.00" type="priority"/>
     <node id="gneJ7" x="80.00" y="250.00" type="priority"/>
-    <node id="gneJ70" x="80.00" y="-570.00" type="dead_end"/>
     <node id="gneJ71" x="80.00" y="-180.00" type="priority"/>
     <node id="gneJ73" x="80.00" y="780.00" type="dead_end"/>
     <node id="gneJ74" x="70.00" y="780.00" type="dead_end"/>
     <node id="gneJ75" x="60.00" y="780.00" type="dead_end"/>
-    <node id="gneJ76" x="50.00" y="780.00" type="dead_end"/>
     <node id="gneJ77" x="50.00" y="330.00" type="priority"/>
-    <node id="gneJ78" x="40.00" y="780.00" type="dead_end"/>
     <node id="gneJ79" x="40.00" y="330.00" type="priority"/>
     <node id="gneJ8" x="50.00" y="250.00" type="priority"/>
-    <node id="gneJ80" x="30.00" y="780.00" type="dead_end"/>
     <node id="gneJ81" x="30.00" y="330.00" type="priority"/>
     <node id="gneJ82" x="-20.00" y="40.00" type="priority"/>
     <node id="gneJ85" x="130.00" y="40.00" type="priority"/>
@@ -134,4 +125,13 @@
     <node id="gneJ94" x="150.00" y="30.00" type="priority"/>
     <node id="gneJ95" x="100.00" y="-20.00" type="priority"/>
     <node id="gneJ97" x="160.00" y="10.00" type="priority"/>
+    <node id="north1" x="50.00" y="780.00" type="dead_end"/>
+    <node id="north2" x="40.00" y="780.00" type="dead_end"/>
+    <node id="north3" x="30.00" y="780.00" type="dead_end"/>
+    <node id="south1" x="60.00" y="-570.00" type="dead_end"/>
+    <node id="south2" x="70.00" y="-570.00" type="dead_end"/>
+    <node id="south3" x="80.00" y="-570.00" type="dead_end"/>
+    <node id="west1" x="-620.00" y="70.00" type="dead_end"/>
+    <node id="west2" x="-620.00" y="60.00" type="dead_end"/>
+    <node id="west3" x="-620.00" y="50.00" type="dead_end"/>
 </nodes>
