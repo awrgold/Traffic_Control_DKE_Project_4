@@ -3,16 +3,26 @@ package com.mygdx.sim.GameObjects.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mygdx.sim.GameObjects.Stoplight;
+
 public class Edge implements Comparable<Edge> {
 
+	// Node connection
     private Node from;
     private Node to;
+    
+    // Edge Lists
     private List<Edge> neighbors;
     private List<Edge> toEdges;
+    
+    // Properties
     private int speedLimit;
     private double weight;
     private int numLanes;
     private int lane;
+    
+    // StopLight
+    private Stoplight stopLight;
     
     private static int lastGivenId = 0;
     private int id;
@@ -88,6 +98,14 @@ public class Edge implements Comparable<Edge> {
     
     public int getNumLanes() {
     	return numLanes;
+    }
+    
+    public Stoplight getStopLight() {
+    	return stopLight;
+    }
+    
+    public void setStopLight(Stoplight stopLight) {
+    	this.stopLight = stopLight;
     }
     
     public List<Coordinates> getShapeCoordinates() {

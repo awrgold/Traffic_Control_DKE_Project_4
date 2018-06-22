@@ -20,8 +20,6 @@ public class Node implements Comparable<Node> {
 	private boolean isDestination;
 	private String type;
 	private boolean isIntersection = false;
-	private Stoplight stoplight;
-	private List<Stoplight> lights;
 	
 	private static int lastGivenId = 0;
 	
@@ -53,14 +51,6 @@ public class Node implements Comparable<Node> {
 
 	public int getNumLanesAttached(){
 		return numLanesAttached;
-	}
-
-	public Stoplight getLight(){
-    	return stoplight;
-	}
-
-	public List<Stoplight> getLights(){
-    	return lights;
 	}
 
 //	public Node(Coordinates coords) {

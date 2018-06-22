@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 6/22/2018 12:05:09 PM by Netedit Version 0.32.0
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
+
+    <output>
+        <output-file value="C:\Users\abeld\Downloads\cloverleaf%20-%20hand.net.xml"/>
+        <plain-output-prefix value="C:\Users\abeld\Downloads\Cloverleaf\cloverleaf"/>
+    </output>
+
+    <processing>
+        <no-turnarounds value="true"/>
+        <offset.disable-normalization value="true"/>
+    </processing>
+
+</configuration>
+-->
+
+<nodes version="0.27" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/nodes_file.xsd">
+    <location netOffset="0.00,0.00" convBoundary="-620.00,-570.00,800.00,780.00" origBoundary="10000000000.00,10000000000.00,-10000000000.00,-10000000000.00" projParameter="!"/>
+
+    <node id="gneJ10" x="40.00" y="250.00" type="priority"/>
+    <node id="gneJ102" x="280.00" y="80.00" type="priority"/>
+    <node id="gneJ103" x="280.00" y="90.00" type="priority"/>
+    <node id="gneJ104" x="280.00" y="100.00" type="priority"/>
+    <node id="gneJ106" x="120.00" y="-30.00" type="priority"/>
+    <node id="gneJ107" x="160.00" y="-10.00" type="priority"/>
+    <node id="gneJ108" x="140.00" y="-30.00" type="priority"/>
+    <node id="gneJ109" x="130.00" y="110.00" type="priority"/>
+    <node id="gneJ11" x="40.00" y="-100.00" type="priority"/>
+    <node id="gneJ110" x="-20.00" y="110.00" type="priority"/>
+    <node id="gneJ111" x="20.00" y="150.00" type="priority"/>
+    <node id="gneJ112" x="20.00" y="0.00" type="priority"/>
+    <node id="gneJ113" x="-40.00" y="120.00" type="priority"/>
+    <node id="gneJ114" x="-50.00" y="140.00" type="priority"/>
+    <node id="gneJ115" x="-50.00" y="160.00" type="priority"/>
+    <node id="gneJ116" x="-30.00" y="180.00" type="priority"/>
+    <node id="gneJ117" x="-10.00" y="180.00" type="priority"/>
+    <node id="gneJ118" x="10.00" y="170.00" type="priority"/>
+    <node id="gneJ119" x="100.00" y="170.00" type="priority"/>
+    <node id="gneJ12" x="30.00" y="250.00" type="priority"/>
+    <node id="gneJ120" x="150.00" y="120.00" type="priority"/>
+    <node id="gneJ121" x="120.00" y="180.00" type="priority"/>
+    <node id="gneJ122" x="160.00" y="140.00" type="priority"/>
+    <node id="gneJ123" x="140.00" y="180.00" type="priority"/>
+    <node id="gneJ124" x="160.00" y="160.00" type="priority"/>
+    <node id="gneJ126" x="10.00" y="-20.00" type="priority"/>
+    <node id="gneJ127" x="-10.00" y="-30.00" type="priority"/>
+    <node id="gneJ128" x="-30.00" y="-30.00" type="priority"/>
+    <node id="gneJ129" x="-40.00" y="30.00" type="priority"/>
+    <node id="gneJ13" x="30.00" y="-100.00" type="priority"/>
+    <node id="gneJ130" x="-50.00" y="10.00" type="priority"/>
+    <node id="gneJ131" x="-50.00" y="-10.00" type="priority"/>
+    <node id="gneJ134" x="-170.00" y="50.00" type="priority"/>
+    <node id="gneJ135" x="-170.00" y="60.00" type="priority"/>
+    <node id="gneJ136" x="-170.00" y="70.00" type="priority"/>
+    <node id="gneJ14" x="-120.00" y="50.00" type="priority"/>
+    <node id="gneJ141" x="50.00" y="300.00" type="priority"/>
+    <node id="gneJ142" x="40.00" y="300.00" type="priority"/>
+    <node id="gneJ143" x="30.00" y="300.00" type="priority"/>
+    <node id="gneJ145" x="80.00" y="-150.00" type="priority"/>
+    <node id="gneJ146" x="70.00" y="-150.00" type="priority"/>
+    <node id="gneJ147" x="60.00" y="-150.00" type="priority"/>
+    <node id="gneJ15" x="230.00" y="50.00" type="priority"/>
+    <node id="gneJ16" x="-120.00" y="60.00" type="priority"/>
+    <node id="gneJ17" x="230.00" y="60.00" type="priority"/>
+    <node id="gneJ18" x="-120.00" y="70.00" type="priority"/>
+    <node id="gneJ19" x="230.00" y="70.00" type="priority"/>
+    <node id="gneJ2" x="60.00" y="-100.00" type="priority"/>
+    <node id="gneJ20" x="230.00" y="80.00" type="priority"/>
+    <node id="gneJ21" x="-120.00" y="80.00" type="priority"/>
+    <node id="gneJ22" x="230.00" y="90.00" type="priority"/>
+    <node id="gneJ23" x="-120.00" y="90.00" type="dead_end"/>
+    <node id="gneJ24" x="230.00" y="100.00" type="priority"/>
+    <node id="gneJ25" x="-120.00" y="100.00" type="priority"/>
+    <node id="gneJ28" x="220.00" y="110.00" type="priority"/>
+    <node id="gneJ29" x="90.00" y="240.00" type="priority"/>
+    <node id="gneJ3" x="60.00" y="250.00" type="priority"/>
+    <node id="gneJ30" x="20.00" y="240.00" type="priority"/>
+    <node id="gneJ31" x="-110.00" y="110.00" type="priority"/>
+    <node id="gneJ34" x="90.00" y="-90.00" type="priority"/>
+    <node id="gneJ35" x="220.00" y="40.00" type="priority"/>
+    <node id="gneJ36" x="-110.00" y="40.00" type="priority"/>
+    <node id="gneJ37" x="20.00" y="-90.00" type="priority"/>
+    <node id="gneJ38" x="800.00" y="50.00" type="dead_end"/>
+    <node id="gneJ39" x="800.00" y="60.00" type="dead_end"/>
+    <node id="gneJ4" x="70.00" y="-100.00" type="priority"/>
+    <node id="gneJ40" x="800.00" y="70.00" type="dead_end"/>
+    <node id="gneJ44" x="-620.00" y="100.00" type="dead_end"/>
+    <node id="gneJ45" x="-120.00" y="90.00" type="dead_end"/>
+    <node id="gneJ46" x="-620.00" y="90.00" type="dead_end"/>
+    <node id="gneJ47" x="-620.00" y="80.00" type="dead_end"/>
+    <node id="gneJ5" x="70.00" y="250.00" type="priority"/>
+    <node id="gneJ51" x="-620.00" y="70.00" type="dead_end"/>
+    <node id="gneJ52" x="-200.00" y="70.00" type="priority"/>
+    <node id="gneJ53" x="-620.00" y="60.00" type="dead_end"/>
+    <node id="gneJ54" x="-200.00" y="60.00" type="priority"/>
+    <node id="gneJ55" x="-620.00" y="50.00" type="dead_end"/>
+    <node id="gneJ56" x="-200.00" y="50.00" type="priority"/>
+    <node id="gneJ57" x="800.00" y="80.00" type="dead_end"/>
+    <node id="gneJ58" x="310.00" y="80.00" type="priority"/>
+    <node id="gneJ59" x="800.00" y="90.00" type="dead_end"/>
+    <node id="gneJ6" x="80.00" y="-100.00" type="priority"/>
+    <node id="gneJ60" x="310.00" y="90.00" type="priority"/>
+    <node id="gneJ61" x="800.00" y="100.00" type="dead_end"/>
+    <node id="gneJ62" x="310.00" y="100.00" type="priority"/>
+    <node id="gneJ63" x="30.00" y="-570.00" type="dead_end"/>
+    <node id="gneJ64" x="40.00" y="-570.00" type="dead_end"/>
+    <node id="gneJ65" x="50.00" y="-570.00" type="dead_end"/>
+    <node id="gneJ66" x="60.00" y="-570.00" type="dead_end"/>
+    <node id="gneJ67" x="60.00" y="-180.00" type="priority"/>
+    <node id="gneJ68" x="70.00" y="-570.00" type="dead_end"/>
+    <node id="gneJ69" x="70.00" y="-180.00" type="priority"/>
+    <node id="gneJ7" x="80.00" y="250.00" type="priority"/>
+    <node id="gneJ70" x="80.00" y="-570.00" type="dead_end"/>
+    <node id="gneJ71" x="80.00" y="-180.00" type="priority"/>
+    <node id="gneJ73" x="80.00" y="780.00" type="dead_end"/>
+    <node id="gneJ74" x="70.00" y="780.00" type="dead_end"/>
+    <node id="gneJ75" x="60.00" y="780.00" type="dead_end"/>
+    <node id="gneJ76" x="50.00" y="780.00" type="dead_end"/>
+    <node id="gneJ77" x="50.00" y="330.00" type="priority"/>
+    <node id="gneJ78" x="40.00" y="780.00" type="dead_end"/>
+    <node id="gneJ79" x="40.00" y="330.00" type="priority"/>
+    <node id="gneJ8" x="50.00" y="250.00" type="priority"/>
+    <node id="gneJ80" x="30.00" y="780.00" type="dead_end"/>
+    <node id="gneJ81" x="30.00" y="330.00" type="priority"/>
+    <node id="gneJ82" x="-20.00" y="40.00" type="priority"/>
+    <node id="gneJ85" x="130.00" y="40.00" type="priority"/>
+    <node id="gneJ86" x="90.00" y="0.00" type="priority"/>
+    <node id="gneJ87" x="90.00" y="150.00" type="priority"/>
+    <node id="gneJ9" x="50.00" y="-100.00" type="priority"/>
+    <node id="gneJ94" x="150.00" y="30.00" type="priority"/>
+    <node id="gneJ95" x="100.00" y="-20.00" type="priority"/>
+    <node id="gneJ97" x="160.00" y="10.00" type="priority"/>
+</nodes>
