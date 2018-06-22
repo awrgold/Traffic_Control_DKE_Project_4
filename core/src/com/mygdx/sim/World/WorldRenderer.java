@@ -26,7 +26,7 @@ public class WorldRenderer {
 	// private Rectangle scissor;
 
 	// Simulation Speed
-	private float simulationSpeed = 0.05f;
+	private float simulationSpeed = 0.01f;
 	private float timer = 0;
 
 	// Control whether to always show all vehicles

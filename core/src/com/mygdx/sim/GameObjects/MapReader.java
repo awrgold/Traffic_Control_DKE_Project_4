@@ -22,7 +22,7 @@ import com.mygdx.sim.GameObjects.data.Node;
 
 public class MapReader {
 
-	private static final int MAPMULTIPLIER = 20;
+	private static final int MAPMULTIPLIER = 10;
 
 	private HashMap<String, Node> nodeMap = null;
 	private HashMap<String, Edge> edgeMap = null;
