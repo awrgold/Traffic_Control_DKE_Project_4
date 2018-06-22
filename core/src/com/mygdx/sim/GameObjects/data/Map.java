@@ -114,7 +114,10 @@ public class Map {
 
 	public void setSpawnPoints(){
 		for (Node n : nodes){
-			if (n.getXmlID().contains("east") || n.getXmlID().contains("west") || n.getXmlID().contains("north") || n.getXmlID().contains("south")){
+			if (n.getXmlID().contains("east2") || n.getXmlID().contains("east3")
+					|| n.getXmlID().contains("west2") || n.getXmlID().contains("west3")
+					|| n.getXmlID().contains("north1") || n.getXmlID().contains("north2")
+					|| n.getXmlID().contains("south2") || n.getXmlID().contains("south3")){
 				spawnPoints.add(n);
 			}
 		}
@@ -122,7 +125,7 @@ public class Map {
 
 	public void setDestinations(){
 		for (Node n : nodes){
-			if (n.getXmlID().contains("eastG") || n.getXmlID().contains("westG") || n.getXmlID().contains("northG") || n.getXmlID().contains("southG")){
+			if (n.getXmlID().contains("eastG1") || n.getXmlID().contains("westG3") || n.getXmlID().contains("northG3") || n.getXmlID().contains("southG1")){
 				destinations.add(n);
 			}
 		}
