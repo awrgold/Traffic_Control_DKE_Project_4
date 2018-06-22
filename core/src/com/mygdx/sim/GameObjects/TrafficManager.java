@@ -38,7 +38,7 @@ public class TrafficManager {
 
 	// Sampling frequency. Larger number means higher fidelity of the model, but
 	// also more computation
-	public final static int TIMESTEPS_PER_SECOND = 4;
+	public final static int TIMESTEPS_PER_SECOND = 1;
 	private final static int VIEW_DISTANCE = 500;
 	private final static int RIDICULOUS_SPEED = 1000;
 
@@ -73,14 +73,14 @@ public class TrafficManager {
 		for (Vehicle vehicle : vehicles) {
 
 			// Validation of the path
-			List<Edge> edgePath = vehicle.getEdgePath();
-			if (edgePath == null) {
-				continue;
-			}
-
-			for (int i = 0; i < edgePath.size() - 1; i++)
-				if (!edgePath.get(i + 1).getFrom().equals(edgePath.get(i).getTo()))
-					throw new RuntimeException("EdgePath of vehicle " + this + " implies teleportation");
+//			List<Edge> edgePath = vehicle.getEdgePath();
+//			if (edgePath == null) {
+//				continue;
+//			}
+//
+//			for (int i = 0; i < edgePath.size() - 1; i++)
+//				if (!edgePath.get(i + 1).getFrom().equals(edgePath.get(i).getTo()))
+//					throw new RuntimeException("EdgePath of vehicle " + this + " implies teleportation");
 
 		}
 		
@@ -361,21 +361,21 @@ public class TrafficManager {
 
 
 			// if A* can't compute a path
-			while(car.getEdgePath() == null) {
-
-				start = destinations.get((int) (Math.floor(Math.random() * destinations.size())));
-				end = destinations.get((int) (Math.floor(Math.random() * destinations.size())));
-				r = (int)(Math.round(Math.random()*getMaximumTimesteps()));
-
-				// Ensures that cars coming from a direction can't have the same nodes as a goal
-				while (start.getXmlID().charAt(0) == end.getXmlID().charAt(0)) {
-					end = destinations.get((int) (Math.floor(Math.random() * destinations.size())));
-				}
-				car = new Car.Builder(start, end, map).setDriverModel(new IntelligentDriverModel()).setStartTimestep(r).build();
-			}
+//			while(car.getEdgePath() == null) {
+//
+//				start = destinations.get((int) (Math.floor(Math.random() * destinations.size())));
+//				end = destinations.get((int) (Math.floor(Math.random() * destinations.size())));
+//				r = (int)(Math.round(Math.random()*getMaximumTimesteps()));
+//
+//				// Ensures that cars coming from a direction can't have the same nodes as a goal
+//				while (start.getXmlID().charAt(0) == end.getXmlID().charAt(0)) {
+//					end = destinations.get((int) (Math.floor(Math.random() * destinations.size())));
+//				}
+//				car = new Car.Builder(start, end, map).setDriverModel(new IntelligentDriverModel()).setStartTimestep(r).build();
+//			}
 
 			cars.add(i, car);
-			car.setTimeLimit(determineTimeLimit(car));
+//			car.setTimeLimit(determineTimeLimit(car));
 		}
 
 		return cars;
@@ -411,25 +411,25 @@ public class TrafficManager {
 	}
 
 	// TODO: Make this robust - right now just arbitrarily calculating a time limit, not based on something realistic
-	private static int determineTimeLimit(Vehicle car){
-		double mDist = manhattanDistance(car.getStartNode(), car.getGoalNode());
-		List<Edge> path = car.getEdgePath();
-		double actualDist = 0;
-		double avgSpeedOnPath = 0;
-		for (Edge e : path){
-			actualDist += e.getLength();
-			avgSpeedOnPath += e.getSpeedLimit();
-		}
-		avgSpeedOnPath = (avgSpeedOnPath/path.size());
-		double differential = Math.abs(actualDist/mDist);
-		int timeLimit = (int)Math.round(actualDist/((avgSpeedOnPath*1000)/60));
-
-		if(DEBUG){
-			System.out.println("Determined time limit for car " + car.toString() + " in [" + timeLimit + "] timesteps.");
-			System.out.println("Actual time taken for car + " + car.toString() + " in [" + car.getEndTimestep() + "] timesteps.");
-		}
-		return timeLimit;
-	}
+//	private static int determineTimeLimit(Vehicle car){
+//		double mDist = manhattanDistance(car.getStartNode(), car.getGoalNode());
+//		List<Edge> path = car.getEdgePath();
+//		double actualDist = 0;
+//		double avgSpeedOnPath = 0;
+//		for (Edge e : path){
+//			actualDist += e.getLength();
+//			avgSpeedOnPath += e.getSpeedLimit();
+//		}
+//		avgSpeedOnPath = (avgSpeedOnPath/path.size());
+//		double differential = Math.abs(actualDist/mDist);
+//		int timeLimit = (int)Math.round(actualDist/((avgSpeedOnPath*1000)/60));
+//
+//		if(DEBUG){
+//			System.out.println("Determined time limit for car " + car.toString() + " in [" + timeLimit + "] timesteps.");
+//			System.out.println("Actual time taken for car + " + car.toString() + " in [" + car.getEndTimestep() + "] timesteps.");
+//		}
+//		return timeLimit;
+//	}
 
 
 	/**
@@ -629,13 +629,13 @@ public class TrafficManager {
 		Map map = new Map(Arrays.asList(node1, node2, node3), Arrays.asList(edge1, edge2));
 
 		Car car1 = new Car.Builder(node2, node3, map).setDriverModel(new SimpleDriverModel(10)).build();
-		car1.setEdgePath(Arrays.asList(edge2));
+//		car1.setEdgePath(Arrays.asList(edge2));
 
 		Car car2 = new Car.Builder(node2, node3, map).setDriverModel(new IntelligentDriverModel()).build();
-		car2.setEdgePath(Arrays.asList(edge2));
+//		car2.setEdgePath(Arrays.asList(edge2));
 
 		Car car3 = new Car.Builder(node1, node3, map).setDriverModel(new IntelligentDriverModel()).setInitialSpeed(20).build();
-		car3.setEdgePath(Arrays.asList(edge1, edge2));
+//		car3.setEdgePath(Arrays.asList(edge1, edge2));
 		
 		TestTrafficObject blocker = new TestTrafficObject(new Location(edge2, 300));
 
@@ -682,12 +682,38 @@ public class TrafficManager {
 			Car car = new Car.Builder(nodes.get(0), nodes.get(nodeN - 1), map).setDriverModel(new SimpleDriverModel())
 					.build();
 
-			car.setEdgePath(edges);
+//			car.setEdgePath(edges);
 
 			cars.add(car);
 		}
 
 		return new TrafficManager(map, cars, new ArrayList<TrafficObject>(), lightController);
+	}
+	
+	public static TrafficManager navigationTest() {
+		Node a = new Node(0,0);
+		Node b = new Node(100,100);
+		Node c = new Node(100,0);
+		Node d = new Node(0,100);
+		Node e = new Node(1000,1000);
+		
+		Edge ad = new Edge(a,d);
+		Edge ae = new Edge(a,e);
+		Edge eb = new Edge(e,b);
+		Edge ac = new Edge(a,c);
+		Edge cb = new Edge(c,b);
+		
+		List<Node> nodes = Arrays.asList(a,b,c,d,e);
+		List<Edge> edges = Arrays.asList(ad,ae,eb,ac,cb);
+		
+		Map map = new Map(nodes,edges);
+		
+		Car car = new Car.Builder(a, b, map).build();
+		
+		ArrayList<Vehicle> cars = new ArrayList<Vehicle>();
+		cars.add(car);
+		
+		return new TrafficManager(map,cars,new ArrayList<TrafficObject>(),new LightController(null));
 	}
 
 	public static void main(String[] args) {

@@ -5,7 +5,6 @@ import java.util.Random;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.mygdx.sim.GameObjects.TrafficManager;
 import com.mygdx.sim.GameObjects.data.Coordinates;
 import com.mygdx.sim.GameObjects.data.Edge;
@@ -13,6 +12,7 @@ import com.mygdx.sim.GameObjects.data.Location;
 import com.mygdx.sim.GameObjects.data.Map;
 import com.mygdx.sim.GameObjects.data.Node;
 import com.mygdx.sim.GameObjects.driverModel.DriverModel;
+import com.mygdx.sim.GameObjects.pathfinding.DynamicPathfinder;
 import com.mygdx.sim.GameObjects.pathfinding.Pathfinder;
 import com.mygdx.sim.GameObjects.trafficObject.TrafficObject;
 import com.mygdx.sim.GameObjects.trafficObject.TrafficObjectState;
@@ -32,7 +32,7 @@ public abstract class Vehicle implements TrafficObject {
 	private Sprite sprite;
 
 	// Vehicle path
-	List<Edge> edgePath;
+//	List<Edge> edgePath;
 
 	// The timesteps when this vehicle begins and ends its journey.
 	int startTimestep;
@@ -80,8 +80,12 @@ public abstract class Vehicle implements TrafficObject {
 	 * By default, it uses a very simple model that maintains a constant speed.
 	 */
 	DriverModel driverModel;
+	
+	private Map map;
+	
+	private static DynamicPathfinder pf = null;
 
-	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Pathfinder pf, Map graph, int startTimestep, DriverModel driverModel, float initialSpeed) {
+	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Pathfinder deprecatedPf, Map graph, int startTimestep, DriverModel driverModel, float initialSpeed) {
 
 		setSprite(spriteName);
 
@@ -97,7 +101,12 @@ public abstract class Vehicle implements TrafficObject {
 		this.maxSpeed = maxSpeed;
 		setAggression();
 
-		this.pathfinder = pf;
+//		this.pathfinder = pf;
+		
+		if(pf == null)		
+			pf = new DynamicPathfinder(graph);
+		
+		this.map = graph;
 
 		this.startTimestep = startTimestep;
 
@@ -105,9 +114,11 @@ public abstract class Vehicle implements TrafficObject {
 
 		speeds[0] = initialSpeed;
 		tripDuration = 0;
+		
+		edgeIndices[0] = pf.selectEdge(startNode, goalNode).getId();
 
 		// Find path
-		computePath(0);
+//		computePath(0);
 	}
 
 	public float getLength() {	return length; }
@@ -129,8 +140,6 @@ public abstract class Vehicle implements TrafficObject {
 	public Location getLocation(int timestep) {
 		return new Location(this.getEdge(timestep),this.getTraveledDistance(timestep));
 	}
-	
-	
 
 	public DriverModel getDriverModel() {
 		return driverModel;
@@ -156,9 +165,9 @@ public abstract class Vehicle implements TrafficObject {
 		return distancesTraveledOnEdge[timestep];
 	}
 
-	public List<Edge> getEdgePath() {
-		return edgePath;
-	}
+//	public List<Edge> getEdgePath() {
+//		return edgePath;
+//	}
 
 	public float getSpeed(int timestep){
 		return speeds[timestep];
@@ -217,9 +226,9 @@ public abstract class Vehicle implements TrafficObject {
 	}
 
 	// DO NOT USE THIS! This is for testing *ONLY*.
-	public void setEdgePath(List<Edge> edgePath) {
-		this.edgePath = edgePath;
-	}
+//	public void setEdgePath(List<Edge> edgePath) {
+//		this.edgePath = edgePath;
+//	}
 
 	private void setSprite(String spriteName) {
 		this.spriteName = spriteName;
@@ -301,9 +310,9 @@ public abstract class Vehicle implements TrafficObject {
 	 * already been traveled, and break EVERYTHING.
 	 * @param timestep - the edges that have already been traveled at that timestep may not be changed by the pathfinder
 	 */
-	public void computePath(int timestep) {
-		this.edgePath = pathfinder.findPath(this, timestep);
-	}
+//	public void computePath(int timestep) {
+//		this.edgePath = pathfinder.findPath(this, timestep);
+//	}
 	
 	/**
 	 * Applies the acceleration provided by a DriverModel to this vehicle, setting its speed in the given timestep.
@@ -366,10 +375,13 @@ public abstract class Vehicle implements TrafficObject {
 			
 			// Check if we have reached the end of the edge we were on in the last timestep. 
 			// If yes, we need to move to the next edge.		
-			if(distanceTraveledOnEdge >= currentEdgeLength) {	
+			if(distanceTraveledOnEdge >= currentEdgeLength) {
+				
+				Node reachedNode = getEdge(timestep-1).getTo();
 				
 				// Check if the destination has been reached
-				if(edgeIdx == edgePath.size()-1) {
+//				if(edgeIdx == edgePath.size()-1) {
+				if(reachedNode.equals(goalNode)) {
 					
 					// Disallow the car from moving further
 					endTimestep = timestep;
@@ -381,7 +393,7 @@ public abstract class Vehicle implements TrafficObject {
 				} else {
 					
 					// Increment the edge index to indicate we have moved on to the next edge from our path
-					edgeIdx++;
+					edgeIdx = pf.selectEdge(reachedNode, goalNode).getId();
 					
 					// Subtract the last edge's length from the distance we have traveled, so we are only storing the
 					// distance traveled on the current (new) edge
@@ -398,8 +410,9 @@ public abstract class Vehicle implements TrafficObject {
 	/**
 	 * Returns the Edge that this vehicle is located on at the given timestep.
 	 */
-	public Edge getEdge(int timestep) {		
-		return edgePath.get(edgeIndices[timestep]);
+	public Edge getEdge(int timestep) {
+		return map.getEdges().get(edgeIndices[timestep]);
+//		return edgePath.get(edgeIndices[timestep]);
 	}
 	
 	/**
