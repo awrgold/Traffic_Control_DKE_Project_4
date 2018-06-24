@@ -141,6 +141,10 @@ public class TrafficManager {
 				map.getLocationCache().get(vehicle.getEdge(lastComputedTimestep)).get(lastComputedTimestep)
 						.add(vehicle);
 
+//			for (Vehicle vehicle : vehicles) {
+//				vehicle.determineLaneChange(lastComputedTimestep);
+//			}
+//			
 			// Set accelerations for the current timestep
 			for (Vehicle vehicle : vehicles) {
 				// Use the driver model the vehicle uses to determine the vehicle's acceleration
@@ -172,10 +176,14 @@ public class TrafficManager {
 	 * @return distance and speed of closest vehicle
 	 */
 	public DistanceAndSpeed getDistanceAndSpeedToClosestTrafficObject(Vehicle vehicle, int timestep) {
-		Edge edge = vehicle.getEdge(timestep);
-		double distance = -vehicle.getTraveledDistance(timestep);
+		return getDistanceAndSpeedToClosestTrafficObject(vehicle.getLocation(timestep), timestep);
+	}
+	
+	public DistanceAndSpeed getDistanceAndSpeedToClosestTrafficObject(Location loc, int timestep) {
+		Edge edge = loc.getEdge();
+		double distance = -loc.getDistanceOnEdge();
 
-		DistanceAndTrafficObject dnv = getClosestVehicle(vehicle, edge, distance, timestep);
+		DistanceAndTrafficObject dnv = getClosestVehicle(loc, edge, distance, timestep);
 
 		if (dnv == null)
 			return new DistanceAndSpeed(VIEW_DISTANCE, RIDICULOUS_SPEED);
@@ -191,7 +199,7 @@ public class TrafficManager {
 		return new DistanceAndSpeed(distanceToClosest, speedOfClosest);
 	}
 
-	private DistanceAndTrafficObject getClosestVehicle(Vehicle vehicle, Edge currentEdge, double distanceUntilNow,
+	private DistanceAndTrafficObject getClosestVehicle(Location loc, Edge currentEdge, double distanceUntilNow,
 			int timestep) {
 		List<Vehicle> vehiclesOnCurrentEdge = map.getLocationCache().get(currentEdge).get(timestep);
 		List<TrafficObject> staticTrafficObjectsOnCurrentEdge = map.getStaticTrafficObjectsCache().get(currentEdge);
@@ -224,7 +232,7 @@ public class TrafficManager {
 		ArrayList<DistanceAndTrafficObject> vehiclesFromFollowingEdges = new ArrayList<DistanceAndTrafficObject>();
 
 		for (Edge edge2 : currentEdge.getTo().getOutEdges())
-			vehiclesFromFollowingEdges.add(getClosestVehicle(vehicle, edge2, distanceUntilNow, timestep));
+			vehiclesFromFollowingEdges.add(getClosestVehicle(loc, edge2, distanceUntilNow, timestep));
 
 		return getClosestDistanceAndTrafficObjectFromList(vehiclesFromFollowingEdges, timestep);
 	}
@@ -717,14 +725,30 @@ public class TrafficManager {
 	}
 
 	public static void main(String[] args) {
-		TrafficManager tm = testcaseBig(1000,1000);
-
-		System.out.println("Created test case");
-
-		tm.simulate(getMaximumTimesteps());
-
-		System.out.println("Done with " + tm.lastComputedTimestep + " timesteps.");
-
-		System.out.println(getTimeAtTimestep(tm.lastComputedTimestep));
+		Node a = new Node(0,0);
+		Node b = new Node(0,1);
+		
+		Node c = new Node(100,0);
+		Node d = new Node(100,1);
+		
+		Edge one = new Edge(a,c);
+		Edge two = new Edge(b,d);
+		
+		List<Node> nodes = Arrays.asList(a,b,c,d);
+		List<Edge> edges = Arrays.asList(one,two);
+		
+		Map map = new Map(nodes,edges);
+		
+		int x = 0;
+	
+//		TrafficManager tm = testcaseBig(1000,1000);
+//
+//		System.out.println("Created test case");
+//
+//		tm.simulate(getMaximumTimesteps());
+//
+//		System.out.println("Done with " + tm.lastComputedTimestep + " timesteps.");
+//
+//		System.out.println(getTimeAtTimestep(tm.lastComputedTimestep));
 	}
 }
