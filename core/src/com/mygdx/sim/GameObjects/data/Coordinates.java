@@ -42,6 +42,10 @@ public class Coordinates {
     	return new Coordinates(Math.abs(this.x-x),Math.abs(this.y-y));
     }
     
+    public float distance(Coordinates b) {
+    	return (float) Math.sqrt(Math.pow((x-b.x), 2)+ Math.pow((y-b.x), 2));
+    }
+    
     public float getX() {
     	return x;
     }

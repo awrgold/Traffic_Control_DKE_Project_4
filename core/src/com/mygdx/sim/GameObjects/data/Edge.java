@@ -1,7 +1,9 @@
 package com.mygdx.sim.GameObjects.data;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.mygdx.sim.GameObjects.Stoplight;
 
@@ -14,6 +16,9 @@ public class Edge implements Comparable<Edge> {
     // Edge Lists
     private List<Edge> neighbors;
     private List<Edge> toEdges;
+    
+    private Set<Edge> neighboringLanes;
+    
     
     // Properties
     private int speedLimit;
@@ -63,6 +68,16 @@ public class Edge implements Comparable<Edge> {
         
         this.toEdges = new ArrayList<Edge>();
         this.id = lastGivenId++;
+        
+        this.neighboringLanes = new HashSet<Edge>();
+    }
+    
+    public void addNeighboringLane(Edge lane){
+    	neighboringLanes.add(lane);
+    }
+    
+    public Set<Edge> getNeighboringLanes(){
+    	return neighboringLanes;
     }
     
     public int hashCode() {

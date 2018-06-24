@@ -71,6 +71,21 @@ public class Map {
 		setDestinations();
 		
 		calculateMapDimensions();
+		
+		for(int i = 0 ; i < edges.size(); i++) {
+			Edge a = edges.get(i);
+			for(int j = 0; j < edges.size(); j ++ ) {
+				Edge b = edges.get(j);
+				
+				float distanceBetweenFroms = a.getFrom().getLocation().distance(b.getFrom().getLocation());
+				float distanceBetweenTos = a.getTo().getLocation().distance(b.getTo().getLocation());
+				
+				if(distanceBetweenFroms < 5 && distanceBetweenTos < 5) {
+					a.addNeighboringLane(b);
+					b.addNeighboringLane(a);
+				}
+			}
+		}
 
 		//setIntersections();
 
