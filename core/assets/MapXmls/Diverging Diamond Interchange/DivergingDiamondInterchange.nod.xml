@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 6/23/2018 10:42:44 PM by Netedit Version 0.32.0
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
+
+    <input>
+        <sumo-net-file value="C:\Users\abeld\Downloads\Intersection\Diverging%20Diamond%20Interchange.net.xml"/>
+    </input>
+
+    <output>
+        <output-file value="C:\Users\abeld\Downloads\Intersection\Diverging%20Diamond%20Interchange.net.xml"/>
+        <plain-output-prefix value="C:\Users\abeld\Downloads\Intersection\Diverging%20Diamond%20Interchange\DivergingDiamondInterchange"/>
+    </output>
+
+    <processing>
+        <no-turnarounds value="true"/>
+        <offset.disable-normalization value="true"/>
+        <lefthand value="false"/>
+        <junctions.corner-detail value="0"/>
+        <rectangular-lane-cut value="false"/>
+        <walkingareas value="false"/>
+    </processing>
+
+</configuration>
+-->
+
+<nodes version="0.27" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/nodes_file.xsd">
+    <location netOffset="0.00,0.00" convBoundary="-620.00,-570.00,800.00,780.00" origBoundary="-10000000000.00,-10000000000.00,10000000000.00,10000000000.00" projParameter="!"/>
+
+    <node id="east-out1" x="800.00" y="70.00" type="dead_end"/>
+    <node id="east-out2" x="800.00" y="60.00" type="dead_end"/>
+    <node id="east-out3" x="800.00" y="50.00" type="dead_end"/>
+    <node id="east1" x="800.00" y="80.00" type="dead_end"/>
+    <node id="east2" x="800.00" y="90.00" type="dead_end"/>
+    <node id="east3" x="800.00" y="100.00" type="dead_end"/>
+    <node id="gneJ10" x="40.00" y="250.00" type="dead_end"/>
+    <node id="gneJ102" x="280.00" y="80.00" type="priority"/>
+    <node id="gneJ103" x="280.00" y="90.00" type="priority"/>
+    <node id="gneJ104" x="280.00" y="100.00" type="priority"/>
+    <node id="gneJ11" x="40.00" y="-100.00" type="dead_end"/>
+    <node id="gneJ12" x="30.00" y="250.00" type="dead_end"/>
+    <node id="gneJ134" x="-170.00" y="50.00" type="priority"/>
+    <node id="gneJ135" x="-170.00" y="60.00" type="priority"/>
+    <node id="gneJ136" x="-170.00" y="70.00" type="priority"/>
+    <node id="gneJ14" x="-120.00" y="50.00" type="priority"/>
+    <node id="gneJ141" x="50.00" y="300.00" type="priority"/>
+    <node id="gneJ142" x="40.00" y="300.00" type="priority"/>
+    <node id="gneJ143" x="30.00" y="300.00" type="priority"/>
+    <node id="gneJ145" x="80.00" y="-150.00" type="priority"/>
+    <node id="gneJ146" x="70.00" y="-150.00" type="priority"/>
+    <node id="gneJ147" x="60.00" y="-150.00" type="priority"/>
+    <node id="gneJ15" x="230.00" y="50.00" type="priority"/>
+    <node id="gneJ156" x="-620.00" y="100.00" type="dead_end"/>
+    <node id="gneJ16" x="-120.00" y="60.00" type="priority"/>
+    <node id="gneJ165" x="30.00" y="-100.00" type="dead_end"/>
+    <node id="gneJ17" x="230.00" y="60.00" type="priority"/>
+    <node id="gneJ18" x="-120.00" y="70.00" type="priority"/>
+    <node id="gneJ19" x="230.00" y="70.00" type="priority"/>
+    <node id="gneJ2" x="60.00" y="-100.00" type="dead_end"/>
+    <node id="gneJ20" x="230.00" y="80.00" type="priority"/>
+    <node id="gneJ207" x="60.00" y="250.00" type="dead_end"/>
+    <node id="gneJ208" x="50.00" y="-100.00" type="dead_end"/>
+    <node id="gneJ21" x="-120.00" y="80.00" type="priority"/>
+    <node id="gneJ22" x="230.00" y="90.00" type="priority"/>
+    <node id="gneJ23" x="-120.00" y="90.00" type="dead_end"/>
+    <node id="gneJ24" x="230.00" y="100.00" type="priority"/>
+    <node id="gneJ25" x="-120.00" y="100.00" type="priority"/>
+    <node id="gneJ38" x="770.00" y="50.00" type="priority"/>
+    <node id="gneJ39" x="770.00" y="60.00" type="priority"/>
+    <node id="gneJ4" x="70.00" y="-100.00" type="dead_end"/>
+    <node id="gneJ40" x="770.00" y="70.00" type="priority"/>
+    <node id="gneJ44" x="-590.00" y="100.00" type="priority"/>
+    <node id="gneJ45" x="-120.00" y="90.00" type="dead_end"/>
+    <node id="gneJ46" x="-590.00" y="90.00" type="priority"/>
+    <node id="gneJ47" x="-590.00" y="80.00" type="priority"/>
+    <node id="gneJ5" x="70.00" y="250.00" type="dead_end"/>
+    <node id="gneJ52" x="-200.00" y="70.00" type="priority"/>
+    <node id="gneJ54" x="-200.00" y="60.00" type="priority"/>
+    <node id="gneJ56" x="-200.00" y="50.00" type="priority"/>
+    <node id="gneJ58" x="310.00" y="80.00" type="priority"/>
+    <node id="gneJ6" x="80.00" y="-100.00" type="dead_end"/>
+    <node id="gneJ60" x="310.00" y="90.00" type="priority"/>
+    <node id="gneJ62" x="310.00" y="100.00" type="priority"/>
+    <node id="gneJ63" x="30.00" y="-540.00" type="priority"/>
+    <node id="gneJ64" x="40.00" y="-540.00" type="priority"/>
+    <node id="gneJ65" x="50.00" y="-540.00" type="priority"/>
+    <node id="gneJ67" x="60.00" y="-180.00" type="priority"/>
+    <node id="gneJ69" x="70.00" y="-180.00" type="priority"/>
+    <node id="gneJ7" x="80.00" y="250.00" type="dead_end"/>
+    <node id="gneJ71" x="80.00" y="-180.00" type="priority"/>
+    <node id="gneJ73" x="80.00" y="750.00" type="priority"/>
+    <node id="gneJ74" x="70.00" y="750.00" type="priority"/>
+    <node id="gneJ75" x="60.00" y="750.00" type="priority"/>
+    <node id="gneJ77" x="50.00" y="330.00" type="priority"/>
+    <node id="gneJ79" x="40.00" y="330.00" type="priority"/>
+    <node id="gneJ8" x="50.00" y="250.00" type="dead_end"/>
+    <node id="gneJ81" x="30.00" y="330.00" type="priority"/>
+    <node id="north-out1" x="60.00" y="780.00" type="dead_end"/>
+    <node id="north-out2" x="70.00" y="780.00" type="dead_end"/>
+    <node id="north-out3" x="80.00" y="780.00" type="dead_end"/>
+    <node id="north1" x="50.00" y="780.00" type="dead_end"/>
+    <node id="north2" x="40.00" y="780.00" type="dead_end"/>
+    <node id="north3" x="30.00" y="780.00" type="dead_end"/>
+    <node id="south-out1" x="50.00" y="-570.00" type="dead_end"/>
+    <node id="south-out2" x="40.00" y="-570.00" type="dead_end"/>
+    <node id="south-out3" x="30.00" y="-570.00" type="dead_end"/>
+    <node id="south1" x="60.00" y="-570.00" type="dead_end"/>
+    <node id="south2" x="70.00" y="-570.00" type="dead_end"/>
+    <node id="south3" x="80.00" y="-570.00" type="dead_end"/>
+    <node id="west-out1" x="-620.00" y="80.00" type="dead_end"/>
+    <node id="west-out2" x="-620.00" y="90.00" type="dead_end"/>
+    <node id="west-out3" x="-620.00" y="100.00" type="dead_end"/>
+    <node id="west1" x="-620.00" y="70.00" type="dead_end"/>
+    <node id="west2" x="-620.00" y="60.00" type="dead_end"/>
+    <node id="west3" x="-620.00" y="50.00" type="dead_end"/>
+</nodes>
