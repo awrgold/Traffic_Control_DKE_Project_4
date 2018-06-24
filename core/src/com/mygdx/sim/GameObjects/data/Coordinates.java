@@ -43,7 +43,7 @@ public class Coordinates {
     }
     
     public float distance(Coordinates b) {
-    	return (float) Math.sqrt(Math.pow((x-b.x), 2)+ Math.pow((y-b.x), 2));
+    	return (float) Math.sqrt(Math.pow((x-b.x), 2)+ Math.pow((y-b.y), 2));
     }
     
     public float getX() {

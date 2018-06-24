@@ -75,6 +75,9 @@ public class Map {
 		for(int i = 0 ; i < edges.size(); i++) {
 			Edge a = edges.get(i);
 			for(int j = 0; j < edges.size(); j ++ ) {
+				if(i==j)
+					continue;
+
 				Edge b = edges.get(j);
 				
 				float distanceBetweenFroms = a.getFrom().getLocation().distance(b.getFrom().getLocation());
@@ -128,19 +131,19 @@ public class Map {
 	}
 
 	public void setSpawnPoints(){
-		for (Node n : nodes){
-			if (n.getXmlID().contains("east") || n.getXmlID().contains("west") || n.getXmlID().contains("north") || n.getXmlID().contains("south")){
-				spawnPoints.add(n);
-			}
-		}
+//		for (Node n : nodes){
+//			if (n.getXmlID().contains("east") || n.getXmlID().contains("west") || n.getXmlID().contains("north") || n.getXmlID().contains("south")){
+//				spawnPoints.add(n);
+//			}
+//		}
 	}
 
 	public void setDestinations(){
-		for (Node n : nodes){
-			if (n.getXmlID().contains("eastG1") || n.getXmlID().contains("westG3") || n.getXmlID().contains("northG3") || n.getXmlID().contains("southG1")){
-				destinations.add(n);
-			}
-		}
+//		for (Node n : nodes){
+//			if (n.getXmlID().contains("eastG1") || n.getXmlID().contains("westG3") || n.getXmlID().contains("northG3") || n.getXmlID().contains("southG1")){
+//				destinations.add(n);
+//			}
+//		}
 		System.out.println("There are " + destinations.size() + " elements in destinations");
 	}
 
