@@ -39,8 +39,8 @@ public class TrafficManager {
 	// Sampling frequency. Larger number means higher fidelity of the model, but
 	// also more computation
 	public final static int TIMESTEPS_PER_SECOND = 1;
-	private final static int VIEW_DISTANCE = 500;
-	private final static int RIDICULOUS_SPEED = 1000;
+	public final static int VIEW_DISTANCE = 500;
+	public final static int RIDICULOUS_SPEED = 1000;
 
 	// Temporary map bounds
 	public final static int MAP_X_DIM = 100000;
@@ -725,17 +725,24 @@ public class TrafficManager {
 	}
 
 	public static void main(String[] args) {
+		Node bichael = new Node(-2,0);
+		Node micycle = new Node(98,0);
+		
 		Node a = new Node(0,0);
-		Node b = new Node(0,1);
+		Node b = new Node(0,3);
+		Node f = new Node(0,6);
 		
 		Node c = new Node(100,0);
-		Node d = new Node(100,1);
+		Node d = new Node(100,3);
+		Node g = new Node(100,6);
 		
 		Edge one = new Edge(a,c);
 		Edge two = new Edge(b,d);
+		Edge three = new Edge(f,g);
+		Edge joke = new Edge(bichael,micycle);
 		
-		List<Node> nodes = Arrays.asList(a,b,c,d);
-		List<Edge> edges = Arrays.asList(one,two);
+		List<Node> nodes = Arrays.asList(a,b,c,d,f,g,bichael,micycle);
+		List<Edge> edges = Arrays.asList(one,two,three,joke);
 		
 		Map map = new Map(nodes,edges);
 		

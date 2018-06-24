@@ -14,6 +14,10 @@ public class DynamicPathfinder {
 		this.calculator = new DistanceMatrixCalculator(graph);
 	}
 	
+	public float[][] getDistances(){
+		return calculator.getDistances();
+	}
+	
 	public Edge selectEdge(Node reached, Node goal) {
 		List<Edge> potentialEdges = reached.getOutEdges();
 		

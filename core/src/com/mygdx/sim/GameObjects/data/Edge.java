@@ -19,6 +19,8 @@ public class Edge implements Comparable<Edge> {
     
     private Set<Edge> neighboringLanes;
     
+    private Set<Edge> allAlignedLanes;
+    
     
     // Properties
     private int speedLimit;
@@ -51,6 +53,7 @@ public class Edge implements Comparable<Edge> {
         
 
         this.neighboringLanes = new HashSet<Edge>();
+        this.allAlignedLanes = new HashSet<Edge>();
         
         this.id = lastGivenId++;
     }
@@ -75,7 +78,14 @@ public class Edge implements Comparable<Edge> {
     
     public void addNeighboringLane(Edge lane){
     	neighboringLanes.add(lane);
+    	
+    	this.allAlignedLanes.add(lane);
+    	
+    	for(Edge alignedLane: allAlignedLanes)
+    		alignedLane.allAlignedLanes.addAll(allAlignedLanes);
     }
+    
+    public Set<Edge> getAllAlignedLanes(){ return allAlignedLanes; }
     
     public Set<Edge> getNeighboringLanes(){
     	return neighboringLanes;
