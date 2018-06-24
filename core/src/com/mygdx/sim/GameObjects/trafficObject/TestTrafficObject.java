@@ -14,49 +14,42 @@ public class TestTrafficObject implements TrafficObject {
 
 	@Override
 	public TrafficObjectState getState(int timestep) {
-		return new TrafficObjectState(null, location, 0, false, (timestep < 85));
+		return new TrafficObjectState(getCoordinates(timestep), getLocation(timestep), getSpeed(timestep), isVisibleInVisualization(timestep), isVisibleToDrivers(timestep));
 	}
 
 	@Override
 	public Coordinates getCoordinates(int timestep) {
-		// TODO Auto-generated method stub
-		return null;
+		return location.getEdge().getLocationIfTraveledDistance(location.getDistanceOnEdge());
 	}
 
 	@Override
 	public Location getLocation(int timestep) {
-		// TODO Auto-generated method stub
-		return null;
+		return location;
 	}
 
 	@Override
 	public float getDistanceOnEdge(int timestep) {
-		// TODO Auto-generated method stub
-		return 0;
+		return location.getDistanceOnEdge();
 	}
 
 	@Override
 	public Edge getEdge(int timestep) {
-		// TODO Auto-generated method stub
-		return null;
+		return location.getEdge();
 	}
 
 	@Override
 	public float getSpeed(int timestep) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public boolean isVisibleInVisualization(int timestep) {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isVisibleToDrivers(int timestep) {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 	
 

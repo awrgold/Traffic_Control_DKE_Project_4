@@ -20,27 +20,27 @@ public class World {
 	public HashMap<String, Texture> roadTextures;
 
 	public World() {
-
-		// Initialise Vehicle Sprites
-		this.initVehicleSprites();
-		
-		// Initialise Road Textures
-		this.initRoadTextures();
+//
+//		// Initialise Vehicle Sprites
+//		this.initVehicleSprites();
+//		
+//		// Initialise Road Textures
+//		this.initRoadTextures();
 	}
 
 	private void initVehicleSprites() {
 
 		// Load Atlas
-		vehicleSpritesAtlas = new TextureAtlas(Gdx.files.internal("resources/vehicles/vehicles.atlas"));
-
-		// Create HashMap
-		vehicleSprites = new HashMap<String, Sprite>();
-
-		for (AtlasRegion atlasRegion : vehicleSpritesAtlas.getRegions()) {
-
-			// Map Name to Sprite in HashMap
-			vehicleSprites.put(atlasRegion.name, vehicleSpritesAtlas.createSprite(atlasRegion.name));
-		}
+//		vehicleSpritesAtlas = new TextureAtlas(Gdx.files.internal("resources/vehicles/vehicles.atlas"));
+//
+//		// Create HashMap
+//		vehicleSprites = new HashMap<String, Sprite>();
+//
+//		for (AtlasRegion atlasRegion : vehicleSpritesAtlas.getRegions()) {
+//
+//			// Map Name to Sprite in HashMap
+//			vehicleSprites.put(atlasRegion.name, vehicleSpritesAtlas.createSprite(atlasRegion.name));
+//		}
 	}
 	
 	public void initRoadTextures() {

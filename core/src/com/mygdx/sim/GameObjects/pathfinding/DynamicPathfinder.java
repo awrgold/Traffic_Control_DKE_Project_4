@@ -19,7 +19,10 @@ public class DynamicPathfinder {
 	}
 	
 	public Edge selectEdge(Node reached, Node goal) {
-		List<Edge> potentialEdges = reached.getOutEdges();
+		List<Edge> potentialEdges = reached.getOutEdges();		
+
+		if(potentialEdges.size() == 0)
+			return null;
 		
 		Edge bestEdge = null;
 		float bestEdgeScore = Integer.MAX_VALUE;
@@ -37,6 +40,11 @@ public class DynamicPathfinder {
 				bestEdgeScore = currentEdgeScore;
 			}
 				
+		}
+		
+		if(bestEdge == null) {
+			int idx = (int)(Math.random()*potentialEdges.size());
+			bestEdge = potentialEdges.get(idx);
 		}
 		
 		return bestEdge;

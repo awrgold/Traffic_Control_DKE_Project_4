@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.sim.GameObjects.Stoplight;
+import com.mygdx.sim.GameObjects.pathfinding.DynamicPathfinder;
 import com.mygdx.sim.GameObjects.trafficObject.TrafficObject;
 import com.mygdx.sim.GameObjects.trafficObject.vehicle.Vehicle;
 
@@ -35,6 +36,8 @@ public class Map {
 
 	HashMap<Edge, ArrayList<ArrayList<Vehicle>>> locationCache;
 	HashMap<Edge, ArrayList<TrafficObject>> staticTrafficObjectsCache;
+	
+	public DynamicPathfinder pf;
 
 	// GUI Map Variables
 	private Rectangle bounds;
@@ -109,6 +112,8 @@ public class Map {
 
 		// throw new runtime exception if ID doesn't match index
 		checkIDs();
+		
+		this.pf = new DynamicPathfinder(this);
 
 	}
 
