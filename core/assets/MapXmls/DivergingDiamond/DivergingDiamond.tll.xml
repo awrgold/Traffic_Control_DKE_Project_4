@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 6/23/2018 10:40:32 PM by Netedit Version 0.32.0
+<!-- generated on 6/25/2018 12:20:16 PM by Netedit Version 0.32.0
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
 
     <input>
-        <sumo-net-file value="C:\Users\abeld\Downloads\Intersection\continuousflow.net.xml"/>
+        <sumo-net-file value="C:\Users\abeld\Downloads\Intersection\DivergingDiamond\DivergingDiamond.net.xml"/>
     </input>
 
     <output>
-        <output-file value="C:\Users\abeld\Downloads\DivergingDiamond.net.xml"/>
-        <plain-output-prefix value="C:\Users\abeld\Downloads\DivergingDiamond\DivergingDiamond"/>
+        <output-file value="C:\Users\abeld\Downloads\Intersection\DivergingDiamond\DivergingDiamond.net.xml"/>
+        <plain-output-prefix value="C:\Users\abeld\Downloads\Intersection\DivergingDiamond\DivergingDiamond"/>
     </output>
 
     <processing>

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 6/23/2018 10:41:58 PM by Netedit Version 0.32.0
+<!-- generated on 6/25/2018 12:23:51 PM by Netedit Version 0.32.0
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
 
     <input>
-        <sumo-net-file value="C:\Users\abeld\Downloads\Intersection\normal%20interchange.net.xml"/>
+        <sumo-net-file value="C:\Users\abeld\Downloads\Intersection\Normal%20Interchange\normal%20interchange.net.xml"/>
     </input>
 
     <output>
-        <output-file value="C:\Users\abeld\Downloads\Intersection\normal%20interchange.net.xml"/>
+        <output-file value="C:\Users\abeld\Downloads\Intersection\Normal%20Interchange\normal%20interchange.net.xml"/>
         <plain-output-prefix value="C:\Users\abeld\Downloads\Intersection\Normal%20Interchange\NormalInterchange"/>
     </output>
 

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 6/23/2018 10:44:09 PM by Netedit Version 0.32.0
+<!-- generated on 6/25/2018 12:19:50 PM by Netedit Version 0.32.0
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
 
     <input>
-        <sumo-net-file value="C:\Users\abeld\Downloads\Intersection\diamondInterchangeSliplanes.net.xml"/>
+        <sumo-net-file value="C:\Users\abeld\Downloads\Intersection\DiamondSliplanes\diamondInterchangeSliplanes.net.xml"/>
     </input>
 
     <output>
-        <output-file value="C:\Users\abeld\Downloads\Intersection\diamondInterchangeSliplanes.net.xml"/>
+        <output-file value="C:\Users\abeld\Downloads\Intersection\DiamondSliplanes\diamondInterchangeSliplanes.net.xml"/>
         <plain-output-prefix value="C:\Users\abeld\Downloads\Intersection\DiamondSliplanes\DiamondSliplanes"/>
     </output>
 
@@ -80,7 +80,9 @@
     <node id="gneJ226" x="60.00" y="10.00" type="priority"/>
     <node id="gneJ227" x="70.00" y="10.00" type="priority"/>
     <node id="gneJ228" x="80.00" y="10.00" type="priority"/>
+    <node id="gneJ229" x="800.00" y="70.00" type="dead_end"/>
     <node id="gneJ23" x="-120.00" y="90.00" type="dead_end"/>
+    <node id="gneJ230" x="60.00" y="750.00" type="dead_end"/>
     <node id="gneJ24" x="230.00" y="100.00" type="priority"/>
     <node id="gneJ25" x="-120.00" y="100.00" type="priority"/>
     <node id="gneJ38" x="770.00" y="50.00" type="priority"/>

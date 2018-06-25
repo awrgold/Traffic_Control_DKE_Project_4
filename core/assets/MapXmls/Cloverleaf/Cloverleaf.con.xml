@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 6/23/2018 10:43:08 PM by Netedit Version 0.32.0
+<!-- generated on 6/25/2018 12:18:45 PM by Netedit Version 0.32.0
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
 
     <input>
-        <sumo-net-file value="C:\Users\abeld\Downloads\Intersection\cloverleaf%20-%20hand.net.xml"/>
+        <sumo-net-file value="C:\Users\abeld\Downloads\Intersection\Cloverleaf\cloverleaf%20-%20hand.net.xml"/>
     </input>
 
     <output>
-        <output-file value="C:\Users\abeld\Downloads\Intersection\cloverleaf%20-%20hand.net.xml"/>
+        <output-file value="C:\Users\abeld\Downloads\Intersection\Cloverleaf\cloverleaf%20-%20hand.net.xml"/>
         <plain-output-prefix value="C:\Users\abeld\Downloads\Intersection\Cloverleaf\Cloverleaf"/>
     </output>
 
@@ -178,6 +178,14 @@
 
     <connection from="gneE173" to="gneE153" fromLane="0" toLane="0"/>
 
+    <connection from="gneE174" to="gneE216" fromLane="0" toLane="0"/>
+
+    <connection from="gneE176" to="gneE217" fromLane="0" toLane="0"/>
+
+    <connection from="gneE178"/>
+
+    <connection from="gneE179" to="gneE216" fromLane="0" toLane="0"/>
+
     <connection from="gneE18" to="gneE58" fromLane="0" toLane="0"/>
 
     <connection from="gneE19" to="gneE20" fromLane="0" toLane="0"/>
@@ -187,7 +195,28 @@
 
     <connection from="gneE20" to="gneE21" fromLane="0" toLane="0"/>
 
+    <connection from="gneE204" to="gneE158" fromLane="0" toLane="0"/>
+
+    <connection from="gneE205" to="gneE160" fromLane="0" toLane="0"/>
+
+    <connection from="gneE206" to="gneE103" fromLane="0" toLane="0"/>
+
+    <connection from="gneE207" to="gneE106" fromLane="0" toLane="0"/>
+
     <connection from="gneE21" to="gneE39" fromLane="0" toLane="0"/>
+
+    <connection from="gneE214" to="gneE154" fromLane="0" toLane="0"/>
+
+    <connection from="gneE215" to="gneE152" fromLane="0" toLane="0"/>
+
+    <connection from="gneE216" to="gneE176" fromLane="0" toLane="0"/>
+
+    <connection from="gneE217" to="gneE180" fromLane="0" toLane="0"/>
+    <connection from="gneE217" to="gneE174" fromLane="0" toLane="0"/>
+
+    <connection from="gneE218" to="gneE143" fromLane="0" toLane="0"/>
+
+    <connection from="gneE219" to="gneE145" fromLane="0" toLane="0"/>
 
     <connection from="gneE23" to="gneE24" fromLane="0" toLane="0"/>
     <connection from="gneE23" to="gneE70" fromLane="0" toLane="0"/>
@@ -207,15 +236,19 @@
 
     <connection from="gneE33" to="gneE189" fromLane="0" toLane="0"/>
     <connection from="gneE33" to="gneE194" fromLane="0" toLane="0"/>
+    <connection from="gneE33" to="gneE213" fromLane="0" toLane="0"/>
 
     <connection from="gneE34" to="gneE193" fromLane="0" toLane="0"/>
     <connection from="gneE34" to="gneE190" fromLane="0" toLane="0"/>
+    <connection from="gneE34" to="gneE210" fromLane="0" toLane="0"/>
 
+    <connection from="gneE35" to="gneE211" fromLane="0" toLane="0"/>
     <connection from="gneE35" to="gneE192" fromLane="0" toLane="0"/>
     <connection from="gneE35" to="gneE191" fromLane="0" toLane="0"/>
 
     <connection from="gneE39" to="gneE183" fromLane="0" toLane="0"/>
     <connection from="gneE39" to="gneE185" fromLane="0" toLane="0"/>
+    <connection from="gneE39" to="gneE222" fromLane="0" toLane="0"/>
 
     <connection from="gneE4" to="gneE53" fromLane="0" toLane="0"/>
 
@@ -223,9 +256,11 @@
     <connection from="gneE40" to="gneE182" fromLane="0" toLane="0"/>
     <connection from="gneE40" to="gneE187" fromLane="0" toLane="0"/>
 
+    <connection from="gneE41" to="gneE223" fromLane="0" toLane="0"/>
     <connection from="gneE41" to="gneE186" fromLane="0" toLane="0"/>
     <connection from="gneE41" to="gneE181" fromLane="0" toLane="0"/>
 
+    <connection from="gneE45" to="gneE219" fromLane="0" toLane="0"/>
     <connection from="gneE45" to="gneE166" fromLane="0" toLane="0"/>
     <connection from="gneE45" to="gneE142" fromLane="0" toLane="0"/>
 
@@ -235,7 +270,9 @@
 
     <connection from="gneE47" to="gneE140" fromLane="0" toLane="0"/>
     <connection from="gneE47" to="gneE169" fromLane="0" toLane="0"/>
+    <connection from="gneE47" to="gneE218" fromLane="0" toLane="0"/>
 
+    <connection from="gneE48" to="gneE207" fromLane="0" toLane="0"/>
     <connection from="gneE48" to="gneE102" fromLane="0" toLane="0"/>
     <connection from="gneE48" to="gneE96" fromLane="0" toLane="0"/>
 
@@ -247,17 +284,21 @@
 
     <connection from="gneE50" to="gneE98" fromLane="0" toLane="0"/>
     <connection from="gneE50" to="gneE99" fromLane="0" toLane="0"/>
+    <connection from="gneE50" to="gneE206" fromLane="0" toLane="0"/>
 
     <connection from="gneE51" to="gneE199" fromLane="0" toLane="0"/>
     <connection from="gneE51" to="gneE200" fromLane="0" toLane="0"/>
+    <connection from="gneE51" to="gneE224" fromLane="0" toLane="0"/>
 
     <connection from="gneE52" to="gneE201" fromLane="0" toLane="0"/>
     <connection from="gneE52" to="gneE198" fromLane="0" toLane="0"/>
     <connection from="gneE52" to="gneE203" fromLane="0" toLane="0"/>
 
+    <connection from="gneE53" to="gneE225" fromLane="0" toLane="0"/>
     <connection from="gneE53" to="gneE202" fromLane="0" toLane="0"/>
     <connection from="gneE53" to="gneE197" fromLane="0" toLane="0"/>
 
+    <connection from="gneE54" to="gneE204" fromLane="0" toLane="0"/>
     <connection from="gneE54" to="gneE165" fromLane="0" toLane="0"/>
     <connection from="gneE54" to="gneE157" fromLane="0" toLane="0"/>
 
@@ -267,6 +308,7 @@
 
     <connection from="gneE56" to="gneE155" fromLane="0" toLane="0"/>
     <connection from="gneE56" to="gneE162" fromLane="0" toLane="0"/>
+    <connection from="gneE56" to="gneE205" fromLane="0" toLane="0"/>
 
     <connection from="gneE58" to="gneE176" fromLane="0" toLane="0"/>
     <connection from="gneE58" to="gneE177" fromLane="0" toLane="0"/>
@@ -280,6 +322,7 @@
     <connection from="gneE60" to="gneE180" fromLane="0" toLane="0"/>
     <connection from="gneE60" to="gneE174" fromLane="0" toLane="0"/>
 
+    <connection from="gneE61" to="gneE215" fromLane="0" toLane="0"/>
     <connection from="gneE61" to="gneE173" fromLane="0" toLane="0"/>
     <connection from="gneE61" to="gneE148" fromLane="0" toLane="0"/>
 
@@ -289,6 +332,7 @@
 
     <connection from="gneE63" to="gneE150" fromLane="0" toLane="0"/>
     <connection from="gneE63" to="gneE170" fromLane="0" toLane="0"/>
+    <connection from="gneE63" to="gneE214" fromLane="0" toLane="0"/>
 
     <connection from="gneE64" to="gneE69" fromLane="0" toLane="0"/>
 
