@@ -1,0 +1,6 @@
+<configuration>
+  <input>
+    <net-file value="Cloverleaf.net.xml"/>
+    <route-files value="Highway.rou.xml"/>
+  </input>
+</configuration>
