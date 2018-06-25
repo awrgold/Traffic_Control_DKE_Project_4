@@ -37,7 +37,7 @@ public class UI {
 	public UI() {
 
 		// Create Atlas
-		atlas = new TextureAtlas(Gdx.files.internal("resources/skins/ui.atlas"));
+		atlas = new TextureAtlas(Gdx.files.internal("assets/resources/skins/ui.atlas"));
 
 		// Initialise Components
 		this.initSkin();
@@ -54,7 +54,7 @@ public class UI {
 		skin.addRegions(atlas);
 
 		// Read Skin
-		skin.load(Gdx.files.internal("resources/skins/ui.json"));
+		skin.load(Gdx.files.internal("assets/resources/skins/ui.json"));
 	}
 
 	private void initMenuUI() {
@@ -63,7 +63,7 @@ public class UI {
 	}
 	
 	private void initSounds() {
-		sound_click = Gdx.audio.newSound(Gdx.files.internal("resources/sounds/click.ogg"));
+		sound_click = Gdx.audio.newSound(Gdx.files.internal("assets/resources/sounds/click.ogg"));
 	}
 	
 	private void initMisc() {

@@ -1,0 +1,93 @@
+ui.png
+size: 500, 300
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+button
+	rotate: false
+	xy: 0, 0
+	size: 16, 16
+	pad: 7, 7, 7, 7
+	orig: 0, 0
+	offset: 0, 0
+	index: -1
+textField
+	rotate: false
+	xy: 16, 0
+	size: 16, 16
+	pad: 7, 7, 7, 7
+	orig: 0, 0
+	offset: 0, 0
+	index: -1
+textField-selection
+	rotate: false
+	xy: 32, 0
+	size: 16, 16
+	pad: 7, 7, 7, 7
+	orig: 0, 0
+	offset: 0, 0
+	index: -1
+sidebar-background
+	rotate: false
+	xy: 48, 0
+	size: 16, 16
+	pad: 5, 5, 5, 5
+	orig: 0, 0
+	offset: 0, 0
+	index: -1
+all-scroll
+	rotate: false
+	xy: 64, 0
+	size: 16, 16
+	orig: 0, 0
+	offset: 0, 0
+	index: -1
+play-button
+	rotate: false
+	xy: 80, 0
+	size: 16, 16
+	orig: 0, 0
+	offset: 0, 0
+	index: -1
+pause-button
+	rotate: false
+	xy: 96, 0
+	size: 16, 16
+	orig: 0, 0
+	offset: 0, 0
+	index: -1
+node
+	rotate: false
+	xy: 112, 0
+	size: 16, 16
+	orig: 0, 0
+	offset: 0, 0
+	index: -1
+node-intersection
+	rotate: false
+	xy: 128, 0
+	size: 16, 16
+	orig: 0, 0
+	offset: 0, 0
+	index: -1
+trafficlight-green
+	rotate: false
+	xy: 144, 0
+	size: 16, 16
+	orig: 0, 0
+	offset: 0, 0
+	index: -1
+trafficlight-yellow
+	rotate: false
+	xy: 160, 0
+	size: 16, 16
+	orig: 0, 0
+	offset: 0, 0
+	index: -1
+trafficlight-red
+	rotate: false
+	xy: 176, 0
+	size: 16, 16
+	orig: 0, 0
+	offset: 0, 0
+	index: -1
