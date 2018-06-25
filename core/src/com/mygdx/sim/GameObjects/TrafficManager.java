@@ -38,7 +38,7 @@ public class TrafficManager {
 	private final static Time DURATION = new Time(1, 0, 0);
 
 	// Sampling frequency. Larger number means higher fidelity of the model, but
-	// also more computation
+	// also more computation. !!!DO NOT CHANGE FROM 1!!!
 	public final static int TIMESTEPS_PER_SECOND = 1;
 	private final static int VIEW_DISTANCE = 500;
 	private final static int RIDICULOUS_SPEED = 100;
@@ -49,8 +49,10 @@ public class TrafficManager {
 	public final static int GRID_FACTOR = 2;
 	public final static int vehicleCount = 1000;
 	public final static int numUrbanCenters = 5;
-	public final static double mean = 0.2;
-	public final static double lambda = 1.0;
+	// Mean IA time of 4 seconds with 1 hour simulation is an average of 900 cars in a 1 hour simulation
+	public final static Time meanInterarrivalTime = new Time(0, 0, 4);
+	// Mean 3.6 in a 1 hour simulation is an average of 1000 cars
+	public final static double mean = 3.6;
     public static LightController lightController;
 
 	private Map map;
@@ -353,8 +355,8 @@ public class TrafficManager {
 	private static List createCars(List<Node> spawns, List<Node> destinations, Map map){
 		List cars = new ArrayList();
 
-		int previousArrivalTime = 1;
-		for (int i = 0; i < vehicleCount; i++) {
+		int previousArrivalTime = 0;
+		while (previousArrivalTime < getMaximumTimesteps()) {
 
 //			Collections.sort(destinations, new SortNode());
 
@@ -374,70 +376,40 @@ public class TrafficManager {
 			 * Need to give it a timestep based on a rush-hour based model
 			 */
 
-//			previousArrivalTime = Math.abs(generateNextPoissonArrival(previousArrivalTime));
 //			System.out.println("!!! Next arrival time: " + previousArrivalTime);
 
-			// Build each car with their given destination and a randomly chosen spawn time
-			// TODO: Make cars arrive via rush hour and not uniformly.
+			// Build each car with their given destination via a Poisson arrival process
+			previousArrivalTime = generateNextArrivalTime(previousArrivalTime);
 			int r = (int)(Math.round(Math.random()*getMaximumTimesteps()));
-			Car car = new Car.Builder(start, end, map).setStartTimestep(r).setDriverModel(new IntelligentDriverModelPlus()).build();
+			Car car = new Car.Builder(start, end, map).setStartTimestep(previousArrivalTime).setDriverModel(new IntelligentDriverModelPlus()).build();
+
+			if (DEBUG){
+				System.out.println("Next arrival time: " + previousArrivalTime);
+			}
 
 			while (start.getSpawntimes().contains(r)){
 				r = (int)(Math.round(Math.random()*getMaximumTimesteps()));
-				car = new Car.Builder(start, end, map).setStartTimestep(r).setDriverModel(new IntelligentDriverModelPlus()).build();
+				car = new Car.Builder(start, end, map).setStartTimestep(generateNextArrivalTime(previousArrivalTime)).setDriverModel(new IntelligentDriverModelPlus()).build();
 			}
 
 			start.getSpawntimes().add(r);
 
-
-			// if A* can't compute a path
-//			while(car.getEdgePath() == null) {
-//
-//				start = destinations.get((int) (Math.floor(Math.random() * destinations.size())));
-//				end = destinations.get((int) (Math.floor(Math.random() * destinations.size())));
-//				r = (int)(Math.round(Math.random()*getMaximumTimesteps()));
-//
-//				// Ensures that cars coming from a direction can't have the same nodes as a goal
-//				while (start.getXmlID().charAt(0) == end.getXmlID().charAt(0)) {
-//					end = destinations.get((int) (Math.floor(Math.random() * destinations.size())));
-//				}
-//				car = new Car.Builder(start, end, map).setDriverModel(new IntelligentDriverModel()).setStartTimestep(r).build();
-//			}
-
-			cars.add(i, car);
+			cars.add(car);
 //			car.setTimeLimit(determineTimeLimit(car));
+
 		}
 
 		return cars;
 	}
 
-	public static int generateNextArrivalTime(int i){
+	public static int generateNextArrivalTime(int currentTime){
 
 		double u = Math.random();
+		int d = (int) Math.round(-mean * Math.log(u));
+		int res = currentTime + d;
 
-		/**
-		 * our PDF for rush hour: (2*(Math.sin((i)/5)-((i)/20)-Math.cos((i)/2)+3.208))
-		 * inverse transform F(x) = 2 * (-5 * Math.cos(0.2*u) - (0.025 * Math.pow(u, 2)) - (2 * Math.sin(0.5*u) + (3.208 * u))) + 10
-		 * generate a uniform random variate U~U(0,1) and plug into our CDF
-		 */
 
-//		double dd = Math.abs(2*(Math.sin((i)/5)-((i)/20)-Math.cos((i)/2)+3.208));
-		double d = (2 * (-5 * Math.cos(0.2*u) - (0.025 * Math.pow(u, 2)) - (2 * Math.sin(0.5*u) + (3.208 * u))) + 10);
-//		double f = Math.abs(d-2.27853);
-
-//		while (f < 0 || f > 1){
-//			d = (2 * (-5 * Math.cos(0.2*u) - (0.025 * Math.pow(u, 2)) - (2 * Math.sin(0.5*u) + (3.208 * u))) + 10);
-//		}
-
-		d = Math.abs(d-2.27853);
-
-		if (DEBUG2){
-			System.out.println("Random variate from CDF: " + d);
-			System.out.println("Next arrival time before rounding: " + (d*getMaximumTimesteps()));
-			System.out.println("Next arrival time after rounding: " + Math.round(d*getMaximumTimesteps()));
-			System.out.println("Next arrival time after casting: " + (int) Math.round(d*getMaximumTimesteps()));
-		}
-		return (int) Math.round(d*getMaximumTimesteps());
+		return res;
 	}
 
 	// TODO: Make this robust - right now just arbitrarily calculating a time limit, not based on something realistic
