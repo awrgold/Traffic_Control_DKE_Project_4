@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 6/25/2018 5:36:45 PM by Netedit Version 0.32.0
+<!-- generated on 6/25/2018 11:34:57 PM by Netedit Version 0.32.0
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
 
     <input>
-        <sumo-net-file value="C:\Users\abeld\Downloads\Intersection\Cloverleaf\Cloverleaf.net.xml"/>
+        <sumo-net-file value="C:\Users\abeld\Documents\School\Year%202\Project%202-2\Project_2.2\desktop\assets\Intersection\Cloverleaf\Cloverleaf.net.xml"/>
     </input>
 
     <output>
-        <output-file value="C:\Users\abeld\Downloads\Intersection\Cloverleaf\Cloverleaf.net.xml"/>
-        <plain-output-prefix value="C:\Users\abeld\Downloads\Intersection\Cloverleaf\Cloverleaf"/>
+        <output-file value="C:\Users\abeld\Documents\School\Year%202\Project%202-2\Project_2.2\desktop\assets\Intersection\Cloverleaf\Cloverleaf.net.xml"/>
+        <plain-output-prefix value="C:\Users\abeld\Documents\School\Year%202\Project%202-2\Project_2.2\desktop\assets\Intersection\Cloverleaf\Cloverleaf"/>
     </output>
 
     <processing>
@@ -177,8 +177,8 @@
     <edge id="gneE273" from="gneJ184" to="xbvvbxxxxxx" priority="1" numLanes="1" speed="13.89"/>
     <edge id="gneE274" from="gneJ184" to="fgsdbxcvb" priority="1" numLanes="1" speed="13.89"/>
     <edge id="gneE275" from="gneJ184" to="xvbxvcbxbvxvcb" priority="1" numLanes="1" speed="13.89"/>
-    <edge id="gneE277" from="gneJ185" to="fgsdbxcvb" priority="1" numLanes="1" speed="13.89"/>
-    <edge id="gneE278" from="gneJ185" to="xvbxvcbxbvxvcb" priority="1" numLanes="1" speed="13.89"/>
+    <edge id="gneE277" from="gneJ188" to="fgsdbxcvb" priority="1" numLanes="1" speed="13.89"/>
+    <edge id="gneE278" from="gneJ188" to="xvbxvcbxbvxvcb" priority="1" numLanes="1" speed="13.89"/>
     <edge id="gneE279" from="gneJ186" to="gneJ183" priority="1" numLanes="1" speed="13.89"/>
     <edge id="gneE28" from="gneJ37" to="gneJ13" priority="1" numLanes="1" speed="13.89"/>
     <edge id="gneE280" from="gneJ187" to="gneJ184" priority="1" numLanes="1" speed="13.89"/>
@@ -213,7 +213,7 @@
     <edge id="gneE317" from="gneJ201" to="gneJ205" priority="1" numLanes="1" speed="13.89"/>
     <edge id="gneE318" from="gneJ200" to="gneJ204" priority="1" numLanes="1" speed="13.89"/>
     <edge id="gneE320" from="gneJ191" to="gneJ211" priority="1" numLanes="1" speed="13.89"/>
-    <edge id="gneE321" from="gneJ211" to="gneJ185" priority="1" numLanes="1" speed="13.89"/>
+    <edge id="gneE321" from="gneJ211" to="gneJ188" priority="1" numLanes="1" speed="13.89"/>
     <edge id="gneE322" from="gneJ190" to="gneJ211" priority="1" numLanes="1" speed="13.89"/>
     <edge id="gneE323" from="xxcvbxcvb" to="gneJ212" priority="1" numLanes="1" speed="13.89"/>
     <edge id="gneE324" from="xvbxvfnd" to="gneJ213" priority="1" numLanes="1" speed="13.89"/>

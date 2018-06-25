@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 6/25/2018 6:21:52 PM by Netedit Version 0.32.0
+<!-- generated on 6/25/2018 11:34:04 PM by Netedit Version 0.32.0
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
 
     <input>
-        <sumo-net-file value="C:\Users\abeld\Downloads\Intersection\DivergingDiamond\DivergingDiamond.net.xml"/>
+        <sumo-net-file value="C:\Users\abeld\Documents\School\Year%202\Project%202-2\Project_2.2\desktop\assets\Intersection\Normal%20Interchange\normal%20interchange.net.xml"/>
     </input>
 
     <output>
-        <output-file value="C:\Users\abeld\Downloads\Intersection\Normal%20Interchange\normal%20interchange.net.xml"/>
-        <plain-output-prefix value="C:\Users\abeld\Downloads\Intersection\Normal%20Interchange\NormalInterchange"/>
+        <output-file value="C:\Users\abeld\Documents\School\Year%202\Project%202-2\Project_2.2\desktop\assets\Intersection\Normal%20Interchange\normal%20interchange.net.xml"/>
+        <plain-output-prefix value="C:\Users\abeld\Documents\School\Year%202\Project%202-2\Project_2.2\desktop\assets\Intersection\Normal%20Interchange\NormalInterchange"/>
     </output>
 
     <processing>
@@ -62,7 +62,6 @@
     <node id="gneJ272" x="50.00" y="-40.00" type="priority"/>
     <node id="gneJ273" x="40.00" y="-40.00" type="priority"/>
     <node id="gneJ274" x="30.00" y="-40.00" type="priority"/>
-    <node id="gneJ286" x="60.00" y="920.00" type="dead_end"/>
     <node id="gneJ287" x="-670.00" y="50.00" type="priority"/>
     <node id="gneJ288" x="-590.00" y="50.00" type="priority"/>
     <node id="gneJ289" x="-520.00" y="50.00" type="priority"/>
@@ -135,7 +134,6 @@
     <node id="gneJ372" x="80.00" y="720.00" type="priority"/>
     <node id="gneJ373" x="80.00" y="800.00" type="priority"/>
     <node id="gneJ374" x="80.00" y="870.00" type="priority"/>
-    <node id="gneJ375" x="80.00" y="920.00" type="dead_end"/>
     <node id="gneJ380" x="850.00" y="100.00" type="priority"/>
     <node id="gneJ381" x="780.00" y="100.00" type="priority"/>
     <node id="gneJ382" x="700.00" y="100.00" type="priority"/>

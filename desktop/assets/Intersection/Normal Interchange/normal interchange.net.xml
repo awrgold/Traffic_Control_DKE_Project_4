@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 6/25/2018 6:21:45 PM by Netedit Version 0.32.0
+<!-- generated on 6/25/2018 11:33:53 PM by Netedit Version 0.32.0
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
 
     <input>
-        <sumo-net-file value="C:\Users\abeld\Downloads\Intersection\DivergingDiamond\DivergingDiamond.net.xml"/>
+        <sumo-net-file value="C:\Users\abeld\Documents\School\Year%202\Project%202-2\Project_2.2\desktop\assets\Intersection\Normal%20Interchange\normal%20interchange.net.xml"/>
     </input>
 
     <output>
-        <output-file value="C:\Users\abeld\Downloads\Intersection\Normal%20Interchange\normal%20interchange.net.xml"/>
-        <plain-output-prefix value=""/>
+        <output-file value="C:\Users\abeld\Documents\School\Year%202\Project%202-2\Project_2.2\desktop\assets\Intersection\Normal%20Interchange\normal%20interchange.net.xml"/>
     </output>
 
     <processing>
@@ -1558,7 +1557,7 @@
     <edge id="gneE525" from="gneJ361" to="gneJ362" priority="1">
         <lane id="gneE525_0" index="0" speed="13.89" length="22.21" shape="61.65,823.90 61.65,846.10"/>
     </edge>
-    <edge id="gneE526" from="gneJ362" to="gneJ286" priority="1">
+    <edge id="gneE526" from="gneJ362" to="north-out1" priority="1">
         <lane id="gneE526_0" index="0" speed="13.89" length="48.27" shape="61.65,871.73 61.65,920.00"/>
     </edge>
     <edge id="gneE527" from="gneJ5" to="gneJ363" priority="1">
@@ -1600,7 +1599,7 @@
     <edge id="gneE539" from="gneJ373" to="gneJ374" priority="1">
         <lane id="gneE539_0" index="0" speed="13.89" length="21.74" shape="81.65,824.13 81.65,845.87"/>
     </edge>
-    <edge id="gneE540" from="gneJ374" to="gneJ375" priority="1">
+    <edge id="gneE540" from="gneJ374" to="north-out3" priority="1">
         <lane id="gneE540_0" index="0" speed="13.89" length="48.50" shape="81.65,871.50 81.65,920.00"/>
     </edge>
     <edge id="gneE541" from="gneJ361" to="gneJ368" priority="1">
@@ -2293,7 +2292,6 @@
     <junction id="gneJ274" type="priority" x="30.00" y="-40.00" incLanes="gneE739_0" intLanes=":gneJ274_0_0" shape="26.75,-40.00 29.95,-40.00 26.75,-40.00">
         <request index="0" response="0" foes="0" cont="0"/>
     </junction>
-    <junction id="gneJ286" type="dead_end" x="60.00" y="920.00" incLanes="gneE526_0" intLanes="" shape="63.25,920.00 60.05,920.00"/>
     <junction id="gneJ287" type="priority" x="-670.00" y="50.00" incLanes="gneE456_0 gneE472_0" intLanes=":gneJ287_0_0 :gneJ287_1_0" shape="-668.50,49.95 -668.50,46.75 -694.13,46.75 -694.13,49.95 -694.12,50.16 -693.66,53.33">
         <request index="0" response="00" foes="10" cont="0"/>
         <request index="1" response="01" foes="01" cont="0"/>
@@ -2606,7 +2604,6 @@
         <request index="0" response="00" foes="10" cont="0"/>
         <request index="1" response="01" foes="01" cont="0"/>
     </junction>
-    <junction id="gneJ375" type="dead_end" x="80.00" y="920.00" incLanes="gneE540_0" intLanes="" shape="83.25,920.00 80.05,920.00"/>
     <junction id="gneJ380" type="priority" x="850.00" y="100.00" incLanes="gneE576_0" intLanes=":gneJ380_0_0 :gneJ380_1_0" shape="851.50,103.25 851.50,100.05 826.34,96.67 825.88,99.84 825.87,100.05 825.87,103.25">
         <request index="0" response="00" foes="00" cont="0"/>
         <request index="1" response="00" foes="00" cont="0"/>
@@ -2992,9 +2989,9 @@
         <request index="0" response="00" foes="00" cont="0"/>
         <request index="1" response="00" foes="00" cont="0"/>
     </junction>
-    <junction id="north-out1" type="dead_end" x="60.00" y="920.00" incLanes="" intLanes="" shape="60.00,920.00"/>
+    <junction id="north-out1" type="dead_end" x="60.00" y="920.00" incLanes="gneE526_0" intLanes="" shape="63.25,920.00 60.05,920.00"/>
     <junction id="north-out2" type="dead_end" x="70.00" y="920.00" incLanes="gneE533_0" intLanes="" shape="73.25,920.00 70.05,920.00"/>
-    <junction id="north-out3" type="dead_end" x="80.00" y="920.00" incLanes="" intLanes="" shape="80.00,920.00"/>
+    <junction id="north-out3" type="dead_end" x="80.00" y="920.00" incLanes="gneE540_0" intLanes="" shape="83.25,920.00 80.05,920.00"/>
     <junction id="north1" type="dead_end" x="50.00" y="920.00" incLanes="" intLanes="" shape="49.95,920.00 46.75,920.00"/>
     <junction id="north2" type="dead_end" x="40.00" y="920.00" incLanes="" intLanes="" shape="39.95,920.00 36.75,920.00"/>
     <junction id="north3" type="dead_end" x="30.00" y="920.00" incLanes="" intLanes="" shape="29.95,920.00 26.75,920.00"/>

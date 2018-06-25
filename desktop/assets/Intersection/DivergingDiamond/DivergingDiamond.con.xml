@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 6/25/2018 6:15:34 PM by Netedit Version 0.32.0
+<!-- generated on 6/25/2018 11:33:03 PM by Netedit Version 0.32.0
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
 
     <input>
-        <sumo-net-file value="C:\Users\abeld\Downloads\Intersection\DivergingDiamond\DivergingDiamond.net.xml"/>
+        <sumo-net-file value="C:\Users\abeld\Documents\School\Year%202\Project%202-2\Project_2.2\desktop\assets\Intersection\DivergingDiamond\DivergingDiamond.net.xml"/>
     </input>
 
     <output>
-        <output-file value="C:\Users\abeld\Downloads\Intersection\DivergingDiamond\DivergingDiamond.net.xml"/>
-        <plain-output-prefix value="C:\Users\abeld\Downloads\Intersection\DivergingDiamond\DivergingDiamond"/>
+        <output-file value="C:\Users\abeld\Documents\School\Year%202\Project%202-2\Project_2.2\desktop\assets\Intersection\DivergingDiamond\DivergingDiamond.net.xml"/>
+        <plain-output-prefix value="C:\Users\abeld\Documents\School\Year%202\Project%202-2\Project_2.2\desktop\assets\Intersection\DivergingDiamond\DivergingDiamond"/>
     </output>
 
     <processing>
@@ -124,22 +124,12 @@
     <connection from="gneE379" to="gneE571" fromLane="0" toLane="0"/>
 
     <connection from="gneE380" to="gneE378" fromLane="0" toLane="0"/>
-    <connection from="gneE380" to="gneE385" fromLane="0" toLane="0"/>
+    <connection from="gneE380" to="gneE743" fromLane="0" toLane="0"/>
 
     <connection from="gneE381" to="gneE379" fromLane="0" toLane="0"/>
-    <connection from="gneE381" to="gneE386" fromLane="0" toLane="0"/>
+    <connection from="gneE381" to="gneE742" fromLane="0" toLane="0"/>
 
     <connection from="gneE382" to="gneE350" fromLane="0" toLane="0"/>
-
-    <connection from="gneE383" to="gneE385" fromLane="0" toLane="0"/>
-    <connection from="gneE383" to="gneE378" fromLane="0" toLane="0"/>
-
-    <connection from="gneE384" to="gneE386" fromLane="0" toLane="0"/>
-    <connection from="gneE384" to="gneE379" fromLane="0" toLane="0"/>
-
-    <connection from="gneE389" to="gneE520" fromLane="0" toLane="0"/>
-
-    <connection from="gneE390" to="gneE527" fromLane="0" toLane="0"/>
 
     <connection from="gneE391" to="gneE339" fromLane="0" toLane="0"/>
 
@@ -319,9 +309,9 @@
 
     <connection from="gneE504" to="gneE505" fromLane="0" toLane="0"/>
 
-    <connection from="gneE505" to="gneE387" fromLane="0" toLane="0"/>
+    <connection from="gneE505" to="gneE737" fromLane="0" toLane="0"/>
 
-    <connection from="gneE506" to="gneE388" fromLane="0" toLane="0"/>
+    <connection from="gneE506" to="gneE736" fromLane="0" toLane="0"/>
 
     <connection from="gneE507" to="gneE554" fromLane="0" toLane="0"/>
     <connection from="gneE507" to="gneE508" fromLane="0" toLane="0"/>
@@ -774,5 +764,23 @@
     <connection from="gneE734" to="gneE711" fromLane="0" toLane="0"/>
 
     <connection from="gneE735" to="gneE704" fromLane="0" toLane="0"/>
+
+    <connection from="gneE736" to="gneE741" fromLane="0" toLane="0"/>
+
+    <connection from="gneE737" to="gneE740" fromLane="0" toLane="0"/>
+
+    <connection from="gneE738" to="gneE520" fromLane="0" toLane="0"/>
+
+    <connection from="gneE739" to="gneE527" fromLane="0" toLane="0"/>
+
+    <connection from="gneE740" to="gneE378" fromLane="0" toLane="0"/>
+    <connection from="gneE740" to="gneE743" fromLane="0" toLane="0"/>
+
+    <connection from="gneE741" to="gneE379" fromLane="0" toLane="0"/>
+    <connection from="gneE741" to="gneE742" fromLane="0" toLane="0"/>
+
+    <connection from="gneE742" to="gneE738" fromLane="0" toLane="0"/>
+
+    <connection from="gneE743" to="gneE739" fromLane="0" toLane="0"/>
 
 </connections>
