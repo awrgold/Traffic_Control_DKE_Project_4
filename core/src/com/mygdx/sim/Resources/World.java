@@ -31,7 +31,7 @@ public class World {
 	private void initVehicleSprites() {
 
 		// Load Atlas
-		vehicleSpritesAtlas = new TextureAtlas(Gdx.files.internal("resources/vehicles/vehicles.atlas"));
+		vehicleSpritesAtlas = new TextureAtlas(Gdx.files.internal("assets/resources/vehicles/vehicles.atlas"));
 
 		// Create HashMap
 		vehicleSprites = new HashMap<String, Sprite>();
@@ -51,7 +51,7 @@ public class World {
 		
 		for(int i = 0; i < 7; i++) {
 			Texture texture;
-			roadTextures.put("road_lane_" + i, (texture = new Texture(Gdx.files.internal("resources/roads/road_lane_" + i +".png"))));
+			roadTextures.put("road_lane_" + i, (texture = new Texture(Gdx.files.internal("assets/resources/roads/road_lane_" + i +".png"))));
 			
 			texture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 			texture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
