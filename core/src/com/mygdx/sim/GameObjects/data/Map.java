@@ -11,24 +11,23 @@ import com.mygdx.sim.GameObjects.trafficObject.vehicle.Vehicle;
 
 public class Map {
 
-	
 	private boolean DEBUG = true;
-	
+
 	private List<Node> nodes = new ArrayList<Node>();
 	private List<Edge> edges = new ArrayList<Edge>();
 	private List<Node> spawnPoints = new ArrayList<Node>();
-	
+
 	private List<Node> destinations = new ArrayList<Node>();
 	private List<Node> intersections = new ArrayList<Node>();
 	private List<Stoplight> lights = new ArrayList<Stoplight>();
-	
+
 	// Map padding
 	private int mapPadding = 200;
-	
+
 	// Maximum map coordinates
 	private int mapMaxX;
 	private int mapMaxY;
-	
+
 	// Minimum map coordinates
 	private int mapMinX;
 	private int mapMinY;
@@ -48,19 +47,19 @@ public class Map {
 		for (int i = 0; i < nodes.size(); i++) {
 			tempNodes.add(null);
 		}
-		for (int i = 0; i < edges.size(); i++){
+		for (int i = 0; i < edges.size(); i++) {
 			tempEdges.add(null);
 		}
 
-		for (Node n : nodes){
+		for (Node n : nodes) {
 			tempNodes.set(n.getId(), n);
-			if (DEBUG){
+			if (DEBUG) {
 				System.out.println("Node " + n.getId() + " placed at " + tempNodes.get(n.getId()).getId());
 			}
 		}
 		for (Edge e : edges) {
 			tempEdges.set(e.getId(), e);
-			if (DEBUG){
+			if (DEBUG) {
 				System.out.println("Edge " + e.getId() + " placed at " + tempEdges.get(e.getId()).getId());
 			}
 		}
@@ -69,10 +68,11 @@ public class Map {
 		this.edges = tempEdges;
 		setSpawnPoints();
 		setDestinations();
-		
+		setTrafficLights();
+
 		calculateMapDimensions();
 
-		//setIntersections();
+		// setIntersections();
 
 		// Temporary hard-coded map bound until we have a save and load feature
 		this.reset(mapMinX, mapMinY, mapMaxX, mapMaxY);
@@ -82,10 +82,10 @@ public class Map {
 		for (Edge edge : edges) {
 			locationCache.put(edge, new ArrayList<ArrayList<Vehicle>>());
 		}
-		
+
 		staticTrafficObjectsCache = new HashMap<Edge, ArrayList<TrafficObject>>();
-		
-		for(Edge edge: edges) {
+
+		for (Edge edge : edges) {
 			staticTrafficObjectsCache.put(edge, new ArrayList<TrafficObject>());
 		}
 
@@ -108,84 +108,92 @@ public class Map {
 		}
 	}
 
-	public List<Node> getSpawnPoints(){
+	public List<Node> getSpawnPoints() {
 		return spawnPoints;
 	}
 
-	public void setSpawnPoints(){
-		for (Node n : nodes){
-			if (n.getXmlID().contains("east") || n.getXmlID().contains("west") || n.getXmlID().contains("north") || n.getXmlID().contains("south")){
+	public void setSpawnPoints() {
+		for (Node n : nodes) {
+			if ((n.getXmlID().contains("east") || n.getXmlID().contains("west") || n.getXmlID().contains("north") || n.getXmlID().contains("south")) && !n.getXmlID().contains("out") && !n.getXmlID().contains("light")) {
 				spawnPoints.add(n);
 			}
 		}
 	}
 
-	public void setDestinations(){
-		for (Node n : nodes){
-			if (n.getXmlID().contains("eastG1") || n.getXmlID().contains("westG3") || n.getXmlID().contains("northG3") || n.getXmlID().contains("southG1")){
+	public void setDestinations() {
+		for (Node n : nodes) {
+			if (n.getXmlID().contains("east-out") || n.getXmlID().contains("west-out") || n.getXmlID().contains("north-out") || n.getXmlID().contains("south-out")) {
 				destinations.add(n);
 			}
 		}
 		System.out.println("There are " + destinations.size() + " elements in destinations");
 	}
 
-	public void checkIDs(){
-		for (int i = 0; i < nodes.size(); i++) {
-			if (i != nodes.get(i).getId()){
-				throw new RuntimeException("YO NODE ID AIN'T THE SAME AS THE INDEX ID LIL NIGGA!");
-			}
-		}
-		for (int i = 0; i < edges.size(); i++) {
-			if (i != edges.get(i).getId()){
-				throw new RuntimeException("YO EDGE ID AIN'T THE SAME AS THE INDEX ID LIL NIGGA!");
+	public void setTrafficLights() {
+		for (Node n : nodes) {
+			if (n.getXmlID().contains("light")) {
+				lights.add(new Stoplight(n));
 			}
 		}
 	}
-	
+
+	public void checkIDs() {
+		for (int i = 0; i < nodes.size(); i++) {
+			if (i != nodes.get(i).getId()) {
+				throw new RuntimeException("Node ID is not Index ID");
+			}
+		}
+		for (int i = 0; i < edges.size(); i++) {
+			if (i != edges.get(i).getId()) {
+				throw new RuntimeException("Edge ID is not Index ID");
+			}
+		}
+	}
+
 	private void calculateMapDimensions() {
-		mapMaxX = (int)nodes.get(0).getX();
-		mapMaxY = (int)nodes.get(0).getY();
-		
+		mapMaxX = (int) nodes.get(0).getX();
+		mapMaxY = (int) nodes.get(0).getY();
+
 		mapMinX = mapMaxX;
 		mapMinY = mapMaxY;
-		
-		for(Node node : nodes) {
-			int nodeX = (int)node.getX();
-			int nodeY = (int)node.getY();
-			
-			if(nodeX > mapMaxX) {
+
+		for (Node node : nodes) {
+			int nodeX = (int) node.getX();
+			int nodeY = (int) node.getY();
+
+			if (nodeX > mapMaxX) {
 				mapMaxX = nodeX;
 			}
-			
-			if(nodeY > mapMaxY) {
+
+			if (nodeY > mapMaxY) {
 				mapMaxY = nodeY;
 			}
-			
-			if(nodeX < mapMinX) {
+
+			if (nodeX < mapMinX) {
 				mapMinX = nodeX;
 			}
-			
-			if(nodeY < mapMinY) {
+
+			if (nodeY < mapMinY) {
 				mapMinY = nodeY;
 			}
 		}
-		
+
 		mapMaxX += mapPadding;
 		mapMaxY += mapPadding;
-		
+
 		mapMinX -= mapPadding;
 		mapMinY -= mapPadding;
 	}
 
-	public List<Node> getIntersections(){
+	public List<Node> getIntersections() {
 		return this.intersections;
 	}
 
 	public HashMap<Edge, ArrayList<ArrayList<Vehicle>>> getLocationCache() {
 		return locationCache;
 	}
-	
-	public HashMap<Edge, ArrayList<TrafficObject>> getStaticTrafficObjectsCache(){
+
+	public HashMap<Edge, ArrayList<TrafficObject>> getStaticTrafficObjectsCache() {
 		return staticTrafficObjectsCache;
 	}
 
@@ -205,10 +213,6 @@ public class Map {
 		return lights;
 	}
 
-	public void setLights(List<Stoplight> lights) {
-		this.lights = lights;
-	}
-
 	public void reset(int minX, int minY, int maxX, int maxY) {
 		// Initialise Map Bounds
 		bounds = new Rectangle(minX, minY, maxX - minX, maxY - minY);
@@ -217,39 +221,43 @@ public class Map {
 	public Rectangle getBounds() {
 		return bounds;
 	}
-	
+
 	public String toString() {
 		return "[Map]";
 	}
 
-	public static double euclideanDistance(Node a, Node b){
-		return Math.abs(Math.sqrt(Math.pow((a.getY()-b.getY()), 2) + Math.pow((a.getX() - b.getX()), 2)));
+	public static double euclideanDistance(Node a, Node b) {
+		return Math.abs(Math.sqrt(Math.pow((a.getY() - b.getY()), 2) + Math.pow((a.getX() - b.getX()), 2)));
 	}
 
-	public int getNodeIndex(Node toFind){
-        for (int i = 0; i < nodes.size(); i++){
-            if (nodes.get(i).equals(toFind)) return i;
-        }
-        return -1;
-    }
+	public int getNodeIndex(Node toFind) {
+		for (int i = 0; i < nodes.size(); i++) {
+			if (nodes.get(i).equals(toFind))
+				return i;
+		}
+		return -1;
+	}
 
-    public Node getNode(Node toFind){
-    	for (Node n : getNodes()){
-    		if (n.equals(toFind)) return n;
+	public Node getNode(Node toFind) {
+		for (Node n : getNodes()) {
+			if (n.equals(toFind))
+				return n;
 		}
 		return null;
 	}
 
-	public Edge getEdge(Edge toFind){
-    	for (Edge e : getEdges()){
-    		if (e.equals(toFind)) return e;
+	public Edge getEdge(Edge toFind) {
+		for (Edge e : getEdges()) {
+			if (e.equals(toFind))
+				return e;
 		}
 		return null;
 	}
 
-	public Node getDestination(Node toFind){
-		for (Node n : getDestinations()){
-			if (n.equals(toFind)) return n;
+	public Node getDestination(Node toFind) {
+		for (Node n : getDestinations()) {
+			if (n.equals(toFind))
+				return n;
 		}
 		return null;
 	}

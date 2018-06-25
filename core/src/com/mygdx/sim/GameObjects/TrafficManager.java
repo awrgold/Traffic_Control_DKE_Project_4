@@ -21,6 +21,7 @@ import com.mygdx.sim.GameObjects.data.Util;
 import com.mygdx.sim.GameObjects.driverModel.IntelligentDriverModel;
 import com.mygdx.sim.GameObjects.driverModel.IntelligentDriverModelPlus;
 import com.mygdx.sim.GameObjects.driverModel.SimpleDriverModel;
+import com.mygdx.sim.GameObjects.trafficObject.InvisibleCar;
 import com.mygdx.sim.GameObjects.trafficObject.TestTrafficObject;
 import com.mygdx.sim.GameObjects.trafficObject.TrafficObject;
 import com.mygdx.sim.GameObjects.trafficObject.TrafficObjectState;
@@ -46,7 +47,7 @@ public class TrafficManager {
 	public final static int MAP_X_DIM = 100000;
 	public final static int MAP_Y_DIM = 100000;
 	public final static int GRID_FACTOR = 2;
-	public final static int vehicleCount = 1000;
+	public final static int vehicleCount = 1;
 	public final static int numUrbanCenters = 5;
 	public final static double mean = 0.2;
 	public final static double lambda = 1.0;
@@ -126,12 +127,31 @@ public class TrafficManager {
 
 		// Ensure all Vehicles have enough memory capacity
 		for (Vehicle vehicle : vehicles)
-		vehicle.ensureCapacity(finalTimeStep);
+			vehicle.ensureCapacity(finalTimeStep);
 		System.out.println("vehicles");
+		
+		// Ensure all TrafficObjects have enough memory capacity
+		for(TrafficObject trafficObject : trafficObjects) {
+			if(trafficObject instanceof InvisibleCar) {
+				((InvisibleCar) trafficObject).ensureCapacity(finalTimeStep);
+			}
+		}
+		System.out.println("trafficObjects");
 
 		while (lastComputedTimestep < finalTimeStep - 1) {
 			if (lastComputedTimestep % 100 == 0)
 				System.out.println(lastComputedTimestep);
+			
+			boolean invisibleCarVisible = true;
+			if(lightController.update(lastComputedTimestep)) {
+				invisibleCarVisible = !invisibleCarVisible;
+			}
+			// Set invisible cars to visible or not depending on traffic light
+			for(TrafficObject trafficObject : trafficObjects) {
+				if(trafficObject instanceof InvisibleCar) {
+					((InvisibleCar) trafficObject).setIsVisibleToDrivers(lastComputedTimestep, invisibleCarVisible);
+				}
+			}
 
 			for (Vehicle vehicle : vehicles)
 				map.getLocationCache().get(vehicle.getEdge(lastComputedTimestep)).get(lastComputedTimestep)
@@ -249,10 +269,6 @@ public class TrafficManager {
 		return new DistanceAndTrafficObject(smallestDistance, closestTrafficObject);
 	}
 
-	private static double manhattanDistance(Node a, Node b) {
-		return Math.abs((a.getY() - b.getY()) + (a.getX() - b.getX()));
-	}
-
 	private static double euclideanDistance(Node a, Node b) {
 		return Math.abs(Math.sqrt(Math.pow((a.getY() - b.getY()), 2) + Math.pow((a.getX() - b.getX()), 2)));
 	}
@@ -272,8 +288,11 @@ public class TrafficManager {
 		List<Edge> edgeList = new ArrayList<Edge>(edgeMap.values());
 		Map map = new Map(nodeList, edgeList);
 
-		List<Node> destinations = map.getSpawnPoints();
-		List cars = createCars(destinations, map);
+		List<Node> spawns = map.getSpawnPoints();
+		List<Node> destinations = map.getDestinations();
+		List cars = createCars(spawns, destinations, map);
+		
+		
 		// createNeighborhoods(destinations, numUrbanCenters);
 
 		if(DEBUG){
@@ -281,9 +300,18 @@ public class TrafficManager {
 			System.out.println("Creating neighborhoods with " + destinations.size() + " destinations, and " + numUrbanCenters + " urban centers.");
 		}
 
+		// Light Controller
 		lightController = new LightController(map.getLights());
 		lightController.setScheme(scheme);
-		TrafficManager tm = new TrafficManager(map, cars, new ArrayList<TrafficObject>(), lightController);
+		
+		// Static Traffic Objects
+		List<TrafficObject> staticTrafficObjects = new ArrayList<TrafficObject>();
+		for(Stoplight stopLight : lightController.getLights()) {
+			staticTrafficObjects.add(new InvisibleCar(stopLight.getParent()));
+		}
+		
+		// Traffic Manager
+		TrafficManager tm = new TrafficManager(map, cars, staticTrafficObjects, lightController);
 		return tm;
 	}
 
@@ -318,7 +346,7 @@ public class TrafficManager {
 	 * @param map: the map of the sim
 	 * @return the list of vehicles in the sim
 	 */
-	private static List createCars(List<Node> destinations, Map map){
+	private static List createCars(List<Node> spawns, List<Node> destinations, Map map){
 		List cars = new ArrayList();
 
 		int previousArrivalTime = 1;
@@ -326,14 +354,16 @@ public class TrafficManager {
 
 //			Collections.sort(destinations, new SortNode());
 
-			Node start = destinations.get((int) (Math.floor(Math.random() * destinations.size())));
+			Node start = spawns.get((int) (Math.floor(Math.random() * spawns.size())));
 			Node end = destinations.get((int) (Math.floor(Math.random() * destinations.size())));
 
 			// Ensures that cars coming from a direction can't have the same nodes as a goal
 			while (start.getXmlID().charAt(0) == end.getXmlID().charAt(0)) {
 				end = destinations.get((int) (Math.floor(Math.random() * destinations.size())));
 			}
-
+			
+			System.out.println("Start: " + start.getXmlID() + " End Goal: " + end.getXmlID());
+			
 			/**
 			 * Generate cars
 			 * StartTimeStep: when the car spawns
