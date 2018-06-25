@@ -733,26 +733,32 @@ public class TrafficManager {
 	public static void main(String[] args) {
 		Node origin1 = new Node(0,0);
 		Node origin2 = new Node(0,3);
-		Node origin3 = new Node(0,6);
-		Node origin4 = new Node(4,1);
+//		Node origin3 = new Node(0,6);
+//		Node origin4 = new Node(4,1);
 		
 		Node end1 = new Node(1000,0);
 		Node end2 = new Node(1000,3);
-		Node end3 = new Node(1000,6);
-		Node end4 = new Node(1004,1);
+//		Node end3 = new Node(1000,6);
+		Node goal = new Node(1010,3);
+		
+		
+//		Node end4 = new Node(1004,1);
 		
 		Edge one = new Edge(origin1,end1,5);
 		Edge two = new Edge(origin2,end2);
-		Edge three = new Edge(origin3,end3);
-		Edge four = new Edge(origin4,end4);
+//		Edge three = new Edge(origin3,end3,7);
 		
-		List<Node> nodes = Arrays.asList(origin1,origin2,origin3,origin4,end1,end2,end3,end4);
-		List<Edge> edges = Arrays.asList(one,two,three,four);
+		Edge oneFinisher = new Edge(end1,goal);
+		Edge twoFinisher = new Edge(end2,goal);
+//		Edge threeFinisher = new Edge(end3,goal);
+//		Edge four = new Edge(origin4,end4);
+		
+		List<Node> nodes = Arrays.asList(origin1,origin2,end1,end2,goal);
+		List<Edge> edges = Arrays.asList(one,two,oneFinisher,twoFinisher);
 		
 		Map map = new Map(nodes,edges);		
 
-		Car car = new Car.Builder(origin1, end2, map).build();
-		Car car2 = new Car.Builder(origin2,end2,map).setStartTimestep(2).build();
+		Car car = new Car.Builder(origin1, goal, map).build();
 		
 		ArrayList<Vehicle> cars = new ArrayList<Vehicle>();
 		ArrayList<TrafficObject> tos = new ArrayList<TrafficObject>();
@@ -762,7 +768,6 @@ public class TrafficManager {
 		tos.add(blocker);
 		
 		cars.add(car);
-		cars.add(car2);
 		
 		TrafficManager mgr = new TrafficManager(map,cars,tos,null);
 		

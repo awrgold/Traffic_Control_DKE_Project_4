@@ -494,7 +494,7 @@ public abstract class Vehicle implements TrafficObject {
 
 	public void determineLaneChangeDesires(TrafficManager mgr, int timestep) {
 
-		if (timestep == 302 && this.id == 1)
+		if (timestep == 40)
 			System.out.println("stop");
 		if (timestep == 0) {
 			laneChangeDesires = new HashMap<Edge, Double>();
@@ -514,6 +514,9 @@ public abstract class Vehicle implements TrafficObject {
 				+ lead.getDistance() / TrafficManager.VIEW_DISTANCE * maxSpeedOnCurrentLane;
 
 		double anticipatedSpeedNoChange = Math.min(discountedLeadSpeed, maxSpeedOnCurrentLane);
+		
+		if(anticipatedSpeedNoChange < 1)
+			anticipatedSpeedNoChange = -50;
 
 		Edge currentEdge = getEdge(timestep);
 
@@ -584,7 +587,8 @@ public abstract class Vehicle implements TrafficObject {
 			int laneChangesFromThatLane = laneChangesNecessary.get(lane);
 
 			double desireToLeaveThatLane = 0;
-			double desireToGoToThatLane = 1;
+
+			double desireToGoToThatLane = -1000;
 
 			if (laneChangesFromThatLane > 0) {
 				double distanceThing = 1
@@ -595,11 +599,16 @@ public abstract class Vehicle implements TrafficObject {
 				if (desireToLeaveThatLane < 0)
 					desireToLeaveThatLane = 0;
 
-				desireToGoToThatLane = desireToLeaveCurrentLane - desireToLeaveThatLane;
+//				desireToGoToThatLane = desireToLeaveCurrentLane - desireToLeaveThatLane;
 
 				Location simulatedLocation = new Location(lane, this.getLocation(timestep).getDistanceOnEdge());
 				DistanceAndSpeed leadIfChange = mgr.getDistanceAndSpeedToClosestTrafficObject(this, simulatedLocation,
 						timestep);
+				
+				if(desireToLeaveThatLane < desireToLeaveCurrentLane)
+					desireToGoToThatLane = desireToLeaveCurrentLane;
+				else
+					desireToGoToThatLane = 0;
 
 				if (leadIfChange.getSpeed() < 1)
 					desireToGoToThatLane = 0;
@@ -650,7 +659,7 @@ public abstract class Vehicle implements TrafficObject {
 		for (Edge lane : edges) {
 			float remainingDistanceToGoalOnLane = TrafficManager.pf.getDistances()[lane.getId()][this.goalNode.getId()];
 
-			if (remainingDistanceToGoalOnLane * 2 < bestDistance) {
+			if (remainingDistanceToGoalOnLane < bestDistance * 2) {
 				bestDistance = remainingDistanceToGoalOnLane;
 				bestEdge = lane;
 			}
@@ -661,7 +670,7 @@ public abstract class Vehicle implements TrafficObject {
 		for (Edge lane : edges) {
 			float remainingDistanceToGoalOnLane = TrafficManager.pf.getDistances()[lane.getId()][this.goalNode.getId()];
 
-			if (remainingDistanceToGoalOnLane * 2 < bestDistance)
+			if (remainingDistanceToGoalOnLane < bestDistance * 2)
 				changes.put(lane, 0);
 		}
 
