@@ -268,7 +268,7 @@ public class TrafficManager {
 		List<Node> nodeList = new ArrayList<Node>(nodeMap.values());
 
 		// Sort the nodeList in descending order based on priority
-		Collections.sort(nodeList, new SortNode());
+//		Collections.sort(nodeList, new SortNode());
 		List<Edge> edgeList = new ArrayList<Edge>(edgeMap.values());
 		Map map = new Map(nodeList, edgeList);
 
@@ -323,8 +323,6 @@ public class TrafficManager {
 
 		int previousArrivalTime = 1;
 		for (int i = 0; i < vehicleCount; i++) {
-
-//			Collections.sort(destinations, new SortNode());
 
 			Node start = destinations.get((int) (Math.floor(Math.random() * destinations.size())));
 			Node end = destinations.get((int) (Math.floor(Math.random() * destinations.size())));
