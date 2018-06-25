@@ -27,6 +27,7 @@ public class MapReader {
 	private HashMap<String, Node> nodeMap = null;
 	private HashMap<String, Edge> edgeMap = null;
 	private List<Node> spawnPoints = new ArrayList<Node>();
+	private boolean isIntersection = false;
 
 	public HashMap<String, Node> getNodes() {
 		return nodeMap;

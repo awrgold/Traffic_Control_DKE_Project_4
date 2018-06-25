@@ -64,6 +64,11 @@ public class Car extends Vehicle {
 			this.initialSpeed = initialSpeed;
 			return this;
 		}
+
+		public Builder setPathfinder(Pathfinder pathfinder){
+			this.pf = pathfinder;
+			return this;
+		}
 		
 		public Car build() {
 			if(pf == null) 

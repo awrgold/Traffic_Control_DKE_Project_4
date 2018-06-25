@@ -46,22 +46,18 @@ public class TrafficManager {
 	public final static int MAP_X_DIM = 100000;
 	public final static int MAP_Y_DIM = 100000;
 	public final static int GRID_FACTOR = 2;
-	public final static int vehicleCount = 100;
+	public final static int vehicleCount = 1000;
 	public final static int numUrbanCenters = 5;
 	public final static double mean = 0.2;
 	public final static double lambda = 1.0;
-	public static double[] arrivalRates;
     public static LightController lightController;
 
 	private Map map;
 	private List<TrafficObject> trafficObjects;
 	private List<Vehicle> vehicles;
-	private static List<Node> intersections = new ArrayList<Node>();
 	private static int urbanCenterWeight = 10;
 	private static ControlScheme scheme = ControlScheme.BASIC;
-
 	private int lastComputedTimestep = 0;
-	private static double aggressionRandomizer;
 
 	public TrafficManager(Map map, List<Vehicle> vehicles, List<TrafficObject> trafficObjects, LightController lightController) {
 		this.map = map;
@@ -350,11 +346,11 @@ public class TrafficManager {
 			// Build each car with their given destination and a randomly chosen spawn time
 			// TODO: Make cars arrive via rush hour and not uniformly.
 			int r = (int)(Math.round(Math.random()*getMaximumTimesteps()));
-			Car car = new Car.Builder(start, end, map).setStartTimestep(r).build();
+			Car car = new Car.Builder(start, end, map).setStartTimestep(r).setDriverModel(new IntelligentDriverModelPlus()).build();
 
 			while (start.getSpawntimes().contains(r)){
 				r = (int)(Math.round(Math.random()*getMaximumTimesteps()));
-				car = new Car.Builder(start, end, map).setStartTimestep(r).build();
+				car = new Car.Builder(start, end, map).setStartTimestep(r).setDriverModel(new IntelligentDriverModelPlus()).build();
 			}
 
 			start.getSpawntimes().add(r);
