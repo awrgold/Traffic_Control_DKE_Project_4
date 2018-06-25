@@ -17,15 +17,15 @@
 	},
 	com.badlogic.gdx.graphics.g2d.BitmapFont: { 
 		font-small: {
-			file: resources/fonts/Emu.fnt,
+			file: assets/resources/fonts/Emu.fnt,
 			scaledSize: 7
 		},
 		font-medium: {
-			file: resources/fonts/Emu.fnt,
+			file: assets/resources/fonts/Emu.fnt,
 			scaledSize: 12
 		},
 		font-large: {
-			file: resources/fonts/Emu.fnt,
+			file: assets/resources/fonts/Emu.fnt,
 			scaledSize: 15
 		}
 	},
