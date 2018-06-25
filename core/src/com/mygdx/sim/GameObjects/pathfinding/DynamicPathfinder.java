@@ -19,7 +19,7 @@ public class DynamicPathfinder {
 	}
 	
 	public Edge selectEdge(Node reached, Node goal) {
-		/*List<Edge> potentialEdges = reached.getOutEdges();
+		List<Edge> potentialEdges = reached.getOutEdges();
 		
 		Edge bestEdge = null;
 		float bestEdgeScore = Integer.MAX_VALUE;
@@ -39,8 +39,8 @@ public class DynamicPathfinder {
 				
 		}
 		
-		return bestEdge;*/
-		return aStarPathfinder.searchPathEdge(graph.getNodes(), reached, goal).get(0);
+		return bestEdge;
+		
 	}
 	
 	public static void main(String[] args) {
