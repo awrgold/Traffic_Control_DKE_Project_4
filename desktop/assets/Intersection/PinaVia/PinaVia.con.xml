@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 6/25/2018 10:57:25 PM by Netedit Version 0.32.0
+<!-- generated on 6/25/2018 11:12:06 PM by Netedit Version 0.32.0
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
@@ -425,6 +425,8 @@
 
     <connection from="gneE708" to="gneE715" fromLane="0" toLane="0"/>
 
+    <connection from="gneE709" to="gneE714" fromLane="0" toLane="0"/>
+
     <connection from="gneE710" to="gneE561" fromLane="0" toLane="0"/>
 
     <connection from="gneE711" to="gneE562" fromLane="0" toLane="0"/>
@@ -458,6 +460,8 @@
     <connection from="gneE723" to="gneE511" fromLane="0" toLane="0"/>
 
     <connection from="gneE724" to="gneE513" fromLane="0" toLane="0"/>
+
+    <connection from="gneE726" to="gneE753" fromLane="0" toLane="0"/>
 
     <connection from="gneE727" to="gneE755" fromLane="0" toLane="0"/>
 
@@ -495,6 +499,8 @@
 
     <connection from="gneE745" to="gneE710" fromLane="0" toLane="0"/>
 
+    <connection from="gneE746" to="gneE712" fromLane="0" toLane="0"/>
+
     <connection from="gneE747" to="gneE861" fromLane="0" toLane="0"/>
     <connection from="gneE747" to="gneE822" fromLane="0" toLane="0"/>
     <connection from="gneE747" to="gneE860" fromLane="0" toLane="0"/>
@@ -504,6 +510,8 @@
 
     <connection from="gneE749" to="gneE859" fromLane="0" toLane="0"/>
     <connection from="gneE749" to="gneE828" fromLane="0" toLane="0"/>
+
+    <connection from="gneE750" to="gneE730" fromLane="0" toLane="0"/>
 
     <connection from="gneE751" to="gneE733" fromLane="0" toLane="0"/>
 
@@ -646,6 +654,8 @@
     <connection from="gneE813" to="gneE768" fromLane="0" toLane="0"/>
 
     <connection from="gneE814" to="gneE775" fromLane="0" toLane="0"/>
+
+    <connection from="gneE815" to="gneE768" fromLane="0" toLane="0"/>
 
     <connection from="gneE816" to="gneE762" fromLane="0" toLane="0"/>
 
@@ -916,6 +926,8 @@
     <connection from="gneE939" to="gneE910" fromLane="0" toLane="0"/>
 
     <connection from="gneE940" to="gneE904" fromLane="0" toLane="0"/>
+
+    <connection from="gneE941" to="gneE906" fromLane="0" toLane="0"/>
 
     <connection from="gneE942" to="gneE912" fromLane="0" toLane="0"/>
 
