@@ -1,18 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 6/25/2018 7:40:47 PM by Netedit Version 0.32.0
+<!-- generated on 6/25/2018 11:44:41 PM by Netedit Version 0.32.0
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
 
+    <input>
+        <sumo-net-file value="C:\Users\abeld\Documents\School\Year%202\Project%202-2\Project_2.2\desktop\assets\Intersection\Turbine\Turbine.net.xml"/>
+    </input>
+
     <output>
-        <output-file value="C:\Users\abeld\Documents\School\Year%202\Project%202-2\Project_2.2\core\assets\Intersection\Turbine\Turbine.net.xml"/>
-        <plain-output-prefix value="C:\Users\abeld\Documents\School\Year%202\Project%202-2\Project_2.2\core\assets\Intersection\Turbine\Turbine"/>
+        <output-file value="C:\Users\abeld\Documents\School\Year%202\Project%202-2\Project_2.2\desktop\assets\Intersection\Turbine\Turbine.net.xml"/>
+        <plain-output-prefix value="C:\Users\abeld\Documents\School\Year%202\Project%202-2\Project_2.2\desktop\assets\Intersection\Turbine\Turbine"/>
     </output>
 
     <processing>
         <no-turnarounds value="true"/>
         <offset.disable-normalization value="true"/>
+        <lefthand value="false"/>
+        <junctions.corner-detail value="0"/>
+        <rectangular-lane-cut value="false"/>
+        <walkingareas value="false"/>
     </processing>
 
 </configuration>
@@ -270,6 +278,8 @@
 
     <connection from="gneE215" to="gneE226" fromLane="0" toLane="0"/>
 
+    <connection from="gneE216" to="gneE240" fromLane="0" toLane="0"/>
+
     <connection from="gneE217" to="gneE239" fromLane="0" toLane="0"/>
 
     <connection from="gneE218" to="gneE237" fromLane="0" toLane="0"/>
@@ -303,6 +313,8 @@
 
     <connection from="gneE228" to="gneE276" fromLane="0" toLane="0"/>
     <connection from="gneE228" to="gneE284" fromLane="0" toLane="0"/>
+
+    <connection from="gneE229" to="gneE213" fromLane="0" toLane="0"/>
 
     <connection from="gneE23" to="gneE24" fromLane="0" toLane="0"/>
 
@@ -770,9 +782,13 @@
 
     <connection from="gneE418" to="gneE387" fromLane="0" toLane="0"/>
 
+    <connection from="gneE419" to="gneE410" fromLane="0" toLane="0"/>
+
     <connection from="gneE42" to="gneE43" fromLane="0" toLane="0"/>
 
     <connection from="gneE420" to="gneE408" fromLane="0" toLane="0"/>
+
+    <connection from="gneE421" to="gneE410" fromLane="0" toLane="0"/>
 
     <connection from="gneE422" to="gneE412" fromLane="0" toLane="0"/>
 

@@ -1,25 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 6/25/2018 7:40:47 PM by Netedit Version 0.32.0
+<!-- generated on 6/25/2018 11:44:41 PM by Netedit Version 0.32.0
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
 
+    <input>
+        <sumo-net-file value="C:\Users\abeld\Documents\School\Year%202\Project%202-2\Project_2.2\desktop\assets\Intersection\Turbine\Turbine.net.xml"/>
+    </input>
+
     <output>
-        <output-file value="C:\Users\abeld\Documents\School\Year%202\Project%202-2\Project_2.2\core\assets\Intersection\Turbine\Turbine.net.xml"/>
-        <plain-output-prefix value="C:\Users\abeld\Documents\School\Year%202\Project%202-2\Project_2.2\core\assets\Intersection\Turbine\Turbine"/>
+        <output-file value="C:\Users\abeld\Documents\School\Year%202\Project%202-2\Project_2.2\desktop\assets\Intersection\Turbine\Turbine.net.xml"/>
+        <plain-output-prefix value="C:\Users\abeld\Documents\School\Year%202\Project%202-2\Project_2.2\desktop\assets\Intersection\Turbine\Turbine"/>
     </output>
 
     <processing>
         <no-turnarounds value="true"/>
         <offset.disable-normalization value="true"/>
+        <lefthand value="false"/>
+        <junctions.corner-detail value="0"/>
+        <rectangular-lane-cut value="false"/>
+        <walkingareas value="false"/>
     </processing>
 
 </configuration>
 -->
 
 <nodes version="0.27" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/nodes_file.xsd">
-    <location netOffset="0.00,0.00" convBoundary="-1810.00,-1820.00,1820.00,1800.00" origBoundary="10000000000.00,10000000000.00,-10000000000.00,-10000000000.00" projParameter="!"/>
+    <location netOffset="0.00,0.00" convBoundary="-1810.00,-1820.00,1820.00,1800.00" origBoundary="-10000000000.00,-10000000000.00,10000000000.00,10000000000.00" projParameter="!"/>
 
     <node id="east-out1" x="1820.00" y="-30.00" type="dead_end"/>
     <node id="east-out2" x="1820.00" y="-40.00" type="dead_end"/>
@@ -148,7 +156,6 @@
     <node id="gneJ211" x="-180.00" y="300.00" type="priority"/>
     <node id="gneJ215" x="700.00" y="30.00" type="priority"/>
     <node id="gneJ216" x="-700.00" y="30.00" type="priority"/>
-    <node id="gneJ217" x="700.00" y="20.00" type="dead_end"/>
     <node id="gneJ218" x="-700.00" y="20.00" type="priority"/>
     <node id="gneJ219" x="-700.00" y="-40.00" type="priority"/>
     <node id="gneJ22" x="-80.00" y="-520.00" type="priority"/>
@@ -156,7 +163,6 @@
     <node id="gneJ221" x="-700.00" y="-30.00" type="priority"/>
     <node id="gneJ222" x="700.00" y="-30.00" type="priority"/>
     <node id="gneJ223" x="40.00" y="-700.00" type="priority"/>
-    <node id="gneJ224" x="40.00" y="690.00" type="dead_end"/>
     <node id="gneJ225" x="30.00" y="-700.00" type="priority"/>
     <node id="gneJ226" x="30.00" y="690.00" type="priority"/>
     <node id="gneJ227" x="-40.00" y="690.00" type="priority"/>
@@ -175,7 +181,7 @@
     <node id="gneJ239" x="1400.00" y="-50.00" type="priority"/>
     <node id="gneJ24" x="-50.00" y="-650.00" type="priority"/>
     <node id="gneJ240" x="1400.00" y="20.00" type="priority"/>
-    <node id="gneJ241" x="700.00" y="20.00" type="dead_end"/>
+    <node id="gneJ241" x="700.00" y="20.00" type="priority"/>
     <node id="gneJ242" x="1400.00" y="30.00" type="priority"/>
     <node id="gneJ243" x="1400.00" y="40.00" type="priority"/>
     <node id="gneJ244" x="30.00" y="-1400.00" type="priority"/>
@@ -186,7 +192,7 @@
     <node id="gneJ250" x="-40.00" y="-1400.00" type="priority"/>
     <node id="gneJ251" x="-50.00" y="-1400.00" type="priority"/>
     <node id="gneJ252" x="30.00" y="1380.00" type="priority"/>
-    <node id="gneJ253" x="40.00" y="690.00" type="dead_end"/>
+    <node id="gneJ253" x="40.00" y="690.00" type="priority"/>
     <node id="gneJ254" x="40.00" y="1380.00" type="priority"/>
     <node id="gneJ255" x="50.00" y="1380.00" type="priority"/>
     <node id="gneJ256" x="-30.00" y="1380.00" type="priority"/>
@@ -288,13 +294,12 @@
     <node id="gneJ357" x="-50.00" y="1450.00" type="priority"/>
     <node id="gneJ358" x="50.00" y="1750.00" type="priority"/>
     <node id="gneJ36" x="80.00" y="190.00" type="priority"/>
-    <node id="gneJ360" x="40.00" y="1750.00" type="priority"/>
     <node id="gneJ362" x="30.00" y="1750.00" type="priority"/>
     <node id="gneJ365" x="-30.00" y="1750.00" type="priority"/>
     <node id="gneJ367" x="-40.00" y="1750.00" type="priority"/>
     <node id="gneJ369" x="-50.00" y="1750.00" type="priority"/>
     <node id="gneJ37" x="40.00" y="220.00" type="priority"/>
-    <node id="gneJ370" x="40.00" y="1750.00" type="dead_end"/>
+    <node id="gneJ370" x="40.00" y="1750.00" type="priority"/>
     <node id="gneJ373" x="-1460.00" y="40.00" type="priority"/>
     <node id="gneJ374" x="-1460.00" y="30.00" type="priority"/>
     <node id="gneJ375" x="-1460.00" y="20.00" type="priority"/>
