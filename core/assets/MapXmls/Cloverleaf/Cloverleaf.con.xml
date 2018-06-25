@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 6/25/2018 5:11:07 PM by Netedit Version 0.32.0
+<!-- generated on 6/25/2018 5:36:45 PM by Netedit Version 0.32.0
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
@@ -127,6 +127,8 @@
     <connection from="gneE108" to="gneE109" fromLane="0" toLane="0"/>
 
     <connection from="gneE109" to="gneE110" fromLane="0" toLane="0"/>
+
+    <connection from="gneE11" to="Owest2" fromLane="0" toLane="0"/>
 
     <connection from="gneE110" to="gneE107" fromLane="0" toLane="0"/>
 

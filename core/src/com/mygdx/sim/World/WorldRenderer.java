@@ -60,11 +60,13 @@ public class WorldRenderer {
 					// Increase Time Step
 					if (worldController.timestep + 1 < worldController.timestepMax) {
 						worldController.timestep++;
+						worldController.updateLightController(worldController.timestep);
 					}
 				} else if (worldState == WorldState.REWINDING) {
 					// Decrease Time Step
 					if (worldController.timestep - 1 > 0) {
 						worldController.timestep--;
+						worldController.updateLightController(worldController.timestep);
 					}
 				}
 

@@ -49,8 +49,9 @@ public class LightController {
 	}
 	
 	public boolean update(int currentTimestep) {
-		if (getTimeRemaining(currentTimestep) == 0) {
+		if (getTimeRemaining(currentTimestep) == interval) {
 			switchLights();
+			System.out.println("hohooh");
 			return true;
 		}
 		

@@ -14,7 +14,7 @@ public class TrafficLight {
 
 	public TrafficLight(Stoplight stopLight) {
 		this.stopLight = stopLight;
-		Node node = stopLight.getLocation().getEdge().getTo();
+		Node node = stopLight.getParent();
 		posX = node.getX();
 		posY = node.getY();
 	}

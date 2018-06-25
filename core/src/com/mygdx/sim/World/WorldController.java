@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.mygdx.sim.GameObjects.Stoplight;
 import com.mygdx.sim.GameObjects.TrafficManager;
 import com.mygdx.sim.GameObjects.data.Edge;
 import com.mygdx.sim.GameObjects.data.Map;
@@ -108,9 +109,17 @@ public class WorldController {
 	public HashMap<TrafficObject, TrafficObjectState> getTrafficObjectState(int timestep) {
 		return trafficManager.getState(timestep);
 	}
+	
+	public void updateLightController(int timestep) {
+		trafficManager.getLightController().update(timestep);
+	}
 
 	public List<Road> getRoads() {
 		return worldGenerator.getRoads();
+	}
+	
+	public List<Stoplight> getStopLights() {
+		return map.getTrafficLights();
 	}
 	
 	public List<TrafficLight> getTrafficLights() {

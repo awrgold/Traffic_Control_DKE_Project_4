@@ -66,6 +66,7 @@ public class Stoplight {
 	public LightState getLightState() {
 		return lightState;
 	}
+	
 
 	public void setLightState(LightState lightState) {
 		this.lightState = lightState;

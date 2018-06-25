@@ -15,7 +15,7 @@ public class WorldGenerator {
 
 	// Roads
 	List<Road> roads;
-	
+
 	// Traffic Lights
 	List<TrafficLight> trafficLights;
 
@@ -23,27 +23,29 @@ public class WorldGenerator {
 		this.worldController = worldController;
 
 		roads = new ArrayList<Road>();
-		
+
 		trafficLights = new ArrayList<TrafficLight>();
 
 		generateRoads(worldController.getEdges());
+		generateTrafficLights();
 	}
 
 	public void generateRoads(List<Edge> edges) {
 		for (Edge edge : edges) {
 			roads.add(new Road(edge));
-			
-			Stoplight stopLight = null;
-			if((stopLight = edge.getStopLight()) != null) {
-				trafficLights.add(new TrafficLight(stopLight));
-			}
+		}
+	}
+
+	public void generateTrafficLights() {
+		for (Stoplight stopLight : worldController.getStopLights()) {
+			trafficLights.add(new TrafficLight(stopLight));
 		}
 	}
 
 	public List<Road> getRoads() {
 		return roads;
 	}
-	
+
 	public List<TrafficLight> getTrafficLights() {
 		return trafficLights;
 	}

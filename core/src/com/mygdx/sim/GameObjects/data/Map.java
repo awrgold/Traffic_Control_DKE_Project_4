@@ -128,6 +128,10 @@ public class Map {
 		}
 		System.out.println("There are " + destinations.size() + " elements in destinations");
 	}
+	
+	public List<Stoplight> getTrafficLights() {
+		return lights;
+	}
 
 	public void setTrafficLights() {
 		for (Node n : nodes) {

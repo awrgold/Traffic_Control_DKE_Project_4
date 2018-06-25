@@ -41,7 +41,7 @@ public class TrafficManager {
 	// also more computation
 	public final static int TIMESTEPS_PER_SECOND = 1;
 	private final static int VIEW_DISTANCE = 500;
-	private final static int RIDICULOUS_SPEED = 1000;
+	private final static int RIDICULOUS_SPEED = 100;
 
 	// Temporary map bounds
 	public final static int MAP_X_DIM = 100000;
@@ -178,6 +178,10 @@ public class TrafficManager {
 			for (Vehicle vehicle : vehicles)
 				vehicle.move(lastComputedTimestep);
 		}
+	}
+	
+	public LightController getLightController() {
+		return lightController;
 	}
 
 	/**
@@ -361,8 +365,6 @@ public class TrafficManager {
 			while (start.getXmlID().charAt(0) == end.getXmlID().charAt(0)) {
 				end = destinations.get((int) (Math.floor(Math.random() * destinations.size())));
 			}
-			
-			end = start.getOutEdges().get(0).getTo();
 			
 			System.out.println("Start: " + start.getXmlID() + " End Goal: " + end.getXmlID());
 			
