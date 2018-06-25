@@ -4,21 +4,32 @@ import com.mygdx.sim.GameObjects.TrafficManager;
 import com.mygdx.sim.GameObjects.data.DistanceAndSpeed;
 import com.mygdx.sim.GameObjects.trafficObject.vehicle.Vehicle;
 
+import java.util.Random;
+
 public class IntelligentDriverModel implements DriverModel{
 	
 	private final static int EXPONENT = 4;
 	private final static double LINEAR_JAM_DISTANCE = 2.0;
 	private final static double NON_LINEAR_JAM_DISTANCE = 3.0;
+	private final static boolean DEBUG = true;
 	
 	private double maximumAcceleration = 1.4;
-
 	private double safetyTimeHeadway = 1.5;
-	
+
+	/**
+	 * Adherence: how closely the driver adheres to speed limit, 1.0 = 100% adherence. 1.1 = 10% over speed limit
+	 * Variance: standard deviation of the normal curve, how far the drivers will deviate.
+	 */
+	private double speedLimitAdherence = 1.0;
+	private double speedLimitVariance = 0.25;
+
+
 	public double determineAcceleration(TrafficManager mgr, Vehicle vehicle, int timestep) {
 		if(timestep == 0) 
 			return 0;
 		
 		// Begin setup
+		setSpeedLimitAdherence();
 		int desiredSpeed = vehicle.getMaxSpeed(timestep);
 		
 		double vehicleLength = vehicle.getLength();
@@ -52,6 +63,22 @@ public class IntelligentDriverModel implements DriverModel{
 		double acceleration = maximumAcceleration * (1 - freeRoadTerm - interactionTerm);
 		
 		return acceleration;
+	}
+
+	public void setSpeedLimitAdherence(){
+		this.speedLimitAdherence = drawRandomNormal(speedLimitAdherence, speedLimitVariance);
+	}
+
+	public static double drawRandomNormal(double mean, double sd){
+		Random r = new Random();
+		double d = r.nextGaussian()*sd + mean;
+		while (d < 0){
+			d = r.nextGaussian()*sd + mean;
+		}
+		if(DEBUG){
+			System.out.println("Speed multiplier: " + d );
+		}
+		return d;
 	}
 	
 
