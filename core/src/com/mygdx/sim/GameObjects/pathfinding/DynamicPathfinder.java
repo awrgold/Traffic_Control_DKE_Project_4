@@ -9,13 +9,17 @@ import com.mygdx.sim.GameObjects.data.Node;
 
 public class DynamicPathfinder {
 	DistanceMatrixCalculator calculator;
+	private AStarPathfinder aStarPathfinder;
+	private Map graph;
 	
 	public DynamicPathfinder(Map graph) {
+		this.graph = graph;
 		this.calculator = new DistanceMatrixCalculator(graph);
+		aStarPathfinder = new AStarPathfinder(graph);
 	}
 	
 	public Edge selectEdge(Node reached, Node goal) {
-		List<Edge> potentialEdges = reached.getOutEdges();
+		/*List<Edge> potentialEdges = reached.getOutEdges();
 		
 		Edge bestEdge = null;
 		float bestEdgeScore = Integer.MAX_VALUE;
@@ -35,7 +39,8 @@ public class DynamicPathfinder {
 				
 		}
 		
-		return bestEdge;
+		return bestEdge;*/
+		return aStarPathfinder.searchPathEdge(graph.getNodes(), reached, goal).get(0);
 	}
 	
 	public static void main(String[] args) {

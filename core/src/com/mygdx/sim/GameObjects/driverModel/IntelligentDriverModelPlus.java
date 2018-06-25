@@ -11,7 +11,7 @@ public class IntelligentDriverModelPlus implements DriverModel{
 	private final static int EXPONENT = 4;
 	private final static double LINEAR_JAM_DISTANCE = 2.0;
 	private final static double NON_LINEAR_JAM_DISTANCE = 3.0;
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = false;
 
 	private double maximumAcceleration = 1.4;
 	private double safetyTimeHeadway = 1.5;
@@ -28,7 +28,7 @@ public class IntelligentDriverModelPlus implements DriverModel{
 			return 0;
 		
 		// Begin setup
-		setSpeedLimitAdherence();
+		//setSpeedLimitAdherence();
 		int desiredSpeed = (int)Math.round(vehicle.getMaxSpeed(timestep)*speedLimitAdherence);
 		
 		double vehicleLength = vehicle.getLength();

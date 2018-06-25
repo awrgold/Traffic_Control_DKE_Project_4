@@ -47,7 +47,7 @@ public class TrafficManager {
 	public final static int MAP_X_DIM = 100000;
 	public final static int MAP_Y_DIM = 100000;
 	public final static int GRID_FACTOR = 2;
-	public final static int vehicleCount = 1000;
+	public final static int vehicleCount = 1;
 	public final static int numUrbanCenters = 5;
 	// Mean IA time of 4 seconds with 1 hour simulation is an average of 900 cars in a 1 hour simulation
 	public final static Time meanInterarrivalTime = new Time(0, 0, 4);
@@ -326,7 +326,7 @@ public class TrafficManager {
 	 * @param map: The current map of the sim
 	 * @return: the list of points vehicles may spawn at
 	 */
-	private static ArrayList<Node> createSpawnPoints(Map map){
+	private static ArrayList<Node> createSpawnPoints(Map map) {
 
 		ArrayList<Node> spawnPoints = new ArrayList<Node>();
 

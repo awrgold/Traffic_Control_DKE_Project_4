@@ -33,6 +33,55 @@ public class AStarPathfinder extends Pathfinder {
 
 	//TODO: Fix A* to remove loopy paths (12 June)
 	
+	public List<Edge> searchPathEdge(List<Node> nodes, Node start, Node goal) {
+
+		// Initialise priority queue
+		PriorityQueue<Node> priorityQueue = new PriorityQueue<Node>();
+
+		// Set all other weights to infinity
+		for (Node node : nodes) {
+			node.setNodeDistanceWeight(MAX_VALUE);
+			node.setNodeDistanceWeightEstimate(MAX_VALUE);
+		}
+
+		// Set start node weight to 0
+		start.setNodeDistanceWeight(0);
+
+		// Add start node to queue
+		priorityQueue.add(start);
+
+		// While the queue is not empty
+		while (!priorityQueue.isEmpty()) {
+
+			Node currentNode = priorityQueue.poll();
+
+			// If we have found the goal
+			if (currentNode.equals(goal)) {
+				return createPath(goal);
+			}
+
+			// Loop through all outgoing edges
+			for (Edge edge : currentNode.getOutEdges()) {
+				Node nextNode = edge.getTo();
+
+				// The cost is the cost from traveling to the next node (Edge length / speed limit) -> faster roads have lower weight.
+				double newCost = currentNode.getNodeDistanceWeight() + (edge.getWeight());
+
+				// If new cost is lower than the currently set cost
+				if (newCost < nextNode.getNodeDistanceWeight()) {
+					nextNode.setNodeDistanceWeight(newCost);
+					nextNode.setPreviousNode(currentNode);
+					// The estimated weight is the cost from traveling to the next edge + manhattan
+					// distance
+					nextNode.setNodeDistanceWeightEstimate(newCost + manhattanDistance(currentNode, nextNode));
+
+					priorityQueue.add(nextNode);
+				}
+			}
+		}
+		return null;
+	}
+	
 	public List<Edge> searchPath(List<Node> nodes, Vehicle vehicle) {
 
 		// Start/Goal Nodes
