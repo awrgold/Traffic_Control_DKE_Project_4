@@ -10,10 +10,16 @@ public class InvisibleCar implements TrafficObject {
     public Node node;
     public int startTimestep;
     public int endTimestep;
+    
+    boolean[] visibleToDrivers = new boolean[0];
 
     public InvisibleCar(Node node){
         this.node = node;
     }
+    
+    public void ensureCapacity(int capacity) {
+		visibleToDrivers = new boolean[capacity];
+	}
 
     @Override
     public TrafficObjectState getState(int timestep) {
@@ -83,11 +89,14 @@ public class InvisibleCar implements TrafficObject {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	public void setIsVisibleToDrivers(int timestep, boolean isVisible) {
+		visibleToDrivers[timestep] = isVisible;
+	}
 
 	@Override
 	public boolean isVisibleToDrivers(int timestep) {
-		// TODO Auto-generated method stub
-		return false;
+		return visibleToDrivers[timestep];
 	}
 
 

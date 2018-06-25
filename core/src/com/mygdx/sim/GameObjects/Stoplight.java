@@ -17,7 +17,6 @@ public class Stoplight {
 	private Sprite sprite;
 
 	// Properties
-	private Edge lane;
 	private Node parent;
 	private ArrayList<Stoplight> linked;
 	private LightState lightState;
@@ -32,15 +31,9 @@ public class Stoplight {
 	 *            the location of the stoplight in 2D Euclidean space
 	 */
 
-	public Stoplight(Edge lane) {
-		this.lane = lane;
-		this.parent = lane.getTo();
-		this.location = new Location(lane, 0);
+	public Stoplight(Node node) {
+		this.parent = node;
 		this.lightState = LightState.GREEN;
-	}
-
-	public Edge getLane() {
-		return lane;
 	}
 
 	public Node getParent() {
@@ -92,14 +85,12 @@ public class Stoplight {
 
 		case RED: {
 			setLightState(LightState.GREEN);
-			invisibleCar = null;
 			break;
 		}
 
 		case GREEN: {
 			setLightState(LightState.RED);
-			// TODO Place invisible cars properly
-			invisibleCar = new InvisibleCar(getParent());
+			break;
 		}
 
 		}

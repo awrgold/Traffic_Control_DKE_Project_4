@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 6/23/2018 10:40:32 PM by Netedit Version 0.32.0
+<!-- generated on 6/25/2018 12:20:16 PM by Netedit Version 0.32.0
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
 
     <input>
-        <sumo-net-file value="C:\Users\abeld\Downloads\Intersection\continuousflow.net.xml"/>
+        <sumo-net-file value="C:\Users\abeld\Downloads\Intersection\DivergingDiamond\DivergingDiamond.net.xml"/>
     </input>
 
     <output>
-        <output-file value="C:\Users\abeld\Downloads\DivergingDiamond.net.xml"/>
-        <plain-output-prefix value="C:\Users\abeld\Downloads\DivergingDiamond\DivergingDiamond"/>
+        <output-file value="C:\Users\abeld\Downloads\Intersection\DivergingDiamond\DivergingDiamond.net.xml"/>
+        <plain-output-prefix value="C:\Users\abeld\Downloads\Intersection\DivergingDiamond\DivergingDiamond"/>
     </output>
 
     <processing>
@@ -104,6 +104,8 @@
     <node id="gneJ282" x="30.00" y="190.00" type="priority"/>
     <node id="gneJ283" x="120.00" y="150.00" type="priority"/>
     <node id="gneJ284" x="80.00" y="190.00" type="priority"/>
+    <node id="gneJ285" x="770.00" y="60.00" type="dead_end"/>
+    <node id="gneJ286" x="60.00" y="780.00" type="dead_end"/>
     <node id="gneJ38" x="770.00" y="50.00" type="priority"/>
     <node id="gneJ39" x="770.00" y="60.00" type="priority"/>
     <node id="gneJ4" x="70.00" y="-100.00" type="priority"/>
