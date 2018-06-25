@@ -27,6 +27,8 @@ import com.mygdx.sim.GameObjects.trafficObject.TrafficObject;
 import com.mygdx.sim.GameObjects.trafficObject.TrafficObjectState;
 import com.mygdx.sim.GameObjects.trafficObject.vehicle.Car;
 import com.mygdx.sim.GameObjects.trafficObject.vehicle.Vehicle;
+import com.mygdx.sim.World.Components.TrafficLight;
+import javafx.scene.paint.Stop;
 
 public class TrafficManager {
 
@@ -53,7 +55,7 @@ public class TrafficManager {
 	public final static Time meanInterarrivalTime = new Time(0, 0, 4);
 	// Mean 3.6 in a 1 hour simulation is an average of 1000 cars
 	public final static double mean = 3.6;
-    public static LightController lightController;
+    public static List<LightController> controllers = new ArrayList<LightController>();
 
 	private Map map;
 	private List<TrafficObject> trafficObjects;
@@ -62,10 +64,10 @@ public class TrafficManager {
 	private static ControlScheme scheme = ControlScheme.BASIC;
 	private int lastComputedTimestep = 0;
 
-	public TrafficManager(Map map, List<Vehicle> vehicles, List<TrafficObject> trafficObjects, LightController lightController) {
+	public TrafficManager(Map map, List<Vehicle> vehicles, List<TrafficObject> trafficObjects, List<LightController> controllers) {
 		this.map = map;
 		this.vehicles = vehicles;
-		this.lightController = lightController;
+		this.controllers = controllers;
 
 		this.trafficObjects = trafficObjects;
 
@@ -145,9 +147,12 @@ public class TrafficManager {
 				System.out.println(lastComputedTimestep);
 			
 			boolean invisibleCarVisible = true;
-			if(lightController.update(lastComputedTimestep)) {
-				invisibleCarVisible = !invisibleCarVisible;
+			for (LightController l : controllers){
+				if(l.update(lastComputedTimestep)) {
+					invisibleCarVisible = !invisibleCarVisible;
+				}
 			}
+
 			// Set invisible cars to visible or not depending on traffic light
 			for(TrafficObject trafficObject : trafficObjects) {
 				if(trafficObject instanceof InvisibleCar) {
@@ -182,8 +187,8 @@ public class TrafficManager {
 		}
 	}
 	
-	public LightController getLightController() {
-		return lightController;
+	public List<LightController> getLightControllers() {
+		return controllers;
 	}
 
 	/**
@@ -307,17 +312,19 @@ public class TrafficManager {
 		}
 
 		// Light Controller
-		lightController = new LightController(map.getLights());
-		lightController.setScheme(scheme);
-		
+
+		initiateStoplights(map);
+
 		// Static Traffic Objects
 		List<TrafficObject> staticTrafficObjects = new ArrayList<TrafficObject>();
-		for(Stoplight stopLight : lightController.getLights()) {
-			staticTrafficObjects.add(new InvisibleCar(stopLight.getParent().getOutEdges().get(0)));
+		for (LightController l : controllers){
+			for(Stoplight stopLight : l.getLights()) {
+				staticTrafficObjects.add(new InvisibleCar(stopLight.getParent().getOutEdges().get(0)));
+			}
 		}
-		
+
 		// Traffic Manager
-		TrafficManager tm = new TrafficManager(map, cars, staticTrafficObjects, lightController);
+		TrafficManager tm = new TrafficManager(map, cars, staticTrafficObjects, controllers);
 		return tm;
 	}
 
@@ -485,6 +492,33 @@ public class TrafficManager {
 		}
 	}
 
+	public static void initiateStoplights(Map map){
+
+		List<Stoplight> lightsA = new ArrayList<Stoplight>();
+		List<Stoplight> lightsB = new ArrayList<Stoplight>();
+
+		for (Stoplight s : map.getLights()){
+			if (s.getParent().getXmlID().contains("east") || s.getParent().getXmlID().contains("west")){
+				lightsA.add(s);
+			}else{
+				lightsB.add(s);
+			}
+		}
+
+
+		LightController L1 = new LightController(lightsA);
+		LightController L2 = new LightController(lightsB);
+
+		L1.setStartsGreen(true);
+		L2.setStartsGreen(false);
+
+		L1.setScheme(scheme);
+		L2.setScheme(scheme);
+
+		controllers.add(L1);
+		controllers.add(L2);
+	}
+
 	/**
 	 * Randomly (Gaussian) choose a weight for each urban center around the mean
 	 * @param mean - defined in class
@@ -577,7 +611,7 @@ public class TrafficManager {
 
         }
 
-        TrafficManager tm = new TrafficManager(map, cars, new ArrayList<TrafficObject>(), lightController);
+        TrafficManager tm = new TrafficManager(map, cars, new ArrayList<TrafficObject>(), controllers);
 
         int y = 0;
 
@@ -646,7 +680,7 @@ public class TrafficManager {
 		List<TrafficObject> staticTrafficObjects = new ArrayList<TrafficObject>();
 		staticTrafficObjects.add(blocker);
 		
-		return new TrafficManager(map, cars, staticTrafficObjects, lightController);
+		return new TrafficManager(map, cars, staticTrafficObjects, controllers);
 	}
 	
 	public static TrafficManager testcaseBlocker() {
@@ -689,7 +723,7 @@ public class TrafficManager {
 			cars.add(car);
 		}
 
-		return new TrafficManager(map, cars, new ArrayList<TrafficObject>(), lightController);
+		return new TrafficManager(map, cars, new ArrayList<TrafficObject>(), controllers);
 	}
 	
 	public static TrafficManager navigationTest() {
@@ -715,7 +749,7 @@ public class TrafficManager {
 		ArrayList<Vehicle> cars = new ArrayList<Vehicle>();
 		cars.add(car);
 		
-		return new TrafficManager(map,cars,new ArrayList<TrafficObject>(),new LightController(null));
+		return new TrafficManager(map,cars,new ArrayList<TrafficObject>(), new ArrayList<LightController>());
 	}
 
 	public static void main(String[] args) {

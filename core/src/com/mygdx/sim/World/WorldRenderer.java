@@ -30,7 +30,7 @@ public class WorldRenderer {
 	private float timer = 0;
 
 	// Control whether to always show all vehicles
-	boolean alwaysShowVehicles = true;
+	boolean alwaysShowVehicles = false;
 
 	// State HashMaps
 	HashMap<TrafficObject, TrafficObjectState> previousTrafficObjectState;

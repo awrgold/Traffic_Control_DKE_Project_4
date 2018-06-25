@@ -2,6 +2,7 @@ package com.mygdx.sim.GameObjects.Controllers;
 
 import java.util.List;
 
+import com.mygdx.sim.GameObjects.LightState;
 import com.mygdx.sim.GameObjects.Stoplight;
 
 public class LightController {
@@ -10,6 +11,8 @@ public class LightController {
 	private final int FINALINTERVAL = 100;
 	private ControlScheme scheme;
 	private List<Stoplight> lights;
+	private boolean startsGreen;
+
 
 	public LightController(List<Stoplight> lights) {
 		this.lights = lights;
@@ -25,6 +28,23 @@ public class LightController {
 
 	public List<Stoplight> getLights() {
 		return lights;
+	}
+
+	public void setStartsGreen(Boolean b){
+		this.startsGreen = b;
+		if (b){
+			for (Stoplight l : lights){
+				l.setLightState(LightState.GREEN);
+			}
+		}else{
+			for (Stoplight l : lights){
+				l.setLightState(LightState.RED);
+			}
+		}
+	}
+
+	public boolean isStartsGreen() {
+		return startsGreen;
 	}
 
 	public void setScheme(ControlScheme scheme) {
