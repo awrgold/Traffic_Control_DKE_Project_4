@@ -47,7 +47,7 @@ public class TrafficManager {
 	public final static int MAP_X_DIM = 100000;
 	public final static int MAP_Y_DIM = 100000;
 	public final static int GRID_FACTOR = 2;
-	public final static int vehicleCount = 1;
+	public final static int vehicleCount = 1000;
 	public final static int numUrbanCenters = 5;
 	public final static double mean = 0.2;
 	public final static double lambda = 1.0;
@@ -82,7 +82,7 @@ public class TrafficManager {
 		}
 		
 		for(TrafficObject to: trafficObjects) {
-			Edge edge = to.getState(0).getLocation().getEdge();
+			Edge edge = to.getEdge(0);
 			map.getStaticTrafficObjectsCache().get(edge).add(to);
 		}
 	}
@@ -129,7 +129,7 @@ public class TrafficManager {
 		for (Vehicle vehicle : vehicles)
 			vehicle.ensureCapacity(finalTimeStep);
 		System.out.println("vehicles");
-
+		
 		// Ensure all TrafficObjects have enough memory capacity
 		for(TrafficObject trafficObject : trafficObjects) {
 			if(trafficObject instanceof InvisibleCar) {
@@ -141,7 +141,7 @@ public class TrafficManager {
 		while (lastComputedTimestep < finalTimeStep - 1) {
 			if (lastComputedTimestep % 100 == 0)
 				System.out.println(lastComputedTimestep);
-
+			
 			boolean invisibleCarVisible = true;
 			if(lightController.update(lastComputedTimestep)) {
 				invisibleCarVisible = !invisibleCarVisible;
@@ -291,8 +291,8 @@ public class TrafficManager {
 		List<Node> spawns = map.getSpawnPoints();
 		List<Node> destinations = map.getDestinations();
 		List cars = createCars(spawns, destinations, map);
-
-
+		
+		
 		// createNeighborhoods(destinations, numUrbanCenters);
 
 		if(DEBUG){
@@ -303,13 +303,13 @@ public class TrafficManager {
 		// Light Controller
 		lightController = new LightController(map.getLights());
 		lightController.setScheme(scheme);
-
+		
 		// Static Traffic Objects
 		List<TrafficObject> staticTrafficObjects = new ArrayList<TrafficObject>();
 		for(Stoplight stopLight : lightController.getLights()) {
-			staticTrafficObjects.add(new InvisibleCar(stopLight.getParent()));
+			staticTrafficObjects.add(new InvisibleCar(stopLight.getParent().getOutEdges().get(0)));
 		}
-
+		
 		// Traffic Manager
 		TrafficManager tm = new TrafficManager(map, cars, staticTrafficObjects, lightController);
 		return tm;
@@ -361,9 +361,11 @@ public class TrafficManager {
 			while (start.getXmlID().charAt(0) == end.getXmlID().charAt(0)) {
 				end = destinations.get((int) (Math.floor(Math.random() * destinations.size())));
 			}
-
+			
+			end = start.getOutEdges().get(0).getTo();
+			
 			System.out.println("Start: " + start.getXmlID() + " End Goal: " + end.getXmlID());
-
+			
 			/**
 			 * Generate cars
 			 * StartTimeStep: when the car spawns
