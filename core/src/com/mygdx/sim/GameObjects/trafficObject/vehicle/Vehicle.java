@@ -588,7 +588,7 @@ public abstract class Vehicle implements TrafficObject {
 
 			double desireToLeaveThatLane = 0;
 
-			double desireToGoToThatLane = -1000;
+			double desireToGoToThatLane = 1;
 
 			if (laneChangesFromThatLane > 0) {
 				double distanceThing = 1

@@ -729,29 +729,21 @@ public class TrafficManager {
 		
 		return new TrafficManager(map,cars,new ArrayList<TrafficObject>(),new LightController(null));
 	}
-
-	public static void main(String[] args) {
+	
+	public static TrafficManager laneChangingTest() {
 		Node origin1 = new Node(0,0);
 		Node origin2 = new Node(0,3);
-//		Node origin3 = new Node(0,6);
-//		Node origin4 = new Node(4,1);
 		
 		Node end1 = new Node(1000,0);
 		Node end2 = new Node(1000,3);
-//		Node end3 = new Node(1000,6);
 		Node goal = new Node(1010,3);
 		
 		
-//		Node end4 = new Node(1004,1);
-		
 		Edge one = new Edge(origin1,end1,5);
 		Edge two = new Edge(origin2,end2);
-//		Edge three = new Edge(origin3,end3,7);
 		
 		Edge oneFinisher = new Edge(end1,goal);
 		Edge twoFinisher = new Edge(end2,goal);
-//		Edge threeFinisher = new Edge(end3,goal);
-//		Edge four = new Edge(origin4,end4);
 		
 		List<Node> nodes = Arrays.asList(origin1,origin2,end1,end2,goal);
 		List<Edge> edges = Arrays.asList(one,two,oneFinisher,twoFinisher);
@@ -769,8 +761,42 @@ public class TrafficManager {
 		
 		cars.add(car);
 		
-		TrafficManager mgr = new TrafficManager(map,cars,tos,null);
+		return new TrafficManager(map,cars,tos,null);
+	}
+	
+	public static TrafficManager secondLaneTest() {
+		Node start1 = new Node(0,0);
+		Node start2 = new Node(0,5);
 		
+		Node end1 = new Node(500,0);
+		Node end2 = new Node(500,5);
+		
+		Node left = new Node(500,-500);
+		Node center = new Node(1000,5);
+		Node right = new Node(500,505);
+		
+		Edge leftLane = new Edge(start1,end1);
+		Edge rightLane = new Edge(start2,end2);
+		Edge rightAlone = new Edge(end2,right);
+		Edge centerAlone = new Edge(end2,center);
+		Edge leftAlone = new Edge(end1,left);
+		
+		List<Edge> edges = Arrays.asList(leftLane,rightLane,rightAlone,centerAlone,leftAlone);
+		List<Node> nodes = Arrays.asList(start1,start2,end1,end2,left,center,right);
+		
+		Map graph = new Map(nodes,edges);
+		
+		Car car = new Car.Builder(start2, left, graph).build();
+		
+		List<Vehicle> vehicles = new ArrayList<Vehicle>();
+		vehicles.add(car);
+		
+		return new TrafficManager(graph, vehicles, new ArrayList<TrafficObject>(), null);
+	}
+
+	public static void main(String[] args) {
+				
+		TrafficManager mgr = secondLaneTest();
 		mgr.simulate(getMaximumTimesteps());
 		
 		int x = 0;

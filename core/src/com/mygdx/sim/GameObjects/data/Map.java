@@ -86,7 +86,7 @@ public class Map {
 				float distanceBetweenFroms = a.getFrom().getLocation().distance(b.getFrom().getLocation());
 				float distanceBetweenTos = a.getTo().getLocation().distance(b.getTo().getLocation());
 				
-				if(distanceBetweenFroms < 5 && distanceBetweenTos < 5) {
+				if(distanceBetweenFroms < 6 && distanceBetweenTos < 6) {
 					a.addNeighboringLane(b);
 					b.addNeighboringLane(a);
 				}
