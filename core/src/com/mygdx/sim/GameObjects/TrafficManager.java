@@ -47,7 +47,7 @@ public class TrafficManager {
 	public final static int MAP_X_DIM = 100000;
 	public final static int MAP_Y_DIM = 100000;
 	public final static int GRID_FACTOR = 2;
-	public final static int vehicleCount = 1;
+	public final static int vehicleCount = 1000;
 	public final static int numUrbanCenters = 5;
 	public final static double mean = 0.2;
 	public final static double lambda = 1.0;
@@ -82,7 +82,7 @@ public class TrafficManager {
 		}
 		
 		for(TrafficObject to: trafficObjects) {
-			Edge edge = to.getState(0).getLocation().getEdge();
+			Edge edge = to.getEdge(0);
 			map.getStaticTrafficObjectsCache().get(edge).add(to);
 		}
 	}
@@ -307,7 +307,7 @@ public class TrafficManager {
 		// Static Traffic Objects
 		List<TrafficObject> staticTrafficObjects = new ArrayList<TrafficObject>();
 		for(Stoplight stopLight : lightController.getLights()) {
-			staticTrafficObjects.add(new InvisibleCar(stopLight.getParent()));
+			staticTrafficObjects.add(new InvisibleCar(stopLight.getParent().getOutEdges().get(0)));
 		}
 		
 		// Traffic Manager
@@ -361,6 +361,8 @@ public class TrafficManager {
 			while (start.getXmlID().charAt(0) == end.getXmlID().charAt(0)) {
 				end = destinations.get((int) (Math.floor(Math.random() * destinations.size())));
 			}
+			
+			end = start.getOutEdges().get(0).getTo();
 			
 			System.out.println("Start: " + start.getXmlID() + " End Goal: " + end.getXmlID());
 			
