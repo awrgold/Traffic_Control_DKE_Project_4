@@ -28,14 +28,14 @@ public class WorldController {
 
 	// Map Objects
 	private List<Vehicle> vehicles;
-	
+
 	// World State
 	private WorldState worldState;
 	private WorldState previousWorldState;
-	
+
 	// Current Timestep
 	public int timestep;
-	
+
 	// Max TimeStep
 	public int timestepMax;
 
@@ -49,20 +49,17 @@ public class WorldController {
 	private TrafficManager trafficManager;
 
 	public WorldController() {
-		
+
 		// World State
 		worldState = WorldState.PAUSED;
 		previousWorldState = WorldState.RUNNING;
-		
+
 		// TimeStep
 		timestep = 1;
 
 		// Create Map Object Lists
 		vehicles = new ArrayList<Vehicle>();
 
-		for (int i = 0; i < numberIterations; i++){
-			trafficManager = TrafficManager.createTestFromFile();
-		}
 		// Traffic Manager
 		trafficManager = TrafficManager.createSimFromFile();
 
@@ -117,9 +114,9 @@ public class WorldController {
 	public HashMap<TrafficObject, TrafficObjectState> getTrafficObjectState(int timestep) {
 		return trafficManager.getState(timestep);
 	}
-	
+
 	public void updateLightController(int timestep) {
-		for (LightController l : trafficManager.getLightControllers()){
+		for (LightController l : trafficManager.getLightControllers()) {
 			l.update(timestep);
 		}
 	}
@@ -127,26 +124,26 @@ public class WorldController {
 	public List<Road> getRoads() {
 		return worldGenerator.getRoads();
 	}
-	
+
 	public List<Stoplight> getStopLights() {
 		return map.getTrafficLights();
 	}
-	
+
 	public List<TrafficLight> getTrafficLights() {
 		return worldGenerator.getTrafficLights();
 	}
-	
+
 	public WorldState getWorldState() {
 		return worldState;
 	}
-	
+
 	public void setWorldState(WorldState worldState) {
-		if(this.worldState != worldState) {
+		if (this.worldState != worldState) {
 			previousWorldState = this.worldState;
 			this.worldState = worldState;
 		}
 	}
-	
+
 	public WorldState getPreviousWorldState() {
 		return previousWorldState;
 	}

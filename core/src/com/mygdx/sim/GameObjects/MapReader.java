@@ -37,7 +37,41 @@ public class MapReader {
 		return edgeMap;
 	}
 
-
+	public void consoleReadMap(int choice) {
+		String nodesPath = null;
+		String edgesPath = null;
+		String connectionsPath = null;
+		File dir = null;
+		if(choice == 0) {
+			dir = new File(Gdx.files.getLocalStoragePath() + "assets\\Intersection\\Cloverleaf");
+		} else if (choice == 1) {
+			dir = new File(Gdx.files.getLocalStoragePath() + "assets\\Intersection\\Diamonds (no stoplights)");
+		} else if (choice == 2) {
+			dir = new File(Gdx.files.getLocalStoragePath() + "assets\\Intersection\\Normal Interchange");
+		} else if (choice == 3) {
+			dir = new File(Gdx.files.getLocalStoragePath() + "assets\\Intersection\\PinaVia");
+		} else if (choice == 4) {
+			dir = new File(Gdx.files.getLocalStoragePath() + "assets\\Intersection\\SinglePoint");
+		} else if (choice == 5) {
+			dir = new File(Gdx.files.getLocalStoragePath() + "assets\\Intersection\\Turbine");
+		}
+		else {
+			throw new NullPointerException("Este mapa no existe");
+		}
+		for (File file : dir.listFiles()) {
+			if (file.getName().endsWith(("nod.xml"))) {
+				nodesPath = file.getAbsolutePath();
+			} else if (file.getName().endsWith(("edg.xml"))) {
+				edgesPath = file.getAbsolutePath();
+			} else if (file.getName().endsWith(("con.xml"))) {
+				connectionsPath = file.getAbsolutePath();
+			}
+		}
+		
+		nodeMap = readNodes(nodesPath);
+		edgeMap = readEdges(nodeMap, edgesPath);
+		readConnections(edgeMap, connectionsPath);
+	}
 
 	public void readMap() {
 
@@ -51,6 +85,7 @@ public class MapReader {
 		int returnVal = chooser.showOpenDialog(null);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			File dir = new File(chooser.getSelectedFile().getPath());
+			System.out.println(chooser.getSelectedFile().getPath());
 			for (File file : dir.listFiles()) {
 				if (file.getName().endsWith(("nod.xml"))) {
 					nodesPath = file.getAbsolutePath();
