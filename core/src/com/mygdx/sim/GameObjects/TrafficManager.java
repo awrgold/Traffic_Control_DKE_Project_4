@@ -1,12 +1,7 @@
 package com.mygdx.sim.GameObjects;
 
 import java.sql.Time;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import com.mygdx.sim.GameObjects.Controllers.ControlScheme;
 import com.mygdx.sim.GameObjects.Controllers.LightController;
@@ -330,7 +325,7 @@ public class TrafficManager {
 		HashMap<String, Node> nodeMap = mr.getNodes();
 		HashMap<String, Edge> edgeMap = mr.getEdges();
 
-		mr.printAll(nodeMap, edgeMap);
+		// mr.printAll(nodeMap, edgeMap);
 
 		List<Node> nodeList = new ArrayList<Node>(nodeMap.values());
 
@@ -340,8 +335,6 @@ public class TrafficManager {
 		Map map = new Map(nodeList, edgeList);
 
 		List<Node> spawns = map.getSpawnPoints();
-		System.out.println("!!!!!!!!!!!!!SIZE OF SPAWN POINTS!!!!!!!!!!" + spawns.size());
-
 		List<Node> destinations = map.getDestinations();
 		List cars = createCars(spawns, destinations, map);
 
@@ -379,7 +372,7 @@ public class TrafficManager {
 		HashMap<String, Node> nodeMap = mr.getNodes();
 		HashMap<String, Edge> edgeMap = mr.getEdges();
 
-		mr.printAll(nodeMap, edgeMap);
+		// mr.printAll(nodeMap, edgeMap);
 
 		List<Node> nodeList = new ArrayList<Node>(nodeMap.values());
 
@@ -427,7 +420,7 @@ public class TrafficManager {
 		HashMap<String, Node> nodeMap = mr.getNodes();
 		HashMap<String, Edge> edgeMap = mr.getEdges();
 
-		mr.printAll(nodeMap, edgeMap);
+		// mr.printAll(nodeMap, edgeMap);
 
 		List<Node> nodeList = new ArrayList<Node>(nodeMap.values());
 
@@ -926,12 +919,86 @@ public class TrafficManager {
 		double meansPerSimulation[] = new double[simulationsToRun];
 		double stDevsPerSimulation[] = new double[simulationsToRun];
 
+		ArrayList<Double> expectedTravelTimesAverage = new ArrayList<Double>();
+		ArrayList<Integer> travellingTimesAverage = new ArrayList<Integer>();
+		ArrayList<Integer> flowsAverage = new ArrayList<Integer>();
+
 		for (int i = 0; i < simulationsToRun; i++) {
 			TrafficManager tm = createTestFromFile(mapPath);
 			tm.simulate(getMaximumTimesteps());
 			
 			double[] speedMeans = new double[tm.getVehicles().size()];
 			double[] speedStDevs = new double[tm.getVehicles().size()];
+
+			ArrayList<Double> expectedTravelTimes = new ArrayList<Double>();
+			ArrayList<Integer> travellingTimes = new ArrayList<Integer>();
+			ArrayList<Integer> flows = new ArrayList<Integer>();
+
+			// Expected travel time
+			for(Vehicle vehicle : tm.getVehicles()) {
+				if(!vehicle.isFinished(getMaximumTimesteps())) {
+					continue;
+				}
+				Set<Edge> edges = new HashSet<Edge>();
+				for(int timeSteps = 0; timeSteps < getMaximumTimesteps(); timeSteps++) {
+					edges.add(vehicle.getEdge(timeSteps));
+				}
+
+				double expectedTravelTime = 0;
+
+				for(Edge edge : edges) {
+					expectedTravelTime += edge.getLength() / edge.getSpeedLimit();
+				}
+
+				expectedTravelTimes.add(expectedTravelTime);
+			}
+
+			double expectedAverage = 0;
+			for(int expAvg = 0; expAvg < expectedTravelTimes.size(); expAvg++) {
+				expectedAverage += expectedTravelTimes.get(expAvg);
+			}
+
+			expectedAverage = expectedAverage / expectedTravelTimes.size();
+			expectedTravelTimesAverage.add(expectedAverage);
+
+			System.out.println("Expected Travel time: " + expectedAverage);
+
+			// Travelling time
+			for(Vehicle vehicle : tm.getVehicles()) {
+				if(!vehicle.isFinished(getMaximumTimesteps())) {
+					continue;
+				}
+
+				int travellingTime = 0;
+
+				travellingTime = vehicle.getEndTimestep() - vehicle.getStartTimestep();
+
+				travellingTimes.add(travellingTime);
+			}
+
+			int expectedAverageTrav = 0;
+			for(int expAvgTrav = 0; expAvgTrav < travellingTimes.size(); expAvgTrav++) {
+				expectedAverageTrav += travellingTimes.get(expAvgTrav);
+			}
+
+			expectedAverageTrav = expectedAverageTrav / travellingTimes.size();
+			travellingTimesAverage.add(expectedAverageTrav);
+
+			System.out.println("Travel time: " + expectedAverageTrav);
+
+			// Flow
+			int vehiclesThatDontReachGoal = 0;
+			for(Vehicle vehicle : tm.getVehicles()) {
+				if(!vehicle.isFinished(getMaximumTimesteps())) {
+					vehiclesThatDontReachGoal++;
+				}
+			}
+			int flow = tm.getVehicles().size() - vehiclesThatDontReachGoal;
+			flowsAverage.add(flow);
+
+
+			System.out.println("Flow: " + flow);
+			//managers.add(tm);
 
 			for (int k = 0; k < tm.getVehicles().size(); k++) {
 				Vehicle currentVehicle = tm.getVehicles().get(k);
@@ -977,7 +1044,32 @@ public class TrafficManager {
 			Edge.lastGivenId = 0;
 			Node.lastGivenId = 0;
 		}
-		
+		double average1 = 0;
+		for(int avg1 = 0; avg1 < expectedTravelTimesAverage.size(); avg1++) {
+			average1 += expectedTravelTimesAverage.get(avg1);
+		}
+
+		average1 = average1 / expectedTravelTimesAverage.size();
+
+		int average2 = 0;
+		for(int avg2 = 0; avg2 < travellingTimesAverage.size(); avg2++) {
+			average2 += travellingTimesAverage.get(avg2);
+		}
+
+		average2 = average2 / travellingTimesAverage.size();
+
+		int average3 = 0;
+		for(int avg3 = 0; avg3 < flowsAverage.size(); avg3++) {
+			average3 += flowsAverage.get(avg3);
+		}
+
+		average3 = average3 / flowsAverage.size();
+
+		System.out.println("Expected Travel Time for " + simulationsToRun + " is " + average1);
+		System.out.println("Travel Time for " + simulationsToRun + " is " + average2);
+		System.out.println("Flow for " + simulationsToRun + " is " + average3);
+
+
 		double averageSpeedForAll = 0;
 		double averageStDevOnSpeedForAll = 0;
 
@@ -994,4 +1086,6 @@ public class TrafficManager {
 
 		System.out.println("done");
 	}
+
+
 }
