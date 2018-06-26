@@ -27,12 +27,6 @@ import com.mygdx.sim.GameObjects.trafficObject.TrafficObject;
 import com.mygdx.sim.GameObjects.trafficObject.TrafficObjectState;
 import com.mygdx.sim.GameObjects.trafficObject.vehicle.Car;
 import com.mygdx.sim.GameObjects.trafficObject.vehicle.Vehicle;
-<<<<<<< HEAD
-=======
-import com.mygdx.sim.World.Components.TrafficLight;
-import javafx.scene.effect.Light;
-import javafx.scene.paint.Stop;
->>>>>>> branch 'master' of https://github.com/awrgold/Project_2.2.git
 
 public class TrafficManager {
 
@@ -230,15 +224,6 @@ public class TrafficManager {
 			}
 
 			lastComputedTimestep++;
-
-<<<<<<< HEAD
-			// lightController.update(lastComputedTimestep);
-=======
-			// Update each light controller
-//			for (LightController l : controllers){
-//				l.update(lastComputedTimestep);
-//			}
->>>>>>> branch 'master' of https://github.com/awrgold/Project_2.2.git
 
 			// Have the vehicles update their locations for the next timestep
 			for (Vehicle vehicle : vehicles)
