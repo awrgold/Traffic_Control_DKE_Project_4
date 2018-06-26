@@ -3,17 +3,12 @@ package com.mygdx.sim.GameObjects;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.mygdx.sim.GameObjects.data.Edge;
-import com.mygdx.sim.GameObjects.data.Location;
 import com.mygdx.sim.GameObjects.data.Node;
 import com.mygdx.sim.GameObjects.trafficObject.InvisibleCar;
 
 public class Stoplight {
-
-	// Timer
-	private int timer;
-
+	
 	// Properties
 	private Node parent;
 	private List<Edge> edges;

@@ -5,9 +5,6 @@ import java.util.List;
 
 import com.mygdx.sim.GameObjects.LightState;
 import com.mygdx.sim.GameObjects.Stoplight;
-import com.mygdx.sim.GameObjects.data.Edge;
-import com.sun.xml.internal.bind.v2.schemagen.xmlschema.SchemaTop;
-import javafx.scene.paint.Stop;
 
 public class LightController {
 

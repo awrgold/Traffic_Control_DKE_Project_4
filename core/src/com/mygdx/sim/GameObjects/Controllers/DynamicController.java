@@ -1,12 +1,10 @@
 package com.mygdx.sim.GameObjects.Controllers;
 
-import com.mygdx.sim.GameObjects.Stoplight;
-import com.mygdx.sim.GameObjects.data.Edge;
-import com.mygdx.sim.GameObjects.data.Map;
-import javafx.scene.effect.Light;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.mygdx.sim.GameObjects.Stoplight;
+import com.mygdx.sim.GameObjects.data.Map;
 
 public class DynamicController {
 

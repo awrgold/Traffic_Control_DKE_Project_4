@@ -1,6 +1,5 @@
 package com.mygdx.sim.GameObjects.trafficObject.vehicle;
 
-import java.util.List;
 import java.util.Random;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -28,6 +27,7 @@ public abstract class Vehicle implements TrafficObject {
 	Node goalNode;
 	// The "time limit" for a car to reach its destination, used for experiments
 	float timeLimit;
+	private float rotation;
 	protected String spriteName;
 	private Sprite sprite;
 
@@ -43,7 +43,7 @@ public abstract class Vehicle implements TrafficObject {
 	int maxSpeed;
 
 	// The physical length of the vehicle in meters.
-	private float length = 4;
+	private float length = 70; // temporarily very high because of UI
 
 	/**
 	 * Stores for each timestep, the index in edgesToTravel of the edge
@@ -249,6 +249,7 @@ public abstract class Vehicle implements TrafficObject {
 
 		this.sprite = Resources.world.vehicleSprites.get(spriteName);
 		sprite.setScale(0.5f);
+		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
 	}
 
 	// TODO: Get a way to find out how much time is left
@@ -432,9 +433,12 @@ public abstract class Vehicle implements TrafficObject {
 	/**
 	 * Returns the Coordinates that this vehicle is located on at the given timestep.
 	 */
-	public void draw(SpriteBatch spriteBatch, float x, float y, float rotation) {
+	public void draw(SpriteBatch spriteBatch, float x, float y, float rotation, boolean reuseRotation) {
+		if(!reuseRotation) {
+			this.rotation = rotation;
+		}
 		sprite.setPosition(x, y);
-		sprite.setRotation(rotation);
+		sprite.setRotation(this.rotation);
 		sprite.draw(spriteBatch);
 	}
 

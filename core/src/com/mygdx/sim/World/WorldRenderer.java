@@ -79,7 +79,7 @@ public class WorldRenderer {
 		}
 
 		this.drawMapRoads(spriteBatch);
-		this.drawMapNodes(spriteBatch);
+		//this.drawMapNodes(spriteBatch);
 		this.drawMapTrafficObjects(spriteBatch, worldController.timestep);
 		this.drawTrafficLights(spriteBatch);
 
@@ -140,15 +140,20 @@ public class WorldRenderer {
 			float rotation = 90;
 
 			rotation += (float) Math.toDegrees(Math.atan2(y, x));
+			
+			boolean reuseRotation = false;
+			if(x == 0 && y == 0) {
+				reuseRotation = true;
+			}
 
 			/**
 			 * Whether or not vehicles will always be visible, regardless if they've spawned
 			 * or not.
 			 */
 			if (alwaysShowVehicles) {
-				vehicle.draw(spriteBatch, (float) nextCoord.getX(), (float) previousCoord.getY(), rotation);
+				vehicle.draw(spriteBatch, (float) nextCoord.getX(), (float) previousCoord.getY(), rotation, reuseRotation);
 			} else if (vehicle.isVisibleInVisualization(timestep)) {
-				vehicle.draw(spriteBatch, (float) nextCoord.getX(), (float) previousCoord.getY(), rotation);
+				vehicle.draw(spriteBatch, (float) nextCoord.getX(), (float) previousCoord.getY(), rotation, reuseRotation);
 			}
 
 		}

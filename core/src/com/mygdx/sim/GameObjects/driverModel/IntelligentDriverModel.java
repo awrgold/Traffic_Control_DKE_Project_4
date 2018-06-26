@@ -1,10 +1,10 @@
 package com.mygdx.sim.GameObjects.driverModel;
 
+import java.util.Random;
+
 import com.mygdx.sim.GameObjects.TrafficManager;
 import com.mygdx.sim.GameObjects.data.DistanceAndSpeed;
 import com.mygdx.sim.GameObjects.trafficObject.vehicle.Vehicle;
-
-import java.util.Random;
 
 public class IntelligentDriverModel implements DriverModel{
 	
