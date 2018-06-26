@@ -434,8 +434,10 @@ public class TrafficManager {
 		// Static Traffic Objects
 		List<TrafficObject> staticTrafficObjects = new ArrayList<TrafficObject>();
 		for (LightController l : controllers){
-			for(Stoplight stopLight : l.getLights()) {
-				staticTrafficObjects.add(new InvisibleCar(stopLight.getParent().getOutEdges().get(0)));
+			for (Stoplight stopLight : l.getLights()) {
+				InvisibleCar invisibleCar = new InvisibleCar(stopLight.getParent().getOutEdges().get(0));
+				stopLight.setInvisibleCar(invisibleCar);
+				staticTrafficObjects.add(invisibleCar);
 			}
 		}
 
@@ -484,8 +486,10 @@ public class TrafficManager {
 		// Static Traffic Objects
 		List<TrafficObject> staticTrafficObjects = new ArrayList<TrafficObject>();
 		for (LightController l : controllers){
-			for(Stoplight stopLight : l.getLights()) {
-				staticTrafficObjects.add(new InvisibleCar(stopLight.getParent().getOutEdges().get(0)));
+			for (Stoplight stopLight : l.getLights()) {
+				InvisibleCar invisibleCar = new InvisibleCar(stopLight.getParent().getOutEdges().get(0));
+				stopLight.setInvisibleCar(invisibleCar);
+				staticTrafficObjects.add(invisibleCar);
 			}
 		}
 
