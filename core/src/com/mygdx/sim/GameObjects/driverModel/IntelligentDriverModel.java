@@ -21,7 +21,7 @@ public class IntelligentDriverModel implements DriverModel{
 	 * Variance: standard deviation of the normal curve, how far the drivers will deviate.
 	 */
 	private double speedLimitAdherence = 1.0;
-	private double speedLimitVariance = 0.25;
+	private double speedLimitVariance = 0.1;
 
 
 	public double determineAcceleration(TrafficManager mgr, Vehicle vehicle, int timestep) {
@@ -29,7 +29,7 @@ public class IntelligentDriverModel implements DriverModel{
 			return 0;
 		
 		// Begin setup
-		//setSpeedLimitAdherence();
+		// setSpeedLimitAdherence();
 		int desiredSpeed = vehicle.getMaxSpeed(timestep);
 		
 		double vehicleLength = vehicle.getLength();

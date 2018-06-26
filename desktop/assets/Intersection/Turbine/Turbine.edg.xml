@@ -1,18 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 6/25/2018 7:40:47 PM by Netedit Version 0.32.0
+<!-- generated on 6/25/2018 11:44:41 PM by Netedit Version 0.32.0
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
 
+    <input>
+        <sumo-net-file value="C:\Users\abeld\Documents\School\Year%202\Project%202-2\Project_2.2\desktop\assets\Intersection\Turbine\Turbine.net.xml"/>
+    </input>
+
     <output>
-        <output-file value="C:\Users\abeld\Documents\School\Year%202\Project%202-2\Project_2.2\core\assets\Intersection\Turbine\Turbine.net.xml"/>
-        <plain-output-prefix value="C:\Users\abeld\Documents\School\Year%202\Project%202-2\Project_2.2\core\assets\Intersection\Turbine\Turbine"/>
+        <output-file value="C:\Users\abeld\Documents\School\Year%202\Project%202-2\Project_2.2\desktop\assets\Intersection\Turbine\Turbine.net.xml"/>
+        <plain-output-prefix value="C:\Users\abeld\Documents\School\Year%202\Project%202-2\Project_2.2\desktop\assets\Intersection\Turbine\Turbine"/>
     </output>
 
     <processing>
         <no-turnarounds value="true"/>
         <offset.disable-normalization value="true"/>
+        <lefthand value="false"/>
+        <junctions.corner-detail value="0"/>
+        <rectangular-lane-cut value="false"/>
+        <walkingareas value="false"/>
     </processing>
 
 </configuration>
@@ -139,10 +147,10 @@
     <edge id="gneE209" from="gneJ211" to="gneJ168" priority="1" numLanes="1" speed="13.89"/>
     <edge id="gneE21" from="gneJ26" to="gneJ27" priority="1" numLanes="1" speed="13.89"/>
     <edge id="gneE212" from="gneJ215" to="gneJ216" priority="1" numLanes="1" speed="13.89"/>
-    <edge id="gneE213" from="gneJ217" to="gneJ218" priority="1" numLanes="1" speed="13.89"/>
+    <edge id="gneE213" from="gneJ241" to="gneJ218" priority="1" numLanes="1" speed="13.89"/>
     <edge id="gneE214" from="gneJ219" to="gneJ220" priority="1" numLanes="1" speed="13.89"/>
     <edge id="gneE215" from="gneJ221" to="gneJ222" priority="1" numLanes="1" speed="13.89"/>
-    <edge id="gneE216" from="gneJ223" to="gneJ224" priority="1" numLanes="1" speed="13.89"/>
+    <edge id="gneE216" from="gneJ223" to="gneJ253" priority="1" numLanes="1" speed="13.89"/>
     <edge id="gneE217" from="gneJ225" to="gneJ226" priority="1" numLanes="1" speed="13.89"/>
     <edge id="gneE218" from="gneJ227" to="gneJ228" priority="1" numLanes="1" speed="13.89"/>
     <edge id="gneE219" from="gneJ229" to="gneJ230" priority="1" numLanes="1" speed="13.89"/>
@@ -353,9 +361,9 @@
     <edge id="gneE406" from="gneJ347" to="gneJ352" priority="1" numLanes="1" speed="13.89"/>
     <edge id="gneE407" from="gneJ337" to="gneJ358" priority="1" numLanes="1" speed="13.89"/>
     <edge id="gneE408" from="gneJ358" to="north-out3" priority="1" numLanes="1" speed="13.89"/>
-    <edge id="gneE409" from="gneJ341" to="gneJ360" priority="1" numLanes="1" speed="13.89"/>
+    <edge id="gneE409" from="gneJ341" to="gneJ370" priority="1" numLanes="1" speed="13.89"/>
     <edge id="gneE41" from="gneJ46" to="gneJ47" priority="1" numLanes="1" speed="13.89"/>
-    <edge id="gneE410" from="gneJ360" to="north-out2" priority="1" numLanes="1" speed="13.89"/>
+    <edge id="gneE410" from="gneJ370" to="north-out2" priority="1" numLanes="1" speed="13.89"/>
     <edge id="gneE411" from="gneJ345" to="gneJ362" priority="1" numLanes="1" speed="13.89"/>
     <edge id="gneE412" from="gneJ362" to="north-out1" priority="1" numLanes="1" speed="13.89"/>
     <edge id="gneE413" from="north1" to="gneJ365" priority="1" numLanes="1" speed="13.89"/>

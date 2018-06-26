@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 6/25/2018 5:26:12 PM by Netedit Version 0.32.0
+<!-- generated on 6/25/2018 11:18:47 PM by Netedit Version 0.32.0
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
 
     <input>
-        <sumo-net-file value="C:\Users\abeld\Downloads\Intersection\DiamondSliplanes\DiamondSlip.net.xml"/>
+        <sumo-net-file value="C:\Users\abeld\Documents\School\Year%202\Project%202-2\Project_2.2\desktop\assets\Intersection\DiamondSliplanes\DiamondSlip.net.xml"/>
     </input>
 
     <output>
-        <output-file value="C:\Users\abeld\Downloads\Intersection\DiamondSliplanes\DiamondSlip.net.xml"/>
-        <plain-output-prefix value="C:\Users\abeld\Downloads\Intersection\DiamondSliplanes\DiamondSlip"/>
+        <output-file value="C:\Users\abeld\Documents\School\Year%202\Project%202-2\Project_2.2\desktop\assets\Intersection\DiamondSliplanes\DiamondSlip.net.xml"/>
+        <plain-output-prefix value="C:\Users\abeld\Documents\School\Year%202\Project%202-2\Project_2.2\desktop\assets\Intersection\DiamondSliplanes\DiamondSlip"/>
     </output>
 
     <processing>
@@ -80,10 +80,9 @@
     <node id="gneJ18" x="-120.00" y="70.00" type="priority"/>
     <node id="gneJ183" x="60.00" y="-570.00" type="priority"/>
     <node id="gneJ184" x="70.00" y="-570.00" type="priority"/>
-    <node id="gneJ185" x="80.00" y="-570.00" type="priority"/>
     <node id="gneJ186" x="60.00" y="-650.00" type="priority"/>
     <node id="gneJ187" x="70.00" y="-650.00" type="priority"/>
-    <node id="gneJ188" x="80.00" y="-570.00" type="dead_end"/>
+    <node id="gneJ188" x="80.00" y="-570.00" type="priority"/>
     <node id="gneJ189" x="60.00" y="-720.00" type="priority"/>
     <node id="gneJ19" x="230.00" y="70.00" type="priority"/>
     <node id="gneJ190" x="70.00" y="-720.00" type="priority"/>

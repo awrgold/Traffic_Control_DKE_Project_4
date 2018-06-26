@@ -26,8 +26,7 @@ public class Stoplight {
 	 * The stoplight is an array of Enumerable Colors, where position N (# of lanes)
 	 * is the left-most lane, and position 0 is the right most lane.
 	 * 
-	 * @param coords:
-	 *            the location of the stoplight in 2D Euclidean space
+	 * @param coords: the location of the stoplight in 2D Euclidean space
 	 */
 
 	public Stoplight(Node node) {
