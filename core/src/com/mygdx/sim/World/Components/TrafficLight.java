@@ -20,6 +20,6 @@ public class TrafficLight {
 	}
 	
 	public void draw(SpriteBatch spriteBatch) {
-		spriteBatch.draw((stopLight.getLightState() == LightState.GREEN) ? Resources.ui.trafficLight_green : Resources.ui.trafficLight_red , posX, posY);
+		spriteBatch.draw((stopLight.getLightState() == LightState.GREEN) ? Resources.ui.trafficLight_red :  Resources.ui.trafficLight_green , posX, posY);
 	}
 }

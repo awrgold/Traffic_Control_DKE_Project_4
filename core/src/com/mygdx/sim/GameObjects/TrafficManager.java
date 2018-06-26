@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Random;
 
 import com.mygdx.sim.GameObjects.Controllers.ControlScheme;
-import com.mygdx.sim.GameObjects.Controllers.DynamicController;
 import com.mygdx.sim.GameObjects.Controllers.LightController;
 import com.mygdx.sim.GameObjects.data.DistanceAndSpeed;
 import com.mygdx.sim.GameObjects.data.DistanceAndTrafficObject;
@@ -28,9 +27,6 @@ import com.mygdx.sim.GameObjects.trafficObject.TrafficObject;
 import com.mygdx.sim.GameObjects.trafficObject.TrafficObjectState;
 import com.mygdx.sim.GameObjects.trafficObject.vehicle.Car;
 import com.mygdx.sim.GameObjects.trafficObject.vehicle.Vehicle;
-import com.mygdx.sim.World.Components.TrafficLight;
-import javafx.scene.effect.Light;
-import javafx.scene.paint.Stop;
 
 public class TrafficManager {
 
@@ -53,11 +49,12 @@ public class TrafficManager {
 	public final static int GRID_FACTOR = 2;
 	public final static int vehicleCount = 1000;
 	public final static int numUrbanCenters = 5;
-	// Mean IA time of 4 seconds with 1 hour simulation is an average of 900 cars in a 1 hour simulation
+	// Mean IA time of 4 seconds with 1 hour simulation is an average of 900 cars in
+	// a 1 hour simulation
 	public final static Time meanInterarrivalTime = new Time(0, 0, 4);
 	// Mean 3.6 in a 1 hour simulation is an average of 1000 cars
 	public final static double mean = 3.6;
-    public static List<LightController> controllers = new ArrayList<LightController>();
+	public static List<LightController> controllers = new ArrayList<LightController>();
 
 
 	private Map map;
@@ -115,8 +112,23 @@ public class TrafficManager {
 		this.controllers = controllers;
 
 		this.trafficObjects = trafficObjects;
-		
-		for(TrafficObject to: trafficObjects) {
+
+		for (Vehicle vehicle : vehicles) {
+
+			// Validation of the path
+			// List<Edge> edgePath = vehicle.getEdgePath();
+			// if (edgePath == null) {
+			// continue;
+			// }
+			//
+			// for (int i = 0; i < edgePath.size() - 1; i++)
+			// if (!edgePath.get(i + 1).getFrom().equals(edgePath.get(i).getTo()))
+			// throw new RuntimeException("EdgePath of vehicle " + this + " implies
+			// teleportation");
+
+		}
+
+		for (TrafficObject to : trafficObjects) {
 			Edge edge = to.getEdge(0);
 			map.getStaticTrafficObjectsCache().get(edge).add(to);
 		}
@@ -133,15 +145,17 @@ public class TrafficManager {
 	/**
 	 * Gets the state (location+visibility) of all traffic objects at the given
 	 * timestep.
-	 * @param timestep - timestep for which you need the state
+	 * 
+	 * @param timestep
+	 *            - timestep for which you need the state
 	 * @return a HashMap that maps TrafficObjects to their State
 	 */
 	public HashMap<TrafficObject, TrafficObjectState> getState(int timestep) {
 		HashMap<TrafficObject, TrafficObjectState> state = new HashMap<TrafficObject, TrafficObjectState>();
 
-		for( Vehicle veh : vehicles)
+		for (Vehicle veh : vehicles)
 			state.put(veh, veh.getState(timestep));
-		
+
 		for (TrafficObject to : trafficObjects)
 			state.put(to, to.getState(timestep));
 
@@ -150,7 +164,9 @@ public class TrafficManager {
 
 	/**
 	 * Run the simulation until the given timestep.
-	 * @param finalTimeStep - timestep until which we are running the sim
+	 * 
+	 * @param finalTimeStep
+	 *            - timestep until which we are running the sim
 	 */
 	public void simulate(int finalTimeStep) {
 
@@ -164,33 +180,28 @@ public class TrafficManager {
 		for (Vehicle vehicle : vehicles)
 			vehicle.ensureCapacity(finalTimeStep);
 		System.out.println("vehicles");
-		
-		// Ensure all TrafficObjects have enough memory capacity
-		for(TrafficObject trafficObject : trafficObjects) {
-			if(trafficObject instanceof InvisibleCar) {
-				((InvisibleCar) trafficObject).ensureCapacity(finalTimeStep);
+
+		// Ensure all InvisibleCars have enough memory capacity
+		for (LightController l : controllers) {
+			for (Stoplight stopLight : l.getLights()) {
+				stopLight.getInvisibleCar().ensureCapacity(finalTimeStep);
 			}
 		}
-		System.out.println("trafficObjects");
+		System.out.println("invisibleCars");
 
 		while (lastComputedTimestep < finalTimeStep - 1) {
 			if (lastComputedTimestep % 100 == 0)
 				System.out.println(lastComputedTimestep);
-			
-			boolean invisibleCarVisible = true;
 
+			for (LightController l : controllers) {
+				l.update(lastComputedTimestep);
 
-			for (LightController lc : controllers){
-				if(lc.update(lastComputedTimestep)) {
-					invisibleCarVisible = !invisibleCarVisible;
-				}
-			}
-
-
-			// Set invisible cars to visible or not depending on traffic light
-			for(TrafficObject trafficObject : trafficObjects) {
-				if(trafficObject instanceof InvisibleCar) {
-					((InvisibleCar) trafficObject).setIsVisibleToDrivers(lastComputedTimestep, invisibleCarVisible);
+				for (Stoplight stopLight : l.getLights()) {
+					if (stopLight.getLightState() == LightState.GREEN) {
+						stopLight.getInvisibleCar().setIsVisibleToDrivers(lastComputedTimestep, false);
+					} else {
+						stopLight.getInvisibleCar().setIsVisibleToDrivers(lastComputedTimestep, true);
+					}
 				}
 			}
 
@@ -207,18 +218,12 @@ public class TrafficManager {
 				// Set the acceleration
 				vehicle.accelerate(lastComputedTimestep, acceleration);
 
-				// (OPTIONAL) update the path for our vehicle based on the current location. Requires updated A* heuristics
+				// (OPTIONAL) update the path for our vehicle based on the current location.
+				// Requires updated A* heuristics
 				// vehicle.computePath(lastComputedTimestep);
 			}
 
 			lastComputedTimestep++;
-
-			// Update each light controller
-//			for (LightController l : controllers){
-//				l.update(lastComputedTimestep);
-//			}
-
-
 
 			// Have the vehicles update their locations for the next timestep
 			for (Vehicle vehicle : vehicles)
@@ -237,7 +242,7 @@ public class TrafficManager {
 
 
 	}
-	
+
 	public List<LightController> getLightControllers() {
 		return controllers;
 	}
@@ -245,8 +250,11 @@ public class TrafficManager {
 	/**
 	 * Gets the distance to and speed of the closest vehicle in front of this
 	 * vehicle.
-	 * @param vehicle - vehicle in front of which we are checking
-	 * @param timestep - timestep at which we are checking
+	 * 
+	 * @param vehicle
+	 *            - vehicle in front of which we are checking
+	 * @param timestep
+	 *            - timestep at which we are checking
 	 * @return distance and speed of closest vehicle
 	 */
 	public DistanceAndSpeed getDistanceAndSpeedToClosestTrafficObject(Vehicle vehicle, int timestep) {
@@ -264,7 +272,7 @@ public class TrafficManager {
 		double speedOfClosest = RIDICULOUS_SPEED;
 
 		if (timestep > 0)
-			speedOfClosest = closest.getSpeed(timestep-1);
+			speedOfClosest = closest.getSpeed(timestep - 1);
 
 		return new DistanceAndSpeed(distanceToClosest, speedOfClosest);
 	}
@@ -273,11 +281,10 @@ public class TrafficManager {
 			int timestep) {
 		List<Vehicle> vehiclesOnCurrentEdge = map.getLocationCache().get(currentEdge).get(timestep);
 		List<TrafficObject> staticTrafficObjectsOnCurrentEdge = map.getStaticTrafficObjectsCache().get(currentEdge);
-		
+
 		ArrayList<TrafficObject> trafficObjectsOnCurrentEdge = new ArrayList<TrafficObject>();
 		trafficObjectsOnCurrentEdge.addAll(staticTrafficObjectsOnCurrentEdge);
 		trafficObjectsOnCurrentEdge.addAll(vehiclesOnCurrentEdge);
-				
 
 		ArrayList<DistanceAndTrafficObject> candidates = new ArrayList<DistanceAndTrafficObject>();
 		for (TrafficObject to : trafficObjectsOnCurrentEdge) {
@@ -315,7 +322,7 @@ public class TrafficManager {
 		for (DistanceAndTrafficObject dnv : list) {
 			if (dnv == null)
 				continue;
-			
+
 			TrafficObject vehicle2 = dnv.getTrafficObject();
 
 			double thisDistance = dnv.getDistance();
@@ -340,7 +347,7 @@ public class TrafficManager {
 		mr.readMap();
 		HashMap<String, Node> nodeMap = mr.getNodes();
 		HashMap<String, Edge> edgeMap = mr.getEdges();
-		
+
 		mr.printAll(nodeMap, edgeMap);
 
 		List<Node> nodeList = new ArrayList<Node>(nodeMap.values());
@@ -359,11 +366,10 @@ public class TrafficManager {
 		}
 		List<Node> destinations = map.getDestinations();
 		List cars = createCars(spawns, destinations, map);
-		
-		
+
 		// createNeighborhoods(destinations, numUrbanCenters);
 
-		if(DEBUG){
+		if (DEBUG) {
 			System.out.println("Destination list size: " + destinations.size());
 			System.out.println("Creating neighborhoods with " + destinations.size() + " destinations, and " + numUrbanCenters + " urban centers.");
 		}
@@ -374,12 +380,14 @@ public class TrafficManager {
 
 		// Static Traffic Objects
 		List<TrafficObject> staticTrafficObjects = new ArrayList<TrafficObject>();
-		for (LightController lc : controllers){
-			for(Stoplight stopLight : lc.getLights()) {
-				staticTrafficObjects.add(new InvisibleCar(stopLight.getParent().getOutEdges().get(0)));
+		for (LightController l : controllers) {
+			for (Stoplight stopLight : l.getLights()) {
+				InvisibleCar invisibleCar = new InvisibleCar(stopLight.getParent().getOutEdges().get(0));
+				stopLight.setInvisibleCar(invisibleCar);
+				staticTrafficObjects.add(invisibleCar);
+
 			}
 		}
-
 
 		// Traffic Manager
 		TrafficManager tm = new TrafficManager(map, cars, staticTrafficObjects, controllers);
@@ -425,12 +433,11 @@ public class TrafficManager {
 
 		// Static Traffic Objects
 		List<TrafficObject> staticTrafficObjects = new ArrayList<TrafficObject>();
-		for (LightController lc : controllers){
-			for(Stoplight stopLight : lc.getLights()) {
+		for (LightController l : controllers){
+			for(Stoplight stopLight : l.getLights()) {
 				staticTrafficObjects.add(new InvisibleCar(stopLight.getParent().getOutEdges().get(0)));
 			}
 		}
-
 
 		// Traffic Manager
 		TrafficManager tm = new TrafficManager(map, cars, staticTrafficObjects, controllers);
@@ -439,22 +446,24 @@ public class TrafficManager {
 
 	/**
 	 * Create spawn/despawn points for vehicles in the simulation
-	 * @param map: The current map of the sim
+	 * 
+	 * @param map:
+	 *            The current map of the sim
 	 * @return: the list of points vehicles may spawn at
 	 */
-	private static ArrayList<Node> createSpawnPoints(Map map){
+	private static ArrayList<Node> createSpawnPoints(Map map) {
 
 		ArrayList<Node> spawnPoints = new ArrayList<Node>();
 
 		// Make small side roads the only place cars can spawn
-		for (Node n : map.getNodes()){
+		for (Node n : map.getNodes()) {
 			int minLanes = Integer.MIN_VALUE;
-			for (Edge e : n.getInEdges()){
-				if (e.getNumLanes() > minLanes){
+			for (Edge e : n.getInEdges()) {
+				if (e.getNumLanes() > minLanes) {
 					minLanes = e.getNumLanes();
 				}
 			}
-			if (minLanes == 1){
+			if (minLanes == 1) {
 				n.makeDestination();
 				spawnPoints.add(n);
 			}
@@ -464,17 +473,20 @@ public class TrafficManager {
 
 	/**
 	 * Create all the vehicles for the simulation
-	 * @param destinations: the list of vehicles cars can spawn at
-	 * @param map: the map of the sim
+	 * 
+	 * @param destinations:
+	 *            the list of vehicles cars can spawn at
+	 * @param map:
+	 *            the map of the sim
 	 * @return the list of vehicles in the sim
 	 */
-	private static List createCars(List<Node> spawns, List<Node> destinations, Map map){
+	private static List createCars(List<Node> spawns, List<Node> destinations, Map map) {
 		List cars = new ArrayList();
 
 		int previousArrivalTime = 0;
 		while (previousArrivalTime < getMaximumTimesteps()) {
 
-//			Collections.sort(destinations, new SortNode());
+			// Collections.sort(destinations, new SortNode());
 
 			Node start = spawns.get((int) (Math.floor(Math.random() * spawns.size())));
 			Node end = destinations.get((int) (Math.floor(Math.random() * destinations.size())));
@@ -483,133 +495,143 @@ public class TrafficManager {
 			while (start.getXmlID().charAt(0) == end.getXmlID().charAt(0)) {
 				end = destinations.get((int) (Math.floor(Math.random() * destinations.size())));
 			}
-			
+
 			System.out.println("Start: " + start.getXmlID() + " End Goal: " + end.getXmlID());
-			
+
 			/**
-			 * Generate cars
-			 * StartTimeStep: when the car spawns
-			 * Need to give it a timestep based on a rush-hour based model
+			 * Generate cars StartTimeStep: when the car spawns Need to give it a timestep
+			 * based on a rush-hour based model
 			 */
 
-//			System.out.println("!!! Next arrival time: " + previousArrivalTime);
+			// System.out.println("!!! Next arrival time: " + previousArrivalTime);
 
 			// Build each car with their given destination via a Poisson arrival process
 			previousArrivalTime = generateNextArrivalTime(previousArrivalTime);
-			int r = (int)(Math.round(Math.random()*getMaximumTimesteps()));
+			int r = (int) (Math.round(Math.random() * getMaximumTimesteps()));
 			Car car = new Car.Builder(start, end, map).setStartTimestep(previousArrivalTime).setDriverModel(new IntelligentDriverModelPlus()).build();
 
-			if (DEBUG){
+			if (DEBUG) {
 				System.out.println("Next arrival time: " + previousArrivalTime);
 			}
 
-			while (start.getSpawntimes().contains(r)){
-				r = (int)(Math.round(Math.random()*getMaximumTimesteps()));
+			while (start.getSpawntimes().contains(r)) {
+				r = (int) (Math.round(Math.random() * getMaximumTimesteps()));
 				car = new Car.Builder(start, end, map).setStartTimestep(generateNextArrivalTime(previousArrivalTime)).setDriverModel(new IntelligentDriverModelPlus()).build();
 			}
 
 			start.getSpawntimes().add(r);
 
 			cars.add(car);
-//			car.setTimeLimit(determineTimeLimit(car));
+			// car.setTimeLimit(determineTimeLimit(car));
 
 		}
 
 		return cars;
 	}
 
-	public static int generateNextArrivalTime(int currentTime){
+	public static int generateNextArrivalTime(int currentTime) {
 
 		double u = Math.random();
 		int d = (int) Math.round(-mean * Math.log(u));
 		int res = currentTime + d;
 
-
 		return res;
 	}
 
-	// TODO: Make this robust - right now just arbitrarily calculating a time limit, not based on something realistic
-//	private static int determineTimeLimit(Vehicle car){
-//		double mDist = manhattanDistance(car.getStartNode(), car.getGoalNode());
-//		List<Edge> path = car.getEdgePath();
-//		double actualDist = 0;
-//		double avgSpeedOnPath = 0;
-//		for (Edge e : path){
-//			actualDist += e.getLength();
-//			avgSpeedOnPath += e.getSpeedLimit();
-//		}
-//		avgSpeedOnPath = (avgSpeedOnPath/path.size());
-//		double differential = Math.abs(actualDist/mDist);
-//		int timeLimit = (int)Math.round(actualDist/((avgSpeedOnPath*1000)/60));
-//
-//		if(DEBUG){
-//			System.out.println("Determined time limit for car " + car.toString() + " in [" + timeLimit + "] timesteps.");
-//			System.out.println("Actual time taken for car + " + car.toString() + " in [" + car.getEndTimestep() + "] timesteps.");
-//		}
-//		return timeLimit;
-//	}
-
+	// TODO: Make this robust - right now just arbitrarily calculating a time limit,
+	// not based on something realistic
+	// private static int determineTimeLimit(Vehicle car){
+	// double mDist = manhattanDistance(car.getStartNode(), car.getGoalNode());
+	// List<Edge> path = car.getEdgePath();
+	// double actualDist = 0;
+	// double avgSpeedOnPath = 0;
+	// for (Edge e : path){
+	// actualDist += e.getLength();
+	// avgSpeedOnPath += e.getSpeedLimit();
+	// }
+	// avgSpeedOnPath = (avgSpeedOnPath/path.size());
+	// double differential = Math.abs(actualDist/mDist);
+	// int timeLimit = (int)Math.round(actualDist/((avgSpeedOnPath*1000)/60));
+	//
+	// if(DEBUG){
+	// System.out.println("Determined time limit for car " + car.toString() + " in
+	// [" + timeLimit + "] timesteps.");
+	// System.out.println("Actual time taken for car + " + car.toString() + " in ["
+	// + car.getEndTimestep() + "] timesteps.");
+	// }
+	// return timeLimit;
+	// }
 
 	/**
 	 * The idea is to create priority neighborhoods such as urban/suburban centers
-	 * that cars are more likely to spawn at and head towards.
-	 * TODO: Update this with more specific locations. Too random right now.
-	 * @param nodes - Map nodes
-	 * @param numUrbanCenters - the number of Urban Centers designed for this map
+	 * that cars are more likely to spawn at and head towards. TODO: Update this
+	 * with more specific locations. Too random right now.
+	 * 
+	 * @param nodes
+	 *            - Map nodes
+	 * @param numUrbanCenters
+	 *            - the number of Urban Centers designed for this map
 	 */
 	private static void createNeighborhoods(List<Node> nodes, int numUrbanCenters) {
 
 		// Keep track of how many centers are left to define
-		if (numUrbanCenters == 0) return;
+		if (numUrbanCenters == 0)
+			return;
 
 		double d = Math.random();
-		while (d >= 0.1){
+		while (d >= 0.1) {
 			d = Math.random();
-        }
+		}
 
-		int r = (int)Math.round(d*nodes.size());
-		if(DEBUG){
-            System.out.println("Random urban center index: " + r);
-            System.out.println("Node " + nodes.get(r).getId() + " is chosen as an urban center.");
-        }
+		int r = (int) Math.round(d * nodes.size());
+		if (DEBUG) {
+			System.out.println("Random urban center index: " + r);
+			System.out.println("Node " + nodes.get(r).getId() + " is chosen as an urban center.");
+		}
 
-        // randomly choose a node to set as an urban center, and update the weights involved
+		// randomly choose a node to set as an urban center, and update the weights
+		// involved
 		nodes.get(r).setNodePriorityWeight(setRandomUrbanCenterWeight(urbanCenterWeight));
-		setNeighborWeights(nodes.get(r), urbanCenterWeight-1);
-		createNeighborhoods(nodes, numUrbanCenters-1);
-		if (DEBUG){
+		setNeighborWeights(nodes.get(r), urbanCenterWeight - 1);
+		createNeighborhoods(nodes, numUrbanCenters - 1);
+		if (DEBUG) {
 			System.out.println("Remaining urban centers to work with: " + (numUrbanCenters - 1));
 		}
 	}
 
 	/**
 	 * Recursively sets the weights of all neighbors of urban centers down to 0
-	 * @param node - the node we're working with
-	 * @param weight - the current weight of the iteration
+	 * 
+	 * @param node
+	 *            - the node we're working with
+	 * @param weight
+	 *            - the current weight of the iteration
 	 */
-	public static void setNeighborWeights(Node node, int weight){
-		if (weight <= 0) return;
-		for (Node n : node.getNeighbors()){
-			// if a node doesn't already have an assigned weight (preventing double decrements)
-			if (!n.isHasWeight()){
+	public static void setNeighborWeights(Node node, int weight) {
+		if (weight <= 0)
+			return;
+		for (Node n : node.getNeighbors()) {
+			// if a node doesn't already have an assigned weight (preventing double
+			// decrements)
+			if (!n.isHasWeight()) {
 				n.setNodePriorityWeight(weight);
-				if(DEBUG){
+				if (DEBUG) {
 					System.out.println("Weight of node " + n.getId() + " = " + weight);
 				}
-				setNeighborWeights(n, weight-1);
+				setNeighborWeights(n, weight - 1);
 			}
 		}
 	}
 
-	public static void initiateStoplights(Map map){
+	public static void initiateStoplights(Map map) {
 
 		List<Stoplight> lightsA = new ArrayList<Stoplight>();
 		List<Stoplight> lightsB = new ArrayList<Stoplight>();
 
-		for (Stoplight s : map.getLights()){
-			if (s.getParent().getXmlID().contains("east") || s.getParent().getXmlID().contains("west")){
+		for (Stoplight s : map.getLights()) {
+			if (s.getParent().getXmlID().contains("east") || s.getParent().getXmlID().contains("west")) {
 				lightsA.add(s);
-			}else{
+			} else {
 				lightsB.add(s);
 			}
 		}
@@ -625,117 +647,124 @@ public class TrafficManager {
 
 		controllers.add(L1);
 		controllers.add(L2);
-
 	}
 
 	/**
 	 * Randomly (Gaussian) choose a weight for each urban center around the mean
-	 * @param mean - defined in class
+	 * 
+	 * @param mean
+	 *            - defined in class
 	 * @return
 	 */
-	public static int setRandomUrbanCenterWeight(int mean){
+	public static int setRandomUrbanCenterWeight(int mean) {
 		Random r = new Random();
 		double g = r.nextGaussian() + mean;
-		if (g < 0 || g > mean*2) {
+		if (g < 0 || g > mean * 2) {
 			setRandomUrbanCenterWeight(mean);
 		}
-		System.out.println("Urban center weight: " + (int)g);
-		return (int)g;
+		System.out.println("Urban center weight: " + (int) g);
+		return (int) g;
 	}
 
-    /**
-     * Draws a random variate from an (negative) exponential distribution with given rate
-     * @param rate - lambda
-     * @return
-     */
-    public static double drawRandomExponential(double rate) {
-        // draw a [0,1] uniform distributed number
-        double u = Math.random();
-        // Convert it into a exponentially distributed random variate, truncated to [0,1]
-        double x = -Math.log(1 - (1 - Math.pow(Math.E, -rate)) * u) / rate;
-        return x;
-    }
-
-    public static double drawRandomNormal(double mean, double sd){
-    	Random r = new Random();
-    	return r.nextGaussian()*sd + mean;
+	/**
+	 * Draws a random variate from an (negative) exponential distribution with given
+	 * rate
+	 * 
+	 * @param rate
+	 *            - lambda
+	 * @return
+	 */
+	public static double drawRandomExponential(double rate) {
+		// draw a [0,1] uniform distributed number
+		double u = Math.random();
+		// Convert it into a exponentially distributed random variate, truncated to
+		// [0,1]
+		double x = -Math.log(1 - (1 - Math.pow(Math.E, -rate)) * u) / rate;
+		return x;
 	}
 
-    /**
-     * Procedurally generates a grid based on static parameters, unused as of phase 2
-     * @return
-     */
-    public static TrafficManager createEnvironment() {
+	public static double drawRandomNormal(double mean, double sd) {
+		Random r = new Random();
+		return r.nextGaussian() * sd + mean;
+	}
 
-        List<Node> mapNodes = new ArrayList<Node>();
-        List<Edge> mapEdges = new ArrayList<Edge>();
-        List<Node> mapDestinations = new ArrayList<Node>();
+	/**
+	 * Procedurally generates a grid based on static parameters, unused as of phase
+	 * 2
+	 * 
+	 * @return
+	 */
+	public static TrafficManager createEnvironment() {
 
-        int nodeCount = 0;
-        int edgeCount = 0;
-        for (int i = 0; i < MAP_X_DIM; i++) {
-            for (int j = 0; j < MAP_Y_DIM; j++) {
-                if (i % (MAP_X_DIM / GRID_FACTOR) == 0 && j % (MAP_Y_DIM / GRID_FACTOR) == 0) {
-                    Node n = new Node(i, j);
-                    n.makeDestination();
-                    mapNodes.add(n);
-                    System.out.println("Adding node at: (" + i + ", " + j + ")");
-                    nodeCount++;
-                    System.out.println("Nodes: " + nodeCount);
-                }
-            }
-        }
+		List<Node> mapNodes = new ArrayList<Node>();
+		List<Edge> mapEdges = new ArrayList<Edge>();
+		List<Node> mapDestinations = new ArrayList<Node>();
 
-        for (int i = 0; i < mapNodes.size(); i++) {
-            for (int j = 0; j < mapNodes.size(); j++) {
-                if ((euclideanDistance(mapNodes.get(i), mapNodes.get(j)) == (MAP_X_DIM / GRID_FACTOR)
-                        || euclideanDistance(mapNodes.get(i), mapNodes.get(j)) == (MAP_Y_DIM / GRID_FACTOR))
-                        && i != j) {
-                    System.out.println("Adding Edge between: (" + mapNodes.get(i).getLocation().toString() + ", "
-                            + mapNodes.get(j).getLocation().toString() + ")");
-                    mapEdges.add(new Edge(mapNodes.get(i), mapNodes.get(j)));
-                    edgeCount++;
-                    System.out.println("Edges: " + edgeCount);
+		int nodeCount = 0;
+		int edgeCount = 0;
+		for (int i = 0; i < MAP_X_DIM; i++) {
+			for (int j = 0; j < MAP_Y_DIM; j++) {
+				if (i % (MAP_X_DIM / GRID_FACTOR) == 0 && j % (MAP_Y_DIM / GRID_FACTOR) == 0) {
+					Node n = new Node(i, j);
+					n.makeDestination();
+					mapNodes.add(n);
+					System.out.println("Adding node at: (" + i + ", " + j + ")");
+					nodeCount++;
+					System.out.println("Nodes: " + nodeCount);
+				}
+			}
+		}
 
-                }
-            }
-        }
-        List<Vehicle> cars = new ArrayList<Vehicle>();
-        Map map = new Map(mapNodes, mapEdges);
+		for (int i = 0; i < mapNodes.size(); i++) {
+			for (int j = 0; j < mapNodes.size(); j++) {
+				if ((euclideanDistance(mapNodes.get(i), mapNodes.get(j)) == (MAP_X_DIM / GRID_FACTOR)
+						|| euclideanDistance(mapNodes.get(i), mapNodes.get(j)) == (MAP_Y_DIM / GRID_FACTOR))
+						&& i != j) {
+					System.out.println("Adding Edge between: (" + mapNodes.get(i).getLocation().toString() + ", "
+							+ mapNodes.get(j).getLocation().toString() + ")");
+					mapEdges.add(new Edge(mapNodes.get(i), mapNodes.get(j)));
+					edgeCount++;
+					System.out.println("Edges: " + edgeCount);
 
-        for (int i = 0; i < vehicleCount; i++) {
+				}
+			}
+		}
+		List<Vehicle> cars = new ArrayList<Vehicle>();
+		Map map = new Map(mapNodes, mapEdges);
 
-            int x = 0;
-            int y = 0;
-            while (x == y) {
-                x = (int) (Math.random() * mapNodes.size());
-                y = (int) (Math.random() * mapNodes.size());
-            }
+		for (int i = 0; i < vehicleCount; i++) {
 
-            if (mapNodes.get(y).isDestination()) {
-                Car temp = new Car.Builder(mapNodes.get(x), mapNodes.get(y), map)
-                        .setDriverModel(new IntelligentDriverModel()).build();
-                cars.add(temp);
-            }
+			int x = 0;
+			int y = 0;
+			while (x == y) {
+				x = (int) (Math.random() * mapNodes.size());
+				y = (int) (Math.random() * mapNodes.size());
+			}
 
-        }
+			if (mapNodes.get(y).isDestination()) {
+				Car temp = new Car.Builder(mapNodes.get(x), mapNodes.get(y), map)
+						.setDriverModel(new IntelligentDriverModel()).build();
+				cars.add(temp);
+			}
 
-        TrafficManager tm = new TrafficManager(map, cars, new ArrayList<TrafficObject>(), controllers);
+		}
 
-        int y = 0;
+		TrafficManager tm = new TrafficManager(map, cars, new ArrayList<TrafficObject>(), controllers);
 
-        // createNeighborhoods(mapNodes, numUrbanCenters);
+		int y = 0;
 
-        return tm;
+		// createNeighborhoods(mapNodes, numUrbanCenters);
 
-    }
+		return tm;
+
+	}
 
 	public static double getDurationOfTimestepInSeconds() {
 		return 1. / TIMESTEPS_PER_SECOND;
 	}
 
-	public static int getTimestepAtTime(Time time){
-    	return (TIMESTEPS_PER_SECOND * time.getSeconds()) + (60 * time.getMinutes()) + (60 * time.getHours());
+	public static int getTimestepAtTime(Time time) {
+		return (TIMESTEPS_PER_SECOND * time.getSeconds()) + (60 * time.getMinutes()) + (60 * time.getHours());
 	}
 
 	public static int getMaximumTimesteps() {
@@ -774,39 +803,39 @@ public class TrafficManager {
 		Map map = new Map(Arrays.asList(node1, node2, node3), Arrays.asList(edge1, edge2));
 
 		Car car1 = new Car.Builder(node2, node3, map).setDriverModel(new SimpleDriverModel(10)).build();
-//		car1.setEdgePath(Arrays.asList(edge2));
+		// car1.setEdgePath(Arrays.asList(edge2));
 
 		Car car2 = new Car.Builder(node2, node3, map).setDriverModel(new IntelligentDriverModel()).build();
-//		car2.setEdgePath(Arrays.asList(edge2));
+		// car2.setEdgePath(Arrays.asList(edge2));
 
 		Car car3 = new Car.Builder(node1, node3, map).setDriverModel(new IntelligentDriverModel()).setInitialSpeed(20).build();
-//		car3.setEdgePath(Arrays.asList(edge1, edge2));
-		
+		// car3.setEdgePath(Arrays.asList(edge1, edge2));
+
 		TestTrafficObject blocker = new TestTrafficObject(new Location(edge2, 300));
 
 		List cars = Arrays.asList(car1, car2, car3);
 
 		List<TrafficObject> staticTrafficObjects = new ArrayList<TrafficObject>();
 		staticTrafficObjects.add(blocker);
-		
+
 		return new TrafficManager(map, cars, staticTrafficObjects, controllers);
 	}
-	
+
 	public static TrafficManager testcaseBlocker() {
-		Node node1 = new Node(0,0);
-		Node node2 = new Node(500,0);
-		
-		Edge edge = new Edge(node1,node2);
-		
-		Map map = new Map(Arrays.asList(node1,node2), Arrays.asList(edge));
-		
+		Node node1 = new Node(0, 0);
+		Node node2 = new Node(500, 0);
+
+		Edge edge = new Edge(node1, node2);
+
+		Map map = new Map(Arrays.asList(node1, node2), Arrays.asList(edge));
+
 		Car car = new Car.Builder(node1, node2, map).build();
-		
-		TestTrafficObject blocker = new TestTrafficObject(new Location(edge,200));
-		
+
+		TestTrafficObject blocker = new TestTrafficObject(new Location(edge, 200));
+
 		List cars = Arrays.asList(car);
 		List blockers = Arrays.asList(blocker);
-		
+
 		return new TrafficManager(map, cars, blockers, null);
 	}
 
@@ -827,42 +856,42 @@ public class TrafficManager {
 			Car car = new Car.Builder(nodes.get(0), nodes.get(nodeN - 1), map).setDriverModel(new SimpleDriverModel())
 					.build();
 
-//			car.setEdgePath(edges);
+			// car.setEdgePath(edges);
 
 			cars.add(car);
 		}
 
 		return new TrafficManager(map, cars, new ArrayList<TrafficObject>(), controllers);
 	}
-	
+
 	public static TrafficManager navigationTest() {
-		Node a = new Node(0,0);
-		Node b = new Node(100,100);
-		Node c = new Node(100,0);
-		Node d = new Node(0,100);
-		Node e = new Node(1000,1000);
-		
-		Edge ad = new Edge(a,d);
-		Edge ae = new Edge(a,e);
-		Edge eb = new Edge(e,b);
-		Edge ac = new Edge(a,c);
-		Edge cb = new Edge(c,b);
-		
-		List<Node> nodes = Arrays.asList(a,b,c,d,e);
-		List<Edge> edges = Arrays.asList(ad,ae,eb,ac,cb);
-		
-		Map map = new Map(nodes,edges);
-		
+		Node a = new Node(0, 0);
+		Node b = new Node(100, 100);
+		Node c = new Node(100, 0);
+		Node d = new Node(0, 100);
+		Node e = new Node(1000, 1000);
+
+		Edge ad = new Edge(a, d);
+		Edge ae = new Edge(a, e);
+		Edge eb = new Edge(e, b);
+		Edge ac = new Edge(a, c);
+		Edge cb = new Edge(c, b);
+
+		List<Node> nodes = Arrays.asList(a, b, c, d, e);
+		List<Edge> edges = Arrays.asList(ad, ae, eb, ac, cb);
+
+		Map map = new Map(nodes, edges);
+
 		Car car = new Car.Builder(a, b, map).build();
-		
+
 		ArrayList<Vehicle> cars = new ArrayList<Vehicle>();
 		cars.add(car);
-		
-		return new TrafficManager(map,cars,new ArrayList<TrafficObject>(), new ArrayList<LightController>());
+
+		return new TrafficManager(map, cars, new ArrayList<TrafficObject>(), new ArrayList<LightController>());
 	}
 
 	public static void main(String[] args) {
-		TrafficManager tm = testcaseBig(1000,1000);
+		TrafficManager tm = testcaseBig(1000, 1000);
 
 		System.out.println("Created test case");
 

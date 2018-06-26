@@ -20,6 +20,7 @@ public class InvisibleCar implements TrafficObject {
 
 	public void ensureCapacity(int capacity) {
 		visibleToDrivers = new boolean[capacity];
+		
 	}
 
 	public TrafficObjectState getState(int timestep) {
@@ -53,7 +54,7 @@ public class InvisibleCar implements TrafficObject {
 	}
 
 	public Coordinates getCoordinates(int timestep) {
-		return edge.getLocationIfTraveledDistance(0);
+		return edge.getLocationIfTraveledDistance(1);
 	}
 
 	public Location getLocation(int timestep) {
