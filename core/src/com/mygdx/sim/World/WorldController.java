@@ -8,7 +8,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.sim.GameObjects.Controllers.LightController;
 import com.mygdx.sim.GameObjects.Stoplight;
 import com.mygdx.sim.GameObjects.TrafficManager;
-import com.mygdx.sim.GameObjects.data.DataCollection;
 import com.mygdx.sim.GameObjects.data.Edge;
 import com.mygdx.sim.GameObjects.data.Map;
 import com.mygdx.sim.GameObjects.data.Node;

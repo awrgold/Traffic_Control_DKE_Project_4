@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.mygdx.sim.GameObjects.LightState;
 import com.mygdx.sim.GameObjects.Stoplight;
+import com.mygdx.sim.GameObjects.data.Edge;
 
 public class LightController {
 

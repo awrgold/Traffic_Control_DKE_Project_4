@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.mygdx.sim.GameObjects.Controllers.ControlScheme;
+import com.mygdx.sim.GameObjects.Controllers.DynamicController;
 import com.mygdx.sim.GameObjects.Controllers.LightController;
 import com.mygdx.sim.GameObjects.data.DistanceAndSpeed;
 import com.mygdx.sim.GameObjects.data.DistanceAndTrafficObject;
@@ -114,20 +115,6 @@ public class TrafficManager {
 		this.controllers = controllers;
 
 		this.trafficObjects = trafficObjects;
-
-		for (Vehicle vehicle : vehicles) {
-
-			// Validation of the path
-//			List<Edge> edgePath = vehicle.getEdgePath();
-//			if (edgePath == null) {
-//				continue;
-//			}
-//
-//			for (int i = 0; i < edgePath.size() - 1; i++)
-//				if (!edgePath.get(i + 1).getFrom().equals(edgePath.get(i).getTo()))
-//					throw new RuntimeException("EdgePath of vehicle " + this + " implies teleportation");
-
-		}
 		
 		for(TrafficObject to: trafficObjects) {
 			Edge edge = to.getEdge(0);
@@ -191,11 +178,14 @@ public class TrafficManager {
 				System.out.println(lastComputedTimestep);
 			
 			boolean invisibleCarVisible = true;
-			for (LightController l : controllers){
-				if(l.update(lastComputedTimestep)) {
+
+
+			for (LightController lc : controllers){
+				if(lc.update(lastComputedTimestep)) {
 					invisibleCarVisible = !invisibleCarVisible;
 				}
 			}
+
 
 			// Set invisible cars to visible or not depending on traffic light
 			for(TrafficObject trafficObject : trafficObjects) {
@@ -227,6 +217,8 @@ public class TrafficManager {
 //			for (LightController l : controllers){
 //				l.update(lastComputedTimestep);
 //			}
+
+
 
 			// Have the vehicles update their locations for the next timestep
 			for (Vehicle vehicle : vehicles)
@@ -382,11 +374,12 @@ public class TrafficManager {
 
 		// Static Traffic Objects
 		List<TrafficObject> staticTrafficObjects = new ArrayList<TrafficObject>();
-		for (LightController l : controllers){
-			for(Stoplight stopLight : l.getLights()) {
+		for (LightController lc : controllers){
+			for(Stoplight stopLight : lc.getLights()) {
 				staticTrafficObjects.add(new InvisibleCar(stopLight.getParent().getOutEdges().get(0)));
 			}
 		}
+
 
 		// Traffic Manager
 		TrafficManager tm = new TrafficManager(map, cars, staticTrafficObjects, controllers);
@@ -432,11 +425,12 @@ public class TrafficManager {
 
 		// Static Traffic Objects
 		List<TrafficObject> staticTrafficObjects = new ArrayList<TrafficObject>();
-		for (LightController l : controllers){
-			for(Stoplight stopLight : l.getLights()) {
+		for (LightController lc : controllers){
+			for(Stoplight stopLight : lc.getLights()) {
 				staticTrafficObjects.add(new InvisibleCar(stopLight.getParent().getOutEdges().get(0)));
 			}
 		}
+
 
 		// Traffic Manager
 		TrafficManager tm = new TrafficManager(map, cars, staticTrafficObjects, controllers);
@@ -620,7 +614,6 @@ public class TrafficManager {
 			}
 		}
 
-
 		LightController L1 = new LightController(lightsA);
 		LightController L2 = new LightController(lightsB);
 
@@ -632,6 +625,7 @@ public class TrafficManager {
 
 		controllers.add(L1);
 		controllers.add(L2);
+
 	}
 
 	/**

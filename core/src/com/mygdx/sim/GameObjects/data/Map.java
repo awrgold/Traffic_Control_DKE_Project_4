@@ -11,7 +11,7 @@ import com.mygdx.sim.GameObjects.trafficObject.vehicle.Vehicle;
 
 public class Map {
 
-	private boolean DEBUG = true;
+	private boolean DEBUG = false;
 
 	private List<Node> nodes = new ArrayList<Node>();
 	private List<Edge> edges = new ArrayList<Edge>();
