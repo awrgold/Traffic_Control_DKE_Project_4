@@ -28,6 +28,7 @@ import com.mygdx.sim.GameObjects.trafficObject.TrafficObjectState;
 import com.mygdx.sim.GameObjects.trafficObject.vehicle.Car;
 import com.mygdx.sim.GameObjects.trafficObject.vehicle.Vehicle;
 import com.mygdx.sim.World.Components.TrafficLight;
+import javafx.scene.effect.Light;
 import javafx.scene.paint.Stop;
 
 public class TrafficManager {
@@ -57,12 +58,31 @@ public class TrafficManager {
 	public final static double mean = 3.6;
     public static List<LightController> controllers = new ArrayList<LightController>();
 
+
 	private Map map;
 	private List<TrafficObject> trafficObjects;
 	private List<Vehicle> vehicles;
 	private static int urbanCenterWeight = 10;
 	private static ControlScheme scheme = ControlScheme.BASIC;
 	private int lastComputedTimestep = 0;
+
+	/**
+	 * --- Statistical parameters ---
+	 * avgDriverSpeed: average speed for driver "i" on the map
+	 * speedLimit: Speed limit for the map
+	 * expectedTravelTimes: expected travel time for driver "i" on map (based on speed limit and distance required to travel)
+	 * actualTravelTimes: actual travel time for driver "i" on map (based on endtime-starttime)
+	 * numVehiclesReachedGoal: (DO WE NEED?) number of vehicles that were able to reach the goal in time
+	 * numTimesSlowed: number of times vehicle "i" slowed down from their top speed during the sim
+	 */
+	public static List<Integer> avgDriverSpeed = new ArrayList<Integer>();
+	public static int speedLimit = 0;
+	public static List<Integer> expectedTravelTimes = new ArrayList<Integer>();
+	public static List<Integer> actualTravelTimes = new ArrayList<Integer>();
+	public static List<Vehicle> vehiclesReachedGoal = new ArrayList<Vehicle>();
+	public static List<Integer> numTimesSlowed = new ArrayList<Integer>();
+
+
 
 	public TrafficManager(Map map, List<Vehicle> vehicles, List<TrafficObject> trafficObjects, List<LightController> controllers) {
 		this.map = map;
@@ -179,12 +199,27 @@ public class TrafficManager {
 
 			lastComputedTimestep++;
 
-//			lightController.update(lastComputedTimestep);
+			// Update each light controller
+//			for (LightController l : controllers){
+//				l.update(lastComputedTimestep);
+//			}
 
 			// Have the vehicles update their locations for the next timestep
 			for (Vehicle vehicle : vehicles)
 				vehicle.move(lastComputedTimestep);
 		}
+
+		for (Vehicle v : vehicles){
+			int a = 0;
+			for (int i = 0; i < v.getSpeeds().length; i++) {
+				a += v.getSpeeds()[i];
+			}
+			a = (a/v.getSpeeds().length);
+			avgDriverSpeed.add(a);
+		}
+
+
+
 	}
 	
 	public List<LightController> getLightControllers() {
@@ -300,6 +335,12 @@ public class TrafficManager {
 		Map map = new Map(nodeList, edgeList);
 
 		List<Node> spawns = map.getSpawnPoints();
+		System.out.println("!!!!!!!!!!!!!SIZE OF SPAWN POINTS!!!!!!!!!!" + spawns.size());
+		for (Node n : spawns){
+			if (n.getXmlID().contains("south")){
+				System.out.println("FOUND A NORTH NODE BITCH");
+			}
+		}
 		List<Node> destinations = map.getDestinations();
 		List cars = createCars(spawns, destinations, map);
 		

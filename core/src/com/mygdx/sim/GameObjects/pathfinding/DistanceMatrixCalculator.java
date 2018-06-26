@@ -49,8 +49,8 @@ public class DistanceMatrixCalculator {
 						found = true;
 				}
 
-				if (!found)
-					System.out.println("There seems to be no connection from node " + i + " to " + j);
+//				if (!found)
+//					System.out.println("There seems to be no connection from node " + i + " to " + j);
 
 			}
 		}
