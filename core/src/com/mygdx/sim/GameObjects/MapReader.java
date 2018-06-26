@@ -71,6 +71,7 @@ public class MapReader {
 		nodeMap = readNodes(nodesPath);
 		edgeMap = readEdges(nodeMap, edgesPath);
 		readConnections(edgeMap, connectionsPath);
+	}
 
 	public static String dialogue() {
 		JFileChooser chooser = new JFileChooser();
