@@ -83,9 +83,10 @@ public class Car extends Vehicle {
 	}
 	
 	public static String randomSprite() {
-		List<String> vehicleSpriteNames = new ArrayList<String>(Resources.world.vehicleSprites.keySet());
-		
-		return vehicleSpriteNames.get((new Random()).nextInt(vehicleSpriteNames.size()));
+//		List<String> vehicleSpriteNames = new ArrayList<String>(Resources.world.vehicleSprites.keySet());
+
+//		return vehicleSpriteNames.get((new Random()).nextInt(vehicleSpriteNames.size()));
+		return null;
 	}
 
 	public int getMaxSpeed(){

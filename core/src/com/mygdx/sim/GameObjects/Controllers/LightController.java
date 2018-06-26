@@ -1,17 +1,22 @@
 package com.mygdx.sim.GameObjects.Controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.mygdx.sim.GameObjects.LightState;
 import com.mygdx.sim.GameObjects.Stoplight;
 import com.mygdx.sim.GameObjects.data.Edge;
+import com.sun.xml.internal.bind.v2.schemagen.xmlschema.SchemaTop;
+import javafx.scene.paint.Stop;
 
 public class LightController {
 
 	private int interval;
 	private final int FINALINTERVAL = 100;
+	private final int WAITINTERVAL = 25;
 	private ControlScheme scheme;
 	private List<Stoplight> lights;
+	private List<Stoplight> pausedLights;
 	private boolean startsGreen;
 
 	public LightController(List<Stoplight> lights) {
@@ -47,6 +52,26 @@ public class LightController {
 		return startsGreen;
 	}
 
+	public List<Stoplight> getReds(){
+		List<Stoplight> reds = new ArrayList<Stoplight>();
+		for (Stoplight l : lights){
+			if (l.getLightState().equals(LightState.RED)){
+				reds.add(l);
+			}
+		}
+		return reds;
+	}
+
+	public List<Stoplight> getGreens(){
+		List<Stoplight> greens = new ArrayList<Stoplight>();
+		for (Stoplight l : lights){
+			if (l.getLightState().equals(LightState.GREEN)){
+				greens.add(l);
+			}
+		}
+		return greens;
+	}
+
 	public void setScheme(ControlScheme scheme) {
 		this.scheme = scheme;
 		if (scheme.equals(ControlScheme.BASIC)) {
@@ -62,15 +87,15 @@ public class LightController {
 		return interval - (currentTimestep % interval);
 	}
 
-	public void switchLights() {
-		for (Stoplight l : lights) {
+	public void switchLights(List<Stoplight> lightsToSwitch) {
+		for (Stoplight l : lightsToSwitch) {
 			l.switchLight();
 		}
 	}
 
 	public void update(int currentTimestep) {
 		if (getTimeRemaining(currentTimestep) == interval) {
-			switchLights();
+			switchLights(lights);
 		}
 	}
 

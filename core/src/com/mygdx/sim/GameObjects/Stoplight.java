@@ -14,15 +14,11 @@ public class Stoplight {
 	// Timer
 	private int timer;
 
-	// UI
-	private Sprite sprite;
-
 	// Properties
 	private Node parent;
 	private List<Edge> edges;
 	private ArrayList<Stoplight> linked;
 	private LightState lightState;
-	private Location location;
 	private InvisibleCar invisibleCar;
 
 	/**
@@ -61,23 +57,14 @@ public class Stoplight {
 		linked.add(index, neighbor);
 	}
 
-	public void setSprite(Sprite sprite) {
-		this.sprite = sprite;
-	}
-
 	public LightState getLightState() {
 		return lightState;
 	}
-	
 
 	public void setLightState(LightState lightState) {
 		this.lightState = lightState;
 	}
 
-	public Location getLocation() {
-		return location;
-	}
-	
 	public void setInvisibleCar(InvisibleCar invisibleCar) {
 		this.invisibleCar = invisibleCar;
 	}

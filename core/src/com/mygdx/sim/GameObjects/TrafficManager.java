@@ -73,18 +73,29 @@ public class TrafficManager {
 	 * numVehiclesReachedGoal: (DO WE NEED?) number of vehicles that were able to reach the goal in time
 	 * numTimesSlowed: number of times vehicle "i" slowed down from their top speed during the sim
 	 */
-	public static List<Integer> avgDriverSpeed = new ArrayList<Integer>();
-	public static int speedLimit = 0;
-	public static List<Integer> expectedTravelTimes = new ArrayList<Integer>();
-	public static List<Integer> actualTravelTimes = new ArrayList<Integer>();
+	public static List<Double> avgDriverSpeed = new ArrayList<Double>();
+    public static List<Float> speeds = new ArrayList<Float>();
+    public static List<Double> avgTotalSpeed = new ArrayList<Double>();
+    public static List<Double> deviationOfSpeed = new ArrayList<Double>();
+	public static double speedLimit = 13.89;
+	public static List<Double> expectedTravelTimes = new ArrayList<Double>();
+	public static List<Double> actualTravelTimes = new ArrayList<Double>();
 	public static List<Vehicle> vehiclesReachedGoal = new ArrayList<Vehicle>();
 	public static List<Integer> numTimesSlowed = new ArrayList<Integer>();
 
-	public static List<Integer> getActualTravelTimes() {
+	public static List<Double> getActualTravelTimes() {
 		return actualTravelTimes;
 	}
 
-	public static List<Integer> getAvgDriverSpeed() {
+    public static List<Double> getAvgTotalSpeed() {
+        return avgTotalSpeed;
+    }
+
+    public static List<Float> getSpeeds(){
+	    return speeds;
+    }
+
+	public static List<Double> getAvgDriverSpeed() {
 		return avgDriverSpeed;
 	}
 
@@ -96,11 +107,11 @@ public class TrafficManager {
 		return vehiclesReachedGoal;
 	}
 
-	public static int getSpeedLimit() {
+	public static double getSpeedLimit() {
 		return speedLimit;
 	}
 
-	public static List<Integer> getExpectedTravelTimes() {
+	public static List<Double> getExpectedTravelTimes() {
 		return expectedTravelTimes;
 	}
 
@@ -231,13 +242,20 @@ public class TrafficManager {
 		}
 
 		for (Vehicle v : vehicles){
-			int a = 0;
-			for (int i = 0; i < v.getSpeeds().length; i++) {
-				a += v.getSpeeds()[i];
+			double a = 0;
+
+			for (int i = 0; i < getMaximumTimesteps(); i++){
+			    if (v.isMoving(i)){
+			        speeds.add(v.getSpeed(i));
+                }
+            }
+
+			for (int i = 1; i < speeds.size(); i++) {
+                a = (a/speeds.size());
 			}
-			a = (a/v.getSpeeds().length);
 			avgDriverSpeed.add(a);
 		}
+
 
 
 
@@ -348,7 +366,9 @@ public class TrafficManager {
 		HashMap<String, Node> nodeMap = mr.getNodes();
 		HashMap<String, Edge> edgeMap = mr.getEdges();
 
-		mr.printAll(nodeMap, edgeMap);
+		if (DEBUG){
+            mr.printAll(nodeMap, edgeMap);
+        }
 
 		List<Node> nodeList = new ArrayList<Node>(nodeMap.values());
 
@@ -358,7 +378,6 @@ public class TrafficManager {
 		Map map = new Map(nodeList, edgeList);
 
 		List<Node> spawns = map.getSpawnPoints();
-		System.out.println("!!!!!!!!!!!!!SIZE OF SPAWN POINTS!!!!!!!!!!" + spawns.size());
 		for (Node n : spawns){
 			if (n.getXmlID().contains("south")){
 				System.out.println("FOUND A NORTH NODE BITCH");
@@ -370,7 +389,8 @@ public class TrafficManager {
 		// createNeighborhoods(destinations, numUrbanCenters);
 
 		if (DEBUG) {
-			System.out.println("Destination list size: " + destinations.size());
+            System.out.println("!!!!!!!!!!!!!SIZE OF SPAWN POINTS: " + spawns.size());
+            System.out.println("Destination list size: " + destinations.size());
 			System.out.println("Creating neighborhoods with " + destinations.size() + " destinations, and " + numUrbanCenters + " urban centers.");
 		}
 
@@ -411,11 +431,7 @@ public class TrafficManager {
 
 		List<Node> spawns = map.getSpawnPoints();
 		System.out.println("!!!!!!!!!!!!!SIZE OF SPAWN POINTS!!!!!!!!!!" + spawns.size());
-		for (Node n : spawns){
-			if (n.getXmlID().contains("south")){
-				System.out.println("FOUND A NORTH NODE BITCH");
-			}
-		}
+
 		List<Node> destinations = map.getDestinations();
 		List cars = createCars(spawns, destinations, map);
 
@@ -452,7 +468,9 @@ public class TrafficManager {
 		HashMap<String, Node> nodeMap = mr.getNodes();
 		HashMap<String, Edge> edgeMap = mr.getEdges();
 
-		mr.printAll(nodeMap, edgeMap);
+		if (DEBUG){
+            mr.printAll(nodeMap, edgeMap);
+        }
 
 		List<Node> nodeList = new ArrayList<Node>(nodeMap.values());
 
@@ -463,11 +481,6 @@ public class TrafficManager {
 
 		List<Node> spawns = map.getSpawnPoints();
 		System.out.println("!!!!!!!!!!!!!SIZE OF SPAWN POINTS!!!!!!!!!!" + spawns.size());
-		for (Node n : spawns){
-			if (n.getXmlID().contains("south")){
-				System.out.println("FOUND A NORTH NODE BITCH");
-			}
-		}
 		List<Node> destinations = map.getDestinations();
 		List cars = createCars(spawns, destinations, map);
 
@@ -551,7 +564,9 @@ public class TrafficManager {
 				end = destinations.get((int) (Math.floor(Math.random() * destinations.size())));
 			}
 
-			System.out.println("Start: " + start.getXmlID() + " End Goal: " + end.getXmlID());
+			if (DEBUG){
+                System.out.println("Start: " + start.getXmlID() + " End Goal: " + end.getXmlID());
+            }
 
 			/**
 			 * Generate cars StartTimeStep: when the car spawns Need to give it a timestep
@@ -946,22 +961,88 @@ public class TrafficManager {
 	}
 
 	public static void main(String[] args) {
-		int simulationsToRun = 100;
+		int simulationsToRun = 5;
 		ArrayList<TrafficManager> managers = new ArrayList<TrafficManager>();
 		
 		String mapPath = MapReader.dialogue();
-		
-		for(int i = 0 ; i < simulationsToRun; i++) {
+
+
+        for(int i = 0 ; i < simulationsToRun; i++) {
 			TrafficManager tm = createTestFromFile(mapPath);
 			tm.simulate(getMaximumTimesteps());
 
-			managers.add(tm);
+			// managers.add(tm);
 			
 			Vehicle.lastGivenId = 0;
 			Edge.lastGivenId = 0;
 			Node.lastGivenId = 0;
+
+			// ----- STATS -----
+
+            // Get avg speed for simulation i
+            double avgTotalSpeed = 0;
+            for (double j : getAvgDriverSpeed()){
+                avgTotalSpeed += j;
+            }
+            avgTotalSpeed = avgTotalSpeed/getAvgDriverSpeed().size();
+            getAvgTotalSpeed().add(avgTotalSpeed);
+
+            // Get stdDev for simulation i
+            double stdDev = 0;
+            List<Float> observedSpeeds = tm.getSpeeds();
+
+            // Get the observed speeds for all vehicles in simulation i
+//            for (int j = 0; j < tm.getVehicles().size(); j++){
+//                for (int k = 0; k < tm.getVehicles().get(j).getSpeeds().length; k++){
+//                    observedSpeeds.add(tm.getVehicles().get(j).getSpeeds()[k]);
+////                  System.out.println("Observed speed: " + observedSpeeds.get(k));
+//                }
+//            }
+
+            // Get (ObservedSpeed_i - mean)^2 for each vehicle observation i
+            double temp1 = 0;
+            List<Double> diff = new ArrayList<Double>();
+
+            for (float f : observedSpeeds){
+                temp1 = Math.pow((f - avgTotalSpeed), 2);
+                diff.add(temp1);
+            }
+            System.out.println("Difference 0: " + diff.get(1));
+
+            // Get sqrt(the sum of all of these and divide by N-1)
+            for (Double d : diff){
+                stdDev += d;
+            }
+            System.out.println("StdDev before div: " + stdDev);
+            stdDev = (stdDev / (simulationsToRun-1));
+            System.out.println("StdDev after div: " + stdDev);
+            stdDev = Math.sqrt(stdDev);
+            System.out.println("StdDev after sqrt: " + stdDev);
+            deviationOfSpeed.add(stdDev);
+
+
 		}
 
-		System.out.println("done");
+		double totalAvgSpeed = 0;
+		for (double i : getAvgTotalSpeed()){
+		    totalAvgSpeed += i;
+        }
+
+        totalAvgSpeed = totalAvgSpeed/getAvgTotalSpeed().size();
+
+        double totalAvgDev = 0;
+        for (double d : deviationOfSpeed){
+            totalAvgDev += d;
+        }
+        System.out.println("Total avg deviation before div: " + totalAvgDev);
+
+        totalAvgDev = totalAvgDev/deviationOfSpeed.size();
+
+        System.out.println("Total avg deviation after div: " + totalAvgDev);
+
+        System.out.println("Average total driver speed over " + simulationsToRun + " simulations = [" + totalAvgSpeed + "] - with map speed limit " + speedLimit);
+        System.out.println("Average standard deviance over " + simulationsToRun + " simulations = [" + totalAvgDev + "]");
+
+        System.out.println("--- Done ---");
 	}
 }
