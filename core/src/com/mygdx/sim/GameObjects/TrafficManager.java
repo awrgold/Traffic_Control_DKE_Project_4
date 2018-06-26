@@ -344,7 +344,7 @@ public class TrafficManager {
 
 	public static TrafficManager createSimFromFile() {
 		MapReader mr = new MapReader();
-		mr.readMap();
+		mr.readMapDialogue();
 		HashMap<String, Node> nodeMap = mr.getNodes();
 		HashMap<String, Edge> edgeMap = mr.getEdges();
 
@@ -396,7 +396,7 @@ public class TrafficManager {
 
 	public static TrafficManager createTestFromFile(){
 		MapReader mr = new MapReader();
-		mr.readMap();
+		mr.readMapDialogue();
 		HashMap<String, Node> nodeMap = mr.getNodes();
 		HashMap<String, Edge> edgeMap = mr.getEdges();
 
@@ -443,6 +443,57 @@ public class TrafficManager {
 		TrafficManager tm = new TrafficManager(map, cars, staticTrafficObjects, controllers);
 		return tm;
 	}
+	
+	public static TrafficManager createTestFromFile(String path){
+		MapReader mr = new MapReader();
+		mr.readMap(path);
+		HashMap<String, Node> nodeMap = mr.getNodes();
+		HashMap<String, Edge> edgeMap = mr.getEdges();
+
+		mr.printAll(nodeMap, edgeMap);
+
+		List<Node> nodeList = new ArrayList<Node>(nodeMap.values());
+
+		// Sort the nodeList in descending order based on priority
+		Collections.sort(nodeList, new SortNode());
+		List<Edge> edgeList = new ArrayList<Edge>(edgeMap.values());
+		Map map = new Map(nodeList, edgeList);
+
+		List<Node> spawns = map.getSpawnPoints();
+		System.out.println("!!!!!!!!!!!!!SIZE OF SPAWN POINTS!!!!!!!!!!" + spawns.size());
+		for (Node n : spawns){
+			if (n.getXmlID().contains("south")){
+				System.out.println("FOUND A NORTH NODE BITCH");
+			}
+		}
+		List<Node> destinations = map.getDestinations();
+		List cars = createCars(spawns, destinations, map);
+
+
+		// createNeighborhoods(destinations, numUrbanCenters);
+
+		if(DEBUG){
+			System.out.println("Destination list size: " + destinations.size());
+			System.out.println("Creating neighborhoods with " + destinations.size() + " destinations, and " + numUrbanCenters + " urban centers.");
+		}
+
+		// Light Controller
+
+		initiateStoplights(map);
+
+		// Static Traffic Objects
+		List<TrafficObject> staticTrafficObjects = new ArrayList<TrafficObject>();
+		for (LightController l : controllers){
+			for(Stoplight stopLight : l.getLights()) {
+				staticTrafficObjects.add(new InvisibleCar(stopLight.getParent().getOutEdges().get(0)));
+			}
+		}
+
+		// Traffic Manager
+		TrafficManager tm = new TrafficManager(map, cars, staticTrafficObjects, controllers);
+		return tm;
+	}
+
 
 	/**
 	 * Create spawn/despawn points for vehicles in the simulation
@@ -891,14 +942,22 @@ public class TrafficManager {
 	}
 
 	public static void main(String[] args) {
-		TrafficManager tm = testcaseBig(1000, 1000);
+		int simulationsToRun = 100;
+		ArrayList<TrafficManager> managers = new ArrayList<TrafficManager>();
+		
+		String mapPath = MapReader.dialogue();
+		
+		for(int i = 0 ; i < simulationsToRun; i++) {
+			TrafficManager tm = createTestFromFile(mapPath);
+			tm.simulate(getMaximumTimesteps());
 
-		System.out.println("Created test case");
+			managers.add(tm);
+			
+			Vehicle.lastGivenId = 0;
+			Edge.lastGivenId = 0;
+			Node.lastGivenId = 0;
+		}
 
-		tm.simulate(getMaximumTimesteps());
-
-		System.out.println("Done with " + tm.lastComputedTimestep + " timesteps.");
-
-		System.out.println(getTimeAtTimestep(tm.lastComputedTimestep));
+		System.out.println("done");
 	}
 }

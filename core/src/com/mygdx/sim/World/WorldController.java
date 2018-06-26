@@ -5,10 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.badlogic.gdx.math.Rectangle;
-import com.mygdx.sim.GameObjects.Controllers.LightController;
 import com.mygdx.sim.GameObjects.Stoplight;
 import com.mygdx.sim.GameObjects.TrafficManager;
-import com.mygdx.sim.GameObjects.data.DataCollection;
+import com.mygdx.sim.GameObjects.Controllers.LightController;
 import com.mygdx.sim.GameObjects.data.Edge;
 import com.mygdx.sim.GameObjects.data.Map;
 import com.mygdx.sim.GameObjects.data.Node;
@@ -20,7 +19,6 @@ import com.mygdx.sim.World.Components.TrafficLight;
 
 public class WorldController {
 
-	DataCollection collector = new DataCollection();
 	private int numberIterations = 100;
 
 	// Map
