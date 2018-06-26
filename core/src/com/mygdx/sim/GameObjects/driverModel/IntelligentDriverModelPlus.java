@@ -28,7 +28,7 @@ public class IntelligentDriverModelPlus implements DriverModel{
 			return 0;
 		
 		// Begin setup
-		setSpeedLimitAdherence();
+		// setSpeedLimitAdherence();
 		int desiredSpeed = (int)Math.round(vehicle.getMaxSpeed(timestep)*speedLimitAdherence);
 		
 		double vehicleLength = vehicle.getLength();

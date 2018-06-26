@@ -87,7 +87,7 @@ public abstract class Vehicle implements TrafficObject {
 
 	public Vehicle(Node startNode, Node goalNode, int maxSpeed, String spriteName, Pathfinder deprecatedPf, Map graph, int startTimestep, DriverModel driverModel, float initialSpeed) {
 
-//		setSprite(spriteName);
+		setSprite(spriteName);
 
 		initialize();
 
@@ -420,7 +420,7 @@ public abstract class Vehicle implements TrafficObject {
 		edgeIndices[timestep] = edgeIdx;
 		distancesTraveledOnEdge[timestep] = distanceTraveledOnEdge;
 	}
-	
+
 	/**
 	 * Returns the Edge that this vehicle is located on at the given timestep.
 	 */

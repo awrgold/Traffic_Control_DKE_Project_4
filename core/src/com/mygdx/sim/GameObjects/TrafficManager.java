@@ -911,181 +911,182 @@ public class TrafficManager {
 		return new TrafficManager(map, cars, new ArrayList<TrafficObject>(), new ArrayList<LightController>());
 	}
 
-	public static void main(String[] args) {
-		int simulationsToRun = 5;
-
-		String mapPath = MapReader.dialogue();
-		
-		double meansPerSimulation[] = new double[simulationsToRun];
-		double stDevsPerSimulation[] = new double[simulationsToRun];
-
-		ArrayList<Double> expectedTravelTimesAverage = new ArrayList<Double>();
-		ArrayList<Integer> travellingTimesAverage = new ArrayList<Integer>();
-		ArrayList<Integer> flowsAverage = new ArrayList<Integer>();
-
-		for (int i = 0; i < simulationsToRun; i++) {
-			TrafficManager tm = createTestFromFile(mapPath);
-			tm.simulate(getMaximumTimesteps());
-			
-			double[] speedMeans = new double[tm.getVehicles().size()];
-			double[] speedStDevs = new double[tm.getVehicles().size()];
-
-			ArrayList<Double> expectedTravelTimes = new ArrayList<Double>();
-			ArrayList<Integer> travellingTimes = new ArrayList<Integer>();
-			ArrayList<Integer> flows = new ArrayList<Integer>();
-
-			// Expected travel time
-			for(Vehicle vehicle : tm.getVehicles()) {
-				if(!vehicle.isFinished(getMaximumTimesteps())) {
-					continue;
-				}
-				Set<Edge> edges = new HashSet<Edge>();
-				for(int timeSteps = 0; timeSteps < getMaximumTimesteps(); timeSteps++) {
-					edges.add(vehicle.getEdge(timeSteps));
-				}
-
-				double expectedTravelTime = 0;
-
-				for(Edge edge : edges) {
-					expectedTravelTime += edge.getLength() / edge.getSpeedLimit();
-				}
-
-				expectedTravelTimes.add(expectedTravelTime);
-			}
-
-			double expectedAverage = 0;
-			for(int expAvg = 0; expAvg < expectedTravelTimes.size(); expAvg++) {
-				expectedAverage += expectedTravelTimes.get(expAvg);
-			}
-
-			expectedAverage = expectedAverage / expectedTravelTimes.size();
-			expectedTravelTimesAverage.add(expectedAverage);
-
-			System.out.println("Expected Travel time: " + expectedAverage);
-
-			// Travelling time
-			for(Vehicle vehicle : tm.getVehicles()) {
-				if(!vehicle.isFinished(getMaximumTimesteps())) {
-					continue;
-				}
-
-				int travellingTime = 0;
-
-				travellingTime = vehicle.getEndTimestep() - vehicle.getStartTimestep();
-
-				travellingTimes.add(travellingTime);
-			}
-
-			int expectedAverageTrav = 0;
-			for(int expAvgTrav = 0; expAvgTrav < travellingTimes.size(); expAvgTrav++) {
-				expectedAverageTrav += travellingTimes.get(expAvgTrav);
-			}
-
-			expectedAverageTrav = expectedAverageTrav / travellingTimes.size();
-			travellingTimesAverage.add(expectedAverageTrav);
-
-			System.out.println("Travel time: " + expectedAverageTrav);
-
-			// Flow
-			int vehiclesThatDontReachGoal = 0;
-			for(Vehicle vehicle : tm.getVehicles()) {
-				if(!vehicle.isFinished(getMaximumTimesteps())) {
-					vehiclesThatDontReachGoal++;
-				}
-			}
-			int flow = tm.getVehicles().size() - vehiclesThatDontReachGoal;
-			flowsAverage.add(flow);
-
-
-			System.out.println("Flow: " + flow);
-			//managers.add(tm);
-
-			for (int k = 0; k < tm.getVehicles().size(); k++) {
-				Vehicle currentVehicle = tm.getVehicles().get(k);
-
-				double sumSpeed = 0;
-				
-				int lastTimeStep = Math.min(currentVehicle.getEndTimestep(), getMaximumTimesteps());
-
-				for (int j = currentVehicle.getStartTimestep(); j < lastTimeStep; j++)
-					sumSpeed += currentVehicle.getSpeed(j);
-				
-				int totalTimesteps = (lastTimeStep - currentVehicle.getStartTimestep());
-				if(totalTimesteps == 0) totalTimesteps = 1;
-				double averageSpeed = sumSpeed / totalTimesteps;
-
-				double standardDevSpeed = 0;
-				
-				for (int j = currentVehicle.getStartTimestep(); j < lastTimeStep; j++)
-					standardDevSpeed += Math.pow(currentVehicle.getSpeed(j) - averageSpeed, 2);
-				
-				standardDevSpeed /= totalTimesteps;
-				standardDevSpeed = Math.sqrt(standardDevSpeed);
-				
-				speedMeans[k] = averageSpeed;
-				speedStDevs[k] = standardDevSpeed;
-			}
-			
-			double averageSpeedMeanForThisSimulation = 0;
-			double averageSpeedStDevForThisSimulation = 0;
-			
-			for (int k = 0; k < tm.getVehicles().size(); k++) {
-				averageSpeedMeanForThisSimulation += speedMeans[k];
-				averageSpeedStDevForThisSimulation += speedStDevs[k];
-			}
-			
-			averageSpeedMeanForThisSimulation /= tm.getVehicles().size();
-			averageSpeedStDevForThisSimulation /= tm.getVehicles().size();
-			
-			meansPerSimulation[i] = averageSpeedMeanForThisSimulation;
-			stDevsPerSimulation[i] = averageSpeedStDevForThisSimulation;
-
-			Vehicle.lastGivenId = 0;
-			Edge.lastGivenId = 0;
-			Node.lastGivenId = 0;
-		}
-		double average1 = 0;
-		for(int avg1 = 0; avg1 < expectedTravelTimesAverage.size(); avg1++) {
-			average1 += expectedTravelTimesAverage.get(avg1);
-		}
-
-		average1 = average1 / expectedTravelTimesAverage.size();
-
-		int average2 = 0;
-		for(int avg2 = 0; avg2 < travellingTimesAverage.size(); avg2++) {
-			average2 += travellingTimesAverage.get(avg2);
-		}
-
-		average2 = average2 / travellingTimesAverage.size();
-
-		int average3 = 0;
-		for(int avg3 = 0; avg3 < flowsAverage.size(); avg3++) {
-			average3 += flowsAverage.get(avg3);
-		}
-
-		average3 = average3 / flowsAverage.size();
-
-		System.out.println("Expected Travel Time for " + simulationsToRun + " is " + average1);
-		System.out.println("Travel Time for " + simulationsToRun + " is " + average2);
-		System.out.println("Flow for " + simulationsToRun + " is " + average3);
-
-
-		double averageSpeedForAll = 0;
-		double averageStDevOnSpeedForAll = 0;
-
-		for (int k = 0; k < simulationsToRun; k++) {
-			averageSpeedForAll += meansPerSimulation[k];
-			averageStDevOnSpeedForAll += stDevsPerSimulation[k];
-		}
-
-		double a = (averageSpeedForAll /= simulationsToRun);
-		double b = (averageStDevOnSpeedForAll /= simulationsToRun);
-
-		System.out.println("Average speed for all vehicles in all simulations: " + a);
-		System.out.println("Average standard deviation for all simulations: " + b);
-
-		System.out.println("done");
-	}
+//	public static void main(String[] args) {
+//		int simulationsToRun = 5;
+//
+//		String mapPath = MapReader.dialogue();
+//
+//		double meansPerSimulation[] = new double[simulationsToRun];
+//		double stDevsPerSimulation[] = new double[simulationsToRun];
+//
+//		ArrayList<Double> expectedTravelTimesAverage = new ArrayList<Double>();
+//		ArrayList<Integer> travellingTimesAverage = new ArrayList<Integer>();
+//		ArrayList<Integer> flowsAverage = new ArrayList<Integer>();
+//
+//		for (int i = 0; i < simulationsToRun; i++) {
+//			TrafficManager tm = createTestFromFile(mapPath);
+//			tm.simulate(getMaximumTimesteps());
+//
+//			double[] speedMeans = new double[tm.getVehicles().size()];
+//			double[] speedStDevs = new double[tm.getVehicles().size()];
+//
+//			ArrayList<Double> expectedTravelTimes = new ArrayList<Double>();
+//			ArrayList<Integer> travellingTimes = new ArrayList<Integer>();
+//			ArrayList<Integer> flows = new ArrayList<Integer>();
+//
+//			// Expected travel time
+//			for(Vehicle vehicle : tm.getVehicles()) {
+//				if(!vehicle.isFinished(getMaximumTimesteps())) {
+//					continue;
+//				}
+//				Set<Edge> edges = new HashSet<Edge>();
+//				for(int timeSteps = 0; timeSteps < getMaximumTimesteps(); timeSteps++) {
+//					edges.add(vehicle.getEdge(timeSteps));
+//				}
+//
+//				double expectedTravelTime = 0;
+//
+//				for(Edge edge : edges) {
+//					expectedTravelTime += edge.getLength() / edge.getSpeedLimit();
+//				}
+//
+//				expectedTravelTimes.add(expectedTravelTime);
+//			}
+//
+//			double expectedAverage = 0;
+//			for(int expAvg = 0; expAvg < expectedTravelTimes.size(); expAvg++) {
+//				expectedAverage += expectedTravelTimes.get(expAvg);
+//			}
+//
+//			expectedAverage = expectedAverage / expectedTravelTimes.size();
+//			expectedTravelTimesAverage.add(expectedAverage);
+//
+//			System.out.println("Expected Travel time: " + expectedAverage);
+//
+//			// Travelling time
+//			for(Vehicle vehicle : tm.getVehicles()) {
+//				if(!vehicle.isFinished(getMaximumTimesteps())) {
+//					continue;
+//				}
+//
+//				int travellingTime = 0;
+//
+//				travellingTime = vehicle.getEndTimestep() - vehicle.getStartTimestep();
+//
+//				travellingTimes.add(travellingTime);
+//			}
+//
+//			int expectedAverageTrav = 0;
+//			for(int expAvgTrav = 0; expAvgTrav < travellingTimes.size(); expAvgTrav++) {
+//				expectedAverageTrav += travellingTimes.get(expAvgTrav);
+//			}
+//
+//			expectedAverageTrav = expectedAverageTrav / travellingTimes.size();
+//			travellingTimesAverage.add(expectedAverageTrav);
+//
+//			System.out.println("Travel time: " + expectedAverageTrav);
+//
+//			// Flow
+//			int vehiclesThatDontReachGoal = 0;
+//			for(Vehicle vehicle : tm.getVehicles()) {
+//				if(!vehicle.isFinished(getMaximumTimesteps())) {
+//					vehiclesThatDontReachGoal++;
+//				}
+//			}
+//			int flow = tm.getVehicles().size() - vehiclesThatDontReachGoal;
+//			flowsAverage.add(flow);
+//
+//
+//			System.out.println("Flow: " + flow);
+//			//managers.add(tm);
+//
+//			for (int k = 0; k < tm.getVehicles().size(); k++) {
+//				Vehicle currentVehicle = tm.getVehicles().get(k);
+//
+//				double sumSpeed = 0;
+//
+//				int lastTimeStep = Math.min(currentVehicle.getEndTimestep(), getMaximumTimesteps());
+//
+//				for (int j = currentVehicle.getStartTimestep(); j < lastTimeStep; j++)
+//					sumSpeed += currentVehicle.getSpeed(j);
+//
+//				int totalTimesteps = (lastTimeStep - currentVehicle.getStartTimestep());
+//				if(totalTimesteps == 0) totalTimesteps = 1;
+//				double averageSpeed = sumSpeed / totalTimesteps;
+//
+//				double standardDevSpeed = 0;
+//
+//				for (int j = currentVehicle.getStartTimestep(); j < lastTimeStep; j++)
+//					standardDevSpeed += Math.pow(currentVehicle.getSpeed(j) - averageSpeed, 2);
+//
+//				standardDevSpeed /= totalTimesteps;
+//				standardDevSpeed = Math.sqrt(standardDevSpeed);
+//
+//				speedMeans[k] = averageSpeed;
+//				speedStDevs[k] = standardDevSpeed;
+//			}
+//
+//			double averageSpeedMeanForThisSimulation = 0;
+//			double averageSpeedStDevForThisSimulation = 0;
+//
+//			for (int k = 0; k < tm.getVehicles().size(); k++) {
+//				averageSpeedMeanForThisSimulation += speedMeans[k];
+//				averageSpeedStDevForThisSimulation += speedStDevs[k];
+//			}
+//
+//			averageSpeedMeanForThisSimulation /= tm.getVehicles().size();
+//			averageSpeedStDevForThisSimulation /= tm.getVehicles().size();
+//
+//			meansPerSimulation[i] = averageSpeedMeanForThisSimulation;
+//			stDevsPerSimulation[i] = averageSpeedStDevForThisSimulation;
+//
+//			Vehicle.lastGivenId = 0;
+//			Edge.lastGivenId = 0;
+//			Node.lastGivenId = 0;
+//
+//		}
+//		double average1 = 0;
+//		for(int avg1 = 0; avg1 < expectedTravelTimesAverage.size(); avg1++) {
+//			average1 += expectedTravelTimesAverage.get(avg1);
+//		}
+//
+//		average1 = average1 / expectedTravelTimesAverage.size();
+//
+//		int average2 = 0;
+//		for(int avg2 = 0; avg2 < travellingTimesAverage.size(); avg2++) {
+//			average2 += travellingTimesAverage.get(avg2);
+//		}
+//
+//		average2 = average2 / travellingTimesAverage.size();
+//
+//		int average3 = 0;
+//		for(int avg3 = 0; avg3 < flowsAverage.size(); avg3++) {
+//			average3 += flowsAverage.get(avg3);
+//		}
+//
+//		average3 = average3 / flowsAverage.size();
+//
+//		System.out.println("Expected Travel Time for " + simulationsToRun + " is " + average1);
+//		System.out.println("Travel Time for " + simulationsToRun + " is " + average2);
+//		System.out.println("Flow for " + simulationsToRun + " is " + average3);
+//
+//
+//		double averageSpeedForAll = 0;
+//		double averageStDevOnSpeedForAll = 0;
+//
+//		for (int k = 0; k < simulationsToRun; k++) {
+//			averageSpeedForAll += meansPerSimulation[k];
+//			averageStDevOnSpeedForAll += stDevsPerSimulation[k];
+//		}
+//
+//		double a = (averageSpeedForAll /= simulationsToRun);
+//		double b = (averageStDevOnSpeedForAll /= simulationsToRun);
+//
+//		System.out.println("Average speed for all vehicles in all simulations: " + a);
+//		System.out.println("Average standard deviation for all simulations: " + b);
+//
+//		System.out.println("done");
+//	}
 
 
 }
