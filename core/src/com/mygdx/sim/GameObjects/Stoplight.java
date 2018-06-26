@@ -74,6 +74,14 @@ public class Stoplight {
 	public Location getLocation() {
 		return location;
 	}
+	
+	public void setInvisibleCar(InvisibleCar invisibleCar) {
+		this.invisibleCar = invisibleCar;
+	}
+	
+	public InvisibleCar getInvisibleCar() {
+		return invisibleCar;
+	}
 
 	/**
 	 * This only controls the single stoplight. Traffic controller must switch

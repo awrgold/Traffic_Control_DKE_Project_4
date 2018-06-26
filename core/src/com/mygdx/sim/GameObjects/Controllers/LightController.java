@@ -13,7 +13,6 @@ public class LightController {
 	private List<Stoplight> lights;
 	private boolean startsGreen;
 
-
 	public LightController(List<Stoplight> lights) {
 		this.lights = lights;
 	}
@@ -30,14 +29,14 @@ public class LightController {
 		return lights;
 	}
 
-	public void setStartsGreen(Boolean b){
+	public void setStartsGreen(Boolean b) {
 		this.startsGreen = b;
-		if (b){
-			for (Stoplight l : lights){
+		if (b) {
+			for (Stoplight l : lights) {
 				l.setLightState(LightState.GREEN);
 			}
-		}else{
-			for (Stoplight l : lights){
+		} else {
+			for (Stoplight l : lights) {
 				l.setLightState(LightState.RED);
 			}
 		}
@@ -67,14 +66,11 @@ public class LightController {
 			l.switchLight();
 		}
 	}
-	
-	public boolean update(int currentTimestep) {
+
+	public void update(int currentTimestep) {
 		if (getTimeRemaining(currentTimestep) == interval) {
 			switchLights();
-			return true;
 		}
-		
-		return false;
 	}
 
 }
