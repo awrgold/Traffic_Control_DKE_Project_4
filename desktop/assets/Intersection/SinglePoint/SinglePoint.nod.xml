@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 6/26/2018 10:27:04 AM by Netedit Version 0.32.0
+<!-- generated on 6/26/2018 10:31:32 AM by Netedit Version 0.32.0
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
@@ -42,8 +42,6 @@
     <node id="gneJ11" x="40.00" y="-100.00" type="priority"/>
     <node id="gneJ12" x="30.00" y="250.00" type="priority"/>
     <node id="gneJ14" x="-160.00" y="50.00" type="priority"/>
-    <node id="gneJ15" x="270.00" y="50.00" type="dead_end"/>
-    <node id="gneJ156" x="-840.00" y="100.00" type="dead_end"/>
     <node id="gneJ16" x="-160.00" y="60.00" type="priority"/>
     <node id="gneJ165" x="30.00" y="-100.00" type="priority"/>
     <node id="gneJ17" x="270.00" y="60.00" type="priority"/>

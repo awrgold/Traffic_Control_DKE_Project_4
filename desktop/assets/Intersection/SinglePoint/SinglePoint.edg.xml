@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 6/26/2018 10:27:04 AM by Netedit Version 0.32.0
+<!-- generated on 6/26/2018 10:31:32 AM by Netedit Version 0.32.0
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
@@ -73,7 +73,7 @@
     <edge id="gneE427" from="gneJ20" to="gneJ21" priority="1" numLanes="1" speed="13.89"/>
     <edge id="gneE428" from="gneJ18" to="gneJ19" priority="1" numLanes="1" speed="13.89"/>
     <edge id="gneE429" from="gneJ16" to="gneJ17" priority="1" numLanes="1" speed="13.89"/>
-    <edge id="gneE430" from="gneJ14" to="gneJ15" priority="1" numLanes="1" speed="13.89"/>
+    <edge id="gneE430" from="gneJ14" to="gneJ289" priority="1" numLanes="1" speed="13.89"/>
     <edge id="gneE449" from="gneJ104" to="gneJ302" priority="1" numLanes="1" speed="13.89"/>
     <edge id="gneE450" from="gneJ302" to="gneJ303" priority="1" numLanes="1" speed="13.89"/>
     <edge id="gneE451" from="gneJ303" to="gneJ304" priority="1" numLanes="1" speed="13.89"/>
@@ -216,7 +216,7 @@
     <edge id="gneE588" from="gneJ405" to="gneJ406" priority="1" numLanes="1" speed="13.89"/>
     <edge id="gneE590" from="gneJ406" to="gneJ409" priority="1" numLanes="1" speed="13.89"/>
     <edge id="gneE591" from="gneJ409" to="gneJ410" priority="1" numLanes="1" speed="13.89"/>
-    <edge id="gneE592" from="gneJ410" to="gneJ156" priority="1" numLanes="1" speed="13.89"/>
+    <edge id="gneE592" from="gneJ410" to="west-out3" priority="1" numLanes="1" speed="13.89"/>
     <edge id="gneE593" from="gneJ372" to="gneJ379" priority="1" numLanes="1" speed="13.89"/>
     <edge id="gneE594" from="gneJ374" to="gneJ381" priority="1" numLanes="1" speed="13.89"/>
     <edge id="gneE595" from="gneJ376" to="gneJ383" priority="1" numLanes="1" speed="13.89"/>
