@@ -24,7 +24,7 @@ public class Edge implements Comparable<Edge> {
     // StopLight
     private Stoplight stopLight;
     
-    private static int lastGivenId = 0;
+    public static int lastGivenId = 0;
     private int id;
     
     // UI

@@ -73,33 +73,50 @@ public class MapReader {
 		readConnections(edgeMap, connectionsPath);
 	}
 
-	public void readMap() {
+	public static String dialogue() {
+		JFileChooser chooser = new JFileChooser();
+		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+		int returnVal = chooser.showOpenDialog(null);
+		if (returnVal == JFileChooser.APPROVE_OPTION)
+			return chooser.getSelectedFile().getPath();
+
+		return null;
+	}
+
+	public void readMapDialogue() {
 
 		JFileChooser chooser = new JFileChooser(Gdx.files.getLocalStoragePath());
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		
+
+		int returnVal = chooser.showOpenDialog(null);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			readMap(chooser.getSelectedFile().getPath());
+		}
+	}
+
+	public void readMap(String path) {
+
 		String nodesPath = null;
 		String edgesPath = null;
 		String connectionsPath = null;
 
-		int returnVal = chooser.showOpenDialog(null);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			File dir = new File(chooser.getSelectedFile().getPath());
-			System.out.println(chooser.getSelectedFile().getPath());
-			for (File file : dir.listFiles()) {
-				if (file.getName().endsWith(("nod.xml"))) {
-					nodesPath = file.getAbsolutePath();
-				} else if (file.getName().endsWith(("edg.xml"))) {
-					edgesPath = file.getAbsolutePath();
-				} else if (file.getName().endsWith(("con.xml"))) {
-					connectionsPath = file.getAbsolutePath();
-				}
+		File dir = new File(path);
+
+		for (File file : dir.listFiles()) {
+			if (file.getName().endsWith(("nod.xml"))) {
+				nodesPath = file.getAbsolutePath();
+			} else if (file.getName().endsWith(("edg.xml"))) {
+				edgesPath = file.getAbsolutePath();
+			} else if (file.getName().endsWith(("con.xml"))) {
+				connectionsPath = file.getAbsolutePath();
 			}
 		}
 
 		nodeMap = readNodes(nodesPath);
 		edgeMap = readEdges(nodeMap, edgesPath);
 		readConnections(edgeMap, connectionsPath);
+
 	}
 
 	public HashMap<String, Node> readNodes(String path) {
@@ -118,8 +135,10 @@ public class MapReader {
 				org.w3c.dom.Node xmlElement = xmlElements.item(i);
 
 				String nodeID = xmlElement.getAttributes().getNamedItem("id").getTextContent();
-				float nodeX = Float.parseFloat(xmlElement.getAttributes().getNamedItem("x").getTextContent()) * MAPMULTIPLIER;
-				float nodeY = Float.parseFloat(xmlElement.getAttributes().getNamedItem("y").getTextContent()) * MAPMULTIPLIER;
+				float nodeX = Float.parseFloat(xmlElement.getAttributes().getNamedItem("x").getTextContent())
+						* MAPMULTIPLIER;
+				float nodeY = Float.parseFloat(xmlElement.getAttributes().getNamedItem("y").getTextContent())
+						* MAPMULTIPLIER;
 				String nodeType = xmlElement.getAttributes().getNamedItem("type").getTextContent();
 
 				Node node = new Node(nodeX, nodeY, nodeType, nodeID);
@@ -156,7 +175,8 @@ public class MapReader {
 				String edgeFrom = xmlElement.getAttributes().getNamedItem("from").getTextContent();
 				String edgeTo = xmlElement.getAttributes().getNamedItem("to").getTextContent();
 				int edgeLanes = Integer.parseInt(xmlElement.getAttributes().getNamedItem("numLanes").getTextContent());
-				double edgeSpeed = Double.parseDouble(xmlElement.getAttributes().getNamedItem("speed").getTextContent());
+				double edgeSpeed = Double
+						.parseDouble(xmlElement.getAttributes().getNamedItem("speed").getTextContent());
 
 				List<Coordinates> shapeCoordinates = null;
 				if (xmlElement.getAttributes().getNamedItem("shape") != null) {
@@ -167,7 +187,8 @@ public class MapReader {
 						shapeCoordinates = new ArrayList<Coordinates>();
 						for (String shapeString : shapeArray) {
 							String coordinates[] = shapeString.split(",");
-							shapeCoordinates.add(new Coordinates(Float.valueOf(coordinates[0]) * MAPMULTIPLIER, Float.valueOf(coordinates[1]) * MAPMULTIPLIER));
+							shapeCoordinates.add(new Coordinates(Float.valueOf(coordinates[0]) * MAPMULTIPLIER,
+									Float.valueOf(coordinates[1]) * MAPMULTIPLIER));
 						}
 					}
 				}
@@ -226,7 +247,8 @@ public class MapReader {
 
 				Edge fromEdge = null;
 				Edge toEdge = null;
-				if ((fromEdge = edges.get(connectionFromID + "_" + connectionFromLane)) != null && (toEdge = edges.get(connectionToID + "_" + connectionToLane)) != null) {
+				if ((fromEdge = edges.get(connectionFromID + "_" + connectionFromLane)) != null
+						&& (toEdge = edges.get(connectionToID + "_" + connectionToLane)) != null) {
 					fromEdge.addToEdge(toEdge);
 				}
 			}
@@ -240,11 +262,11 @@ public class MapReader {
 		}
 	}
 
-	public void addSpawn(Node node){
+	public void addSpawn(Node node) {
 		spawnPoints.add(node);
 	}
 
-	public List<Node> getSpawnPoints(){
+	public List<Node> getSpawnPoints() {
 		return spawnPoints;
 	}
 
@@ -257,7 +279,8 @@ public class MapReader {
 
 		counter = 0;
 		for (Edge edge : edgeMap.values()) {
-			System.out.println("Edge " + edge.getId() + " is from: " + edge.getFrom() + " to: " + edge.getTo() + " to edges: " + edge.getToEdges().size());
+			System.out.println("Edge " + edge.getId() + " is from: " + edge.getFrom() + " to: " + edge.getTo()
+					+ " to edges: " + edge.getToEdges().size());
 			counter++;
 		}
 	}

@@ -24,7 +24,7 @@ public class Node implements Comparable<Node> {
 
 	private List<Integer> spawntimes = new ArrayList<Integer>();
 	
-	private static int lastGivenId = 0;
+	public static int lastGivenId = 0;
 	
 	private int id;
 

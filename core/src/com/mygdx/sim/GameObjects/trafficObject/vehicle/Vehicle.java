@@ -20,7 +20,7 @@ import com.mygdx.sim.Resources.Resources;
 
 public abstract class Vehicle implements TrafficObject {
 	
-	private static int lastGivenId = 0;
+	public static int lastGivenId = 0;
 	private int id;
 
 	// The node this vehicle starts its trip at and the node it wants to reach.
