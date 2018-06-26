@@ -111,21 +111,6 @@ public class TrafficManager {
 
 		this.trafficObjects = trafficObjects;
 
-		for (Vehicle vehicle : vehicles) {
-
-			// Validation of the path
-			// List<Edge> edgePath = vehicle.getEdgePath();
-			// if (edgePath == null) {
-			// continue;
-			// }
-			//
-			// for (int i = 0; i < edgePath.size() - 1; i++)
-			// if (!edgePath.get(i + 1).getFrom().equals(edgePath.get(i).getTo()))
-			// throw new RuntimeException("EdgePath of vehicle " + this + " implies
-			// teleportation");
-
-		}
-
 		for (TrafficObject to : trafficObjects) {
 			Edge edge = to.getEdge(0);
 			map.getStaticTrafficObjectsCache().get(edge).add(to);
@@ -356,11 +341,7 @@ public class TrafficManager {
 
 		List<Node> spawns = map.getSpawnPoints();
 		System.out.println("!!!!!!!!!!!!!SIZE OF SPAWN POINTS!!!!!!!!!!" + spawns.size());
-		for (Node n : spawns) {
-			if (n.getXmlID().contains("south")) {
-				System.out.println("FOUND A NORTH NODE BITCH");
-			}
-		}
+
 		List<Node> destinations = map.getDestinations();
 		List cars = createCars(spawns, destinations, map);
 
@@ -409,11 +390,7 @@ public class TrafficManager {
 
 		List<Node> spawns = map.getSpawnPoints();
 		System.out.println("!!!!!!!!!!!!!SIZE OF SPAWN POINTS!!!!!!!!!!" + spawns.size());
-		for (Node n : spawns) {
-			if (n.getXmlID().contains("south")) {
-				System.out.println("FOUND A NORTH NODE BITCH");
-			}
-		}
+
 		List<Node> destinations = map.getDestinations();
 		List cars = createCars(spawns, destinations, map);
 
@@ -461,11 +438,7 @@ public class TrafficManager {
 
 		List<Node> spawns = map.getSpawnPoints();
 		System.out.println("!!!!!!!!!!!!!SIZE OF SPAWN POINTS!!!!!!!!!!" + spawns.size());
-		for (Node n : spawns) {
-			if (n.getXmlID().contains("south")) {
-				System.out.println("FOUND A NORTH NODE BITCH");
-			}
-		}
+
 		List<Node> destinations = map.getDestinations();
 		List cars = createCars(spawns, destinations, map);
 
@@ -548,7 +521,7 @@ public class TrafficManager {
 				end = destinations.get((int) (Math.floor(Math.random() * destinations.size())));
 			}
 
-			System.out.println("Start: " + start.getXmlID() + " End Goal: " + end.getXmlID());
+//			System.out.println("Start: " + start.getXmlID() + " End Goal: " + end.getXmlID());
 
 			/**
 			 * Generate cars StartTimeStep: when the car spawns Need to give it a timestep
@@ -1007,13 +980,17 @@ public class TrafficManager {
 		
 		double averageSpeedForAll = 0;
 		double averageStDevOnSpeedForAll = 0;
+
 		for (int k = 0; k < simulationsToRun; k++) {
 			averageSpeedForAll += meansPerSimulation[k];
 			averageStDevOnSpeedForAll += stDevsPerSimulation[k];
 		}
-		
-		averageSpeedForAll /= simulationsToRun;
-		averageStDevOnSpeedForAll /= simulationsToRun;
+
+		double a = (averageSpeedForAll /= simulationsToRun);
+		double b = (averageStDevOnSpeedForAll /= simulationsToRun);
+
+		System.out.println("Average speed for all vehicles in all simulations: " + a);
+		System.out.println("Average standard deviation for all simulations: " + b);
 
 		System.out.println("done");
 	}
