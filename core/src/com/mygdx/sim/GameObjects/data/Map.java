@@ -117,6 +117,9 @@ public class Map {
 			if ((n.getXmlID().contains("east") || n.getXmlID().contains("west") || n.getXmlID().contains("south") || n.getXmlID().contains("north")) && !n.getXmlID().contains("-out") && !n.getXmlID().contains("light")) {
 				spawnPoints.add(n);
 			}
+			if (n.getXmlID().contains("south")){
+				System.out.println("FOUND A SOUTHERN FUCKER");
+			}
 		}
 	}
 

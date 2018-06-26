@@ -151,6 +151,10 @@ public abstract class Vehicle implements TrafficObject {
 		return new Location(this.getEdge(timestep),this.getTraveledDistance(timestep));
 	}
 
+	public float[] getSpeeds() {
+		return speeds;
+	}
+
 	public DriverModel getDriverModel() {
 		return driverModel;
 	}

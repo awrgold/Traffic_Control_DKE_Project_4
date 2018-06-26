@@ -37,6 +37,8 @@ public class MapReader {
 		return edgeMap;
 	}
 
+
+
 	public void readMap() {
 
 		JFileChooser chooser = new JFileChooser(Gdx.files.getLocalStoragePath());

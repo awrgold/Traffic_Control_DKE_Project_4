@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.sim.GameObjects.Controllers.LightController;
 import com.mygdx.sim.GameObjects.Stoplight;
 import com.mygdx.sim.GameObjects.TrafficManager;
+import com.mygdx.sim.GameObjects.data.DataCollection;
 import com.mygdx.sim.GameObjects.data.Edge;
 import com.mygdx.sim.GameObjects.data.Map;
 import com.mygdx.sim.GameObjects.data.Node;
@@ -18,6 +19,9 @@ import com.mygdx.sim.World.Components.Road;
 import com.mygdx.sim.World.Components.TrafficLight;
 
 public class WorldController {
+
+	DataCollection collector = new DataCollection();
+	private int numberIterations = 100;
 
 	// Map
 	private Map map;
@@ -56,8 +60,11 @@ public class WorldController {
 		// Create Map Object Lists
 		vehicles = new ArrayList<Vehicle>();
 
+		for (int i = 0; i < numberIterations; i++){
+			trafficManager = TrafficManager.createTestFromFile();
+		}
 		// Traffic Manager
-		trafficManager = TrafficManager.createTestFromFile();
+		trafficManager = TrafficManager.createSimFromFile();
 
 		// Get Vehicles
 		vehicles = trafficManager.getVehicles();

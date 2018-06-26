@@ -27,6 +27,12 @@ import com.mygdx.sim.GameObjects.trafficObject.TrafficObject;
 import com.mygdx.sim.GameObjects.trafficObject.TrafficObjectState;
 import com.mygdx.sim.GameObjects.trafficObject.vehicle.Car;
 import com.mygdx.sim.GameObjects.trafficObject.vehicle.Vehicle;
+<<<<<<< HEAD
+=======
+import com.mygdx.sim.World.Components.TrafficLight;
+import javafx.scene.effect.Light;
+import javafx.scene.paint.Stop;
+>>>>>>> branch 'master' of https://github.com/awrgold/Project_2.2.git
 
 public class TrafficManager {
 
@@ -56,12 +62,55 @@ public class TrafficManager {
 	public final static double mean = 3.6;
 	public static List<LightController> controllers = new ArrayList<LightController>();
 
+
 	private Map map;
 	private List<TrafficObject> trafficObjects;
 	private List<Vehicle> vehicles;
 	private static int urbanCenterWeight = 10;
 	private static ControlScheme scheme = ControlScheme.BASIC;
 	private int lastComputedTimestep = 0;
+
+	/**
+	 * --- Statistical parameters ---
+	 * avgDriverSpeed: average speed for driver "i" on the map
+	 * speedLimit: Speed limit for the map
+	 * expectedTravelTimes: expected travel time for driver "i" on map (based on speed limit and distance required to travel)
+	 * actualTravelTimes: actual travel time for driver "i" on map (based on endtime-starttime)
+	 * numVehiclesReachedGoal: (DO WE NEED?) number of vehicles that were able to reach the goal in time
+	 * numTimesSlowed: number of times vehicle "i" slowed down from their top speed during the sim
+	 */
+	public static List<Integer> avgDriverSpeed = new ArrayList<Integer>();
+	public static int speedLimit = 0;
+	public static List<Integer> expectedTravelTimes = new ArrayList<Integer>();
+	public static List<Integer> actualTravelTimes = new ArrayList<Integer>();
+	public static List<Vehicle> vehiclesReachedGoal = new ArrayList<Vehicle>();
+	public static List<Integer> numTimesSlowed = new ArrayList<Integer>();
+
+	public static List<Integer> getActualTravelTimes() {
+		return actualTravelTimes;
+	}
+
+	public static List<Integer> getAvgDriverSpeed() {
+		return avgDriverSpeed;
+	}
+
+	public static List<Integer> getNumTimesSlowed() {
+		return numTimesSlowed;
+	}
+
+	public static List<Vehicle> getVehiclesReachedGoal() {
+		return vehiclesReachedGoal;
+	}
+
+	public static int getSpeedLimit() {
+		return speedLimit;
+	}
+
+	public static List<Integer> getExpectedTravelTimes() {
+		return expectedTravelTimes;
+	}
+
+	
 
 	public TrafficManager(Map map, List<Vehicle> vehicles, List<TrafficObject> trafficObjects, List<LightController> controllers) {
 		this.map = map;
@@ -182,12 +231,31 @@ public class TrafficManager {
 
 			lastComputedTimestep++;
 
+<<<<<<< HEAD
 			// lightController.update(lastComputedTimestep);
+=======
+			// Update each light controller
+//			for (LightController l : controllers){
+//				l.update(lastComputedTimestep);
+//			}
+>>>>>>> branch 'master' of https://github.com/awrgold/Project_2.2.git
 
 			// Have the vehicles update their locations for the next timestep
 			for (Vehicle vehicle : vehicles)
 				vehicle.move(lastComputedTimestep);
 		}
+
+		for (Vehicle v : vehicles){
+			int a = 0;
+			for (int i = 0; i < v.getSpeeds().length; i++) {
+				a += v.getSpeeds()[i];
+			}
+			a = (a/v.getSpeeds().length);
+			avgDriverSpeed.add(a);
+		}
+
+
+
 	}
 
 	public List<LightController> getLightControllers() {
@@ -289,7 +357,7 @@ public class TrafficManager {
 		return Math.abs(Math.sqrt(Math.pow((a.getY() - b.getY()), 2) + Math.pow((a.getX() - b.getX()), 2)));
 	}
 
-	public static TrafficManager createTestFromFile() {
+	public static TrafficManager createSimFromFile() {
 		MapReader mr = new MapReader();
 		mr.readMap();
 		HashMap<String, Node> nodeMap = mr.getNodes();
@@ -305,6 +373,12 @@ public class TrafficManager {
 		Map map = new Map(nodeList, edgeList);
 
 		List<Node> spawns = map.getSpawnPoints();
+		System.out.println("!!!!!!!!!!!!!SIZE OF SPAWN POINTS!!!!!!!!!!" + spawns.size());
+		for (Node n : spawns){
+			if (n.getXmlID().contains("south")){
+				System.out.println("FOUND A NORTH NODE BITCH");
+			}
+		}
 		List<Node> destinations = map.getDestinations();
 		List cars = createCars(spawns, destinations, map);
 
@@ -327,6 +401,56 @@ public class TrafficManager {
 				stopLight.setInvisibleCar(invisibleCar);
 				staticTrafficObjects.add(invisibleCar);
 
+			}
+		}
+
+		// Traffic Manager
+		TrafficManager tm = new TrafficManager(map, cars, staticTrafficObjects, controllers);
+		return tm;
+	}
+
+	public static TrafficManager createTestFromFile(){
+		MapReader mr = new MapReader();
+		mr.readMap();
+		HashMap<String, Node> nodeMap = mr.getNodes();
+		HashMap<String, Edge> edgeMap = mr.getEdges();
+
+		mr.printAll(nodeMap, edgeMap);
+
+		List<Node> nodeList = new ArrayList<Node>(nodeMap.values());
+
+		// Sort the nodeList in descending order based on priority
+		Collections.sort(nodeList, new SortNode());
+		List<Edge> edgeList = new ArrayList<Edge>(edgeMap.values());
+		Map map = new Map(nodeList, edgeList);
+
+		List<Node> spawns = map.getSpawnPoints();
+		System.out.println("!!!!!!!!!!!!!SIZE OF SPAWN POINTS!!!!!!!!!!" + spawns.size());
+		for (Node n : spawns){
+			if (n.getXmlID().contains("south")){
+				System.out.println("FOUND A NORTH NODE BITCH");
+			}
+		}
+		List<Node> destinations = map.getDestinations();
+		List cars = createCars(spawns, destinations, map);
+
+
+		// createNeighborhoods(destinations, numUrbanCenters);
+
+		if(DEBUG){
+			System.out.println("Destination list size: " + destinations.size());
+			System.out.println("Creating neighborhoods with " + destinations.size() + " destinations, and " + numUrbanCenters + " urban centers.");
+		}
+
+		// Light Controller
+
+		initiateStoplights(map);
+
+		// Static Traffic Objects
+		List<TrafficObject> staticTrafficObjects = new ArrayList<TrafficObject>();
+		for (LightController l : controllers){
+			for(Stoplight stopLight : l.getLights()) {
+				staticTrafficObjects.add(new InvisibleCar(stopLight.getParent().getOutEdges().get(0)));
 			}
 		}
 
