@@ -1,7 +1,14 @@
 # Project 2.2
 DKE project (year 2, semester 2 - 2018)
 
-*A 3-part semester-long project regarding traffic flow, control, and simulation. We designed a simulation of a number of road networks, integrating our graph theory and optimization courses into developing algorithms for directing traffic around 2D space.*
+*A 3-part semester-long project regarding traffic flow, control, and simulation. From the handbook:*
+
+```
+The central topic of project 2-2 is intelligent traffic control. Next to designing and 
+implementing a traffic simulator, the program should also allow the incorporation of 
+various strategies to for instance reduce traffic jams and to have parameters that allow
+defining the traffic density at a specific road or crossroad. 
+```
 
 **Phase 1 Description:**
 
