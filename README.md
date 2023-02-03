@@ -3,7 +3,8 @@ DKE project (year 2, semester 2 - 2018)
 
 *A 3-part semester-long project regarding traffic flow, control, and simulation. We designed a simulation of a number of road networks, integrating our graph theory and optimization courses into developing algorithms for directing traffic around 2D space.*
 
-Phase 1 Description:
+**Phase 1 Description:**
+
 In the first phase, literature research is performed on modeling and simulation approaches. 
 Attempt to include enough dynamics in your model such that congestion etc. occurs. 
 Furthermore, preferably realistic data of the traffic density or flow is collected. 
@@ -14,21 +15,21 @@ Also, a draft introduction and literature reveiw for the final report is deliver
 Obviously, you are most welcome to do more. 
 An overview needs to be provided of which group member contributed to what and to which extent. 
 
-Cars:
+**Cars:**
 
     Need origins, destinations, and a time frame to reach destination
     Need to detect collisions with each other
     Need to be able to remove themselves from the street once arriving at the destination
 
-Streets: 
+**Streets: **
 
     Need stop lights (Green/Yellow/Red) that direct traffic
 
-Research:
+**Research:**
 
     Traffic control algorithms, flow network design, and literature regarding the study of traffic flow and density.
 
-Notes:
+**Notes:**
 
     - Ways to introduce cars would be to create "origin/destination objects" with values 
     that determine how popular they are. Houses would have a value of 1, supermarkets could 
@@ -44,5 +45,4 @@ Notes:
     Either way, there needs to be some way for cars to navigate a given space.
     - Should we decide to do a level editor, the street objects that we can place/move around 
     must have an edge/vertex attached to them, such that if we place objects in a location 
-    next to another, they automatically connect. ***OTHERWISE, A LEVEL EDITOR IS GOING TO 
-    BE EXTREMELY DIFFICULT IF NOT IMPOSSIBLE TO IMPLEMENT***
+    next to another, they automatically connect. 
